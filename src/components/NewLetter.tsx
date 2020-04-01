@@ -138,7 +138,7 @@ const StyledTextArea = styled.textarea`
   padding: 12px;
   font-size: 1em;
   font-family: 'Merriweather', serif;
-  line-height: 1.2;
+  line-height: 1.4;
   resize: none;
 `
 
@@ -272,6 +272,7 @@ const StyledMailCover = styled.div`
 const NewLetter = (props: Props) => {
 
   const [isSent, setIsSent] = React.useState(false);
+  const [isSending, setIsSending] = React.useState(false);
 
   function closeLetter() {
     props.setNewLetter({ ...props.newLetter, isNewLetter: false })
@@ -285,8 +286,44 @@ const NewLetter = (props: Props) => {
     props.setNewLetter({ ...props.newLetter, message: e.target.value })
   }
 
+  async function getUserLocation(): Promise<any> {
+
+    if (navigator.geolocation) {
+
+      return new Promise((resolve, reject) => {
+        const getGeolocation = async (position: any) => {
+
+          if (!position) return alert('Cannot get your location')
+
+          let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIP();
+
+          const location: UserLocation = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+            city,
+            country_name,
+            country_code,
+            region,
+          }
+
+          return resolve(location)
+        }
+
+        navigator.geolocation.getCurrentPosition(getGeolocation)
+      });
+
+
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+
+  }
+
   async function sendLetter() {
-    let { lat, lon, city, country, countryCode, regionName }: UserLocation = await IPLocationAPI.getLocationFromIP();
+
+    setIsSending(true)
+
+    let { lat = 0, lon = 0, city, country_name, country_code, region }: UserLocation = await getUserLocation();
 
     if (!city) {
       return alert('Cannot get location. Unable to send letter')
@@ -299,16 +336,20 @@ const NewLetter = (props: Props) => {
         lat: lat,
         lon: lon,
         city: city,
-        country: country,
-        countryCode: countryCode,
-        regionName: regionName
+        country_name: country_name,
+        country_code: country_code,
+        region: region,
       }
+    }).then(() => {
+      setIsSending(false)
+      setIsSent(true)
+      setTimeout(() => {
+        closeLetter()
+
+      }, 2000);
     })
 
-    setIsSent(true)
-    setTimeout(() => {
-      closeLetter()
-    }, 2000);
+
   }
 
 
@@ -323,7 +364,6 @@ const NewLetter = (props: Props) => {
       <StyledNewLetter isSent={isSent}>
         {
           isSent ?
-            // <StyledMailContent>{props.newLetter.message}</StyledMailContent>
             null
             :
             <>
@@ -333,7 +373,7 @@ const NewLetter = (props: Props) => {
               </StyledHeader>
               <StyledTextArea onChange={handleMessageChange} placeholder="Enter Message...">
               </StyledTextArea>
-              <StyledSendButton onClick={sendLetter}>Send Thank You</StyledSendButton>
+              <StyledSendButton onClick={sendLetter}>{isSending ? 'Sending...' : 'Send Thank You'}</StyledSendButton>
               <StyledInstructions>Your approximate location is retrieved using your public IP Address to tag where the message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
             </>
         }

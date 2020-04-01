@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactGlobe from 'react-globe.gl';
 import styled from 'styled-components'
-import NewLetter, { Letter } from './NewLetter';
+import { Letter } from './NewLetter';
 
 const earthImg = require('../assets/8081_earthmap10k.jpg');
 const earthNightImg = require('../assets/earth-night.jpg');
@@ -150,7 +150,6 @@ const Globe = ({ letters = [] }: Props) => {
   }, [])
 
   useEffect(() => {
-    console.log('change');
     formatPoints(letters as Letter[])
   }, [letters])
 

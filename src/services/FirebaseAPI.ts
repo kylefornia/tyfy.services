@@ -8,6 +8,8 @@ import { Letter } from '../components/NewLetter';
 class FirebaseAPI {
 
   public static init() {
+
+
     const firebaseConfig = {
       apiKey: "AIzaSyBIgU2xef7EtjnvEgGeip-LLUtz07IMfq0",
       authDomain: "tyfyservices.firebaseapp.com",
@@ -42,9 +44,7 @@ class FirebaseAPI {
     batch.update(letterCountRef, { totalLetters: increment })
 
 
-    batch.commit().then(() => {
-      console.log('committed')
-    })
+    return batch.commit()
 
 
   }

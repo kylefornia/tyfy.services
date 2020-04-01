@@ -30,10 +30,10 @@ const Home = (props: Props) => {
     location: {
       lat: 0,
       lon: 0,
-      country: '',
-      countryCode: '',
+      country_name: '',
+      country_code: '',
       city: '',
-      regionName: ''
+      region: '',
     },
   })
 
