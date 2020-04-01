@@ -7,7 +7,7 @@ import { Letter } from '../components/NewLetter';
 
 class FirebaseAPI {
 
-  static init() {
+  public static init() {
     const firebaseConfig = {
       apiKey: "AIzaSyBIgU2xef7EtjnvEgGeip-LLUtz07IMfq0",
       authDomain: "tyfyservices.firebaseapp.com",
@@ -24,18 +24,37 @@ class FirebaseAPI {
     }
   }
 
-  static addNewLetter({ name, message, location }: Letter) {
-    firebase.firestore().collection('letters').add({
+  public static addNewLetter({ name, message, location }: Letter) {
+    const lettersRef = firebase.firestore().collection('letters')
+    const newLetterRef = lettersRef.doc()
+    const increment = firebase.firestore.FieldValue.increment(1);
+    const letterCountRef = firebase.firestore().collection('counters').doc('letterCount')
+
+    const batch = firebase.firestore().batch();
+
+    batch.set(newLetterRef, {
       name: name,
       message: message,
       location: location,
       date: firebase.firestore.Timestamp.now(),
-
     })
+
+    batch.update(letterCountRef, { totalLetters: increment })
+
+
+    batch.commit().then(() => {
+      console.log('committed')
+    })
+
+
   }
 
-  static getAllLetters() {
+  public static getAllLetters() {
     return firebase.firestore().collection('letters')
+  }
+
+  public static getLetterCount() {
+    return firebase.firestore().collection('counters').doc('letterCount')
   }
 }
 

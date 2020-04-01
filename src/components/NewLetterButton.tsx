@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 interface Props {
-
+  onClick: () => void;
 }
 
 const StyledNewLetterButton = styled.button`
@@ -15,7 +15,7 @@ const StyledNewLetterButton = styled.button`
   padding: 5px 20px;
   font-family: 'Open Sans', sans-serif;
   font-weight: 800;
-  font-size: 1.2em;
+  font-size: 1em;
   letter-spacing: 1px;
   transition: transform 120ms ease-out;
   box-shadow: 0px 3px 10px rgba(0,0,0,0.1);

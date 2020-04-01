@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import NumberFormat from 'react-number-format'
 
 interface Props {
-  count: number;
+  count: number | firebase.firestore.DocumentData;
 }
 
 const StyledThanksCounterContainer = styled.div`
@@ -37,7 +37,7 @@ const ThanksCounter = (props: Props) => {
     <StyledThanksCounterContainer>
       <StyledThanksCounterText>
         <NumberFormat
-          value={props.count || 0}
+          value={props.count as number || 0}
           displayType="text"
           thousandSeparator
         />

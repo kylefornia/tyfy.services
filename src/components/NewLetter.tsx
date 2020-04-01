@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import styled from 'styled-components';
 import IPLocationAPI from '../services/IPLocationAPI';
 import FirebaseAPI from '../services/FirebaseAPI';
@@ -9,17 +9,13 @@ export interface Letter {
   isNewLetter?: boolean;
   name: string;
   message: string;
-  location: UserLocation;
+  location?: UserLocation;
 }
 
 interface Props {
-  setNewLetter: ({
-    isNewLetter,
-    name,
-    message,
-    location,
-  }: Letter) => {};
-  newLetter: Letter
+  setNewLetter: Dispatch<SetStateAction<Letter>>;
+  newLetter: Letter;
+
 }
 
 const StyledNewLetterWrapper = styled.div`
@@ -35,23 +31,27 @@ const StyledNewLetterWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `
-const StyledNewLetter = styled.div`
+const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
   background: #FFF;
+  /* height: ${ ({ isSent }) => isSent ? '180px' : 'calc(100% - 40px)'}; */
+  /* width: ${ ({ isSent }) => isSent ? '280px' : 'calc(100% - 20px)'}; */
   height: calc(100% - 40px);
   width: calc(100% - 20px);
   max-width: 768px;
   max-height: 900px;
-  transition: transform 300ms ease-out, opacity 300ms ease-out;
-  animation: animate-in 300ms ease-out;
+  transition: all 300ms ease-out;
+  animation: ${ ({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'animate-in 300ms ease-out'} ;
   will-change: transform, opacity;
   font-family: 'Merriweather', serif;
   font-size: 1.1em;
   box-shadow: 0 3px 15px rgba(0,0,0,0.1);
   border-radius: 3px;
   padding: 10px 0;
+  position: ${ ({ isSent }) => isSent ? 'absolute' : 'relative'};
+  z-index: 3;
 
   @keyframes animate-in {
     0% {
@@ -64,6 +64,25 @@ const StyledNewLetter = styled.div`
     }
 
   }
+
+  @keyframes shrink {
+    0% {
+      transform: scale(1);
+      opacity: 1
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      transform: scale(1, 0);
+      opacity: 0;
+    }
+  }
+
+
+
 
 `
 
@@ -136,6 +155,10 @@ const StyledSendButton = styled.button`
   font-weight: 900;
   font-size: 0.8em;
   letter-spacing: 1px;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `
 
 const StyledInstructions = styled.p`
@@ -145,8 +168,110 @@ const StyledInstructions = styled.p`
   padding: 0px 20px;
 `
 
+const StyledMail = styled('div') <{ isSent: boolean }>`
+  display: ${ ({ isSent }) => isSent ? 'block' : 'none'} ;
+  width: 300px;
+  height: 200px;
+  background: #ff8789;
+  position: relative;
+  transform-style: preserve-3d;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  z-index: 4;
+  animation: ${ ({ isSent }) => isSent ? 'flyRight 2000ms ease forwards' : 'none'};
+
+
+  &:before{
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-left: 140px solid Transparent;
+  border-right: 150px solid #ff393c;
+  border-top: 100px solid Transparent;
+  border-bottom: 100px solid #ff393c;
+  z-index: 5;
+  border-bottom-right-radius: 10px;
+}
+
+  &:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-left: 150px solid #ff5355;
+  border-right: 140px solid Transparent;
+  border-top: 100px solid Transparent;
+  border-bottom: 100px solid #ff5355;
+  z-index: 4;
+  border-bottom-left-radius: 10px;
+  }
+
+
+  @keyframes flyRight {
+    0% {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+    }
+
+    70% {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateX(800px);
+      opacity: 0;
+    }
+  }
+
+`
+
+const StyledMailContent = styled.div`
+  height: 100px;
+  width: 200px;
+  white-space: pre-wrap;
+  padding: 20px;
+  font-size: 0.7em;
+  font-family: 'Merriweather', serif;
+  background: #FFF;
+  margin: 0 auto;
+  border-radius: 3px;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+`
+
+const StyledMailCover = styled.div`
+  &::before {
+    content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-left: 150px solid transparent;
+  border-right: 150px solid transparent;
+  border-top: 100px solid #ff8789;
+  border-bottom: 100px solid transparent;
+  z-index: 6;
+  transform-origin: top;
+  transition: all 200ms 1s ease;
+  transform: rotateX(180deg);
+  animation: closeFlap 300ms 700ms ease-out forwards;
+
+  @keyframes closeFlap {
+    0% {
+      transform: rotateX(180deg);
+    }
+
+    100% {
+    transform: rotateX(0deg);
+    }
+  }
+  }
+`
+
 
 const NewLetter = (props: Props) => {
+
+  const [isSent, setIsSent] = React.useState(false);
 
   function closeLetter() {
     props.setNewLetter({ ...props.newLetter, isNewLetter: false })
@@ -167,7 +292,7 @@ const NewLetter = (props: Props) => {
       return alert('Cannot get location. Unable to send letter')
     }
 
-    FirebaseAPI.addNewLetter({
+    await FirebaseAPI.addNewLetter({
       name: props.newLetter.name,
       message: props.newLetter.message,
       location: {
@@ -180,20 +305,38 @@ const NewLetter = (props: Props) => {
       }
     })
 
+    setIsSent(true)
+    setTimeout(() => {
+      closeLetter()
+    }, 2000);
   }
 
 
   return (
     <StyledNewLetterWrapper >
-      <StyledNewLetter>
-        <StyledHeader>
-          <StyledNameInput onChange={handleNameChange} placeholder="Your Name" type="text" />
-          <StyledCloseButton onClick={closeLetter}><i className="ri-delete-bin-2-line"></i></StyledCloseButton>
-        </StyledHeader>
-        <StyledTextArea onChange={handleMessageChange} placeholder="Enter Message...">
-        </StyledTextArea>
-        <StyledSendButton onClick={sendLetter}>Send Thank You</StyledSendButton>
-        <StyledInstructions>Your approximate location is retrieved using your public IP Address to tag where the message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
+
+      <StyledMail isSent={isSent}>
+        <StyledMailCover></StyledMailCover>
+        <StyledMailContent>{props.newLetter.message}</StyledMailContent>
+      </StyledMail>
+
+      <StyledNewLetter isSent={isSent}>
+        {
+          isSent ?
+            // <StyledMailContent>{props.newLetter.message}</StyledMailContent>
+            null
+            :
+            <>
+              <StyledHeader>
+                <StyledNameInput onChange={handleNameChange} placeholder="Your Name" type="text" />
+                <StyledCloseButton onClick={closeLetter}><i className="ri-delete-bin-2-line"></i></StyledCloseButton>
+              </StyledHeader>
+              <StyledTextArea onChange={handleMessageChange} placeholder="Enter Message...">
+              </StyledTextArea>
+              <StyledSendButton onClick={sendLetter}>Send Thank You</StyledSendButton>
+              <StyledInstructions>Your approximate location is retrieved using your public IP Address to tag where the message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
+            </>
+        }
       </StyledNewLetter>
     </StyledNewLetterWrapper>
   )

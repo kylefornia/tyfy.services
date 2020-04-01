@@ -8,7 +8,7 @@ const earthNightImg = require('../assets/earth-night.jpg');
 const earthVectortImg = require('../assets/earth-styled.jpg');
 
 interface Props {
-  letters: Letter[];
+  letters: Letter[] | firebase.firestore.DocumentData;
 }
 
 interface PointData {
@@ -60,7 +60,7 @@ const Globe = ({ letters = [] }: Props) => {
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
-    altitude: window.innerWidth > 480 ? 4 : 5 //if mobile, reduce globe size
+    altitude: window.innerWidth > 480 ? 4 : 6 //if mobile, reduce globe size
   })
 
   const globeEl = useRef<HTMLCanvasElement>(null) as any;
@@ -74,9 +74,12 @@ const Globe = ({ letters = [] }: Props) => {
         const tooltip = `
           <div 
             style="background: #FFF; 
-                  padding: 10px;
-                  color: #000;
+                  padding: 16px;
+                  color: #444;
                   font-family: 'Merriweather', serif;
+                  box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
+                  max-width: 400px;
+                  line-height: 1.7em;
                   border-radius: 3px">
                   <span style="
                     font-weight: 800;
@@ -98,7 +101,6 @@ const Globe = ({ letters = [] }: Props) => {
           // color: [['white', 'blue'][Math.round(Math.random() * 2)], ['white', 'blue'][Math.round(Math.random() * 2)]]
           color: ["blue", "green"],
           // color: '#fa8231'
-          // label: `${letter.name} &#8594; Receipient`,
           label: tooltip,
         }
       }) : []
@@ -109,7 +111,6 @@ const Globe = ({ letters = [] }: Props) => {
           lat: letter.location.lat,
           lng: letter.location.lon,
           size: 0.02,
-          // altitude: 0,
           // color: [['white', 'blue'][Math.round(Math.random() * 2)], ['white', 'blue'][Math.round(Math.random() * 3)]]
           color: '#26de81',
           radius: 1,
@@ -117,12 +118,9 @@ const Globe = ({ letters = [] }: Props) => {
           ...letter
         }
       }) : []
-
-    console.log(formattedPoints);
     setArcData(formattedArcs)
     setPointsData(formattedPoints)
-    // window.globeEl = globeEl
-    // (formattedLetters)
+
   }
 
   //init globe
@@ -137,7 +135,7 @@ const Globe = ({ letters = [] }: Props) => {
       setDimensions({
         height: window.innerHeight,
         width: window.innerWidth,
-        altitude: window.innerWidth > 480 ? 4 : 5 //if mobile, reduce globe size
+        altitude: window.innerWidth > 480 ? 4 : 6 //if mobile, reduce globe size
       })
     }
 
@@ -153,7 +151,7 @@ const Globe = ({ letters = [] }: Props) => {
 
   useEffect(() => {
     console.log('change');
-    formatPoints(letters)
+    formatPoints(letters as Letter[])
   }, [letters])
 
   function handleArcHover(arc: any) {
@@ -166,15 +164,10 @@ const Globe = ({ letters = [] }: Props) => {
 
     }
 
-    // globeEl.current.controls().dampingFactor = 1
   }
 
   function handleArcClick(arc: any) {
-    console.log('arc clicked');
-    console.log(arc);
-    // globeEl.current.controls().autoRotate = true;
-    // globeEl.current.controls().dampingFactor = 0.01;
-    // globeEl.current.controls().po = 0.01;
+    // TODO: Click function
 
 
   }
