@@ -1,11 +1,15 @@
 import React from 'react'
 import styled from 'styled-components';
+import IPLocationAPI from '../services/IPLocationAPI';
+import FirebaseAPI from '../services/FirebaseAPI';
+import { UserLocation } from '../services/IPLocationAPI'
 
-interface NewLetter {
+export interface Letter {
+  id?: string;
   isNewLetter?: boolean;
   name: string;
   message: string;
-  location: {};
+  location: UserLocation;
 }
 
 interface Props {
@@ -14,8 +18,8 @@ interface Props {
     name,
     message,
     location,
-  }: NewLetter) => {};
-  newLetter: NewLetter
+  }: Letter) => {};
+  newLetter: Letter
 }
 
 const StyledNewLetterWrapper = styled.div`
@@ -75,7 +79,8 @@ const StyledNameInput = styled.input`
   font-family: 'Merriweather', serif;
   border: 1px dashed #f0f0f0;
   font-size: 1em;
-
+  flex: 1;
+  max-width: 300px;
 `
 
 const StyledCloseButton = styled.button`
@@ -87,7 +92,7 @@ const StyledCloseButton = styled.button`
   font-size: 0.8em;
   font-weight: bold;
   text-transform: uppercase;
-  margin: 0;
+  margin: 0 0 0 10px;
   color: #fc5c65;
   padding: 10px;
   /* border-radius: 30px; */
@@ -137,7 +142,7 @@ const StyledInstructions = styled.p`
   color: #ccc;
   font-size: 0.7em;
   font-family: 'Open Sans', sans-serif;
-  padding: 0 10px;
+  padding: 0px 20px;
 `
 
 
@@ -151,25 +156,44 @@ const NewLetter = (props: Props) => {
     props.setNewLetter({ ...props.newLetter, name: e.target.value })
   }
 
-  function handleMessageChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleMessageChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     props.setNewLetter({ ...props.newLetter, message: e.target.value })
   }
 
+  async function sendLetter() {
+    let { lat, lon, city, country, countryCode, regionName }: UserLocation = await IPLocationAPI.getLocationFromIP();
 
+    if (!city) {
+      return alert('Cannot get location. Unable to send letter')
+    }
+
+    FirebaseAPI.addNewLetter({
+      name: props.newLetter.name,
+      message: props.newLetter.message,
+      location: {
+        lat: lat,
+        lon: lon,
+        city: city,
+        country: country,
+        countryCode: countryCode,
+        regionName: regionName
+      }
+    })
+
+  }
 
 
   return (
-    <StyledNewLetterWrapper>
+    <StyledNewLetterWrapper >
       <StyledNewLetter>
         <StyledHeader>
           <StyledNameInput onChange={handleNameChange} placeholder="Your Name" type="text" />
           <StyledCloseButton onClick={closeLetter}><i className="ri-delete-bin-2-line"></i></StyledCloseButton>
-
         </StyledHeader>
         <StyledTextArea onChange={handleMessageChange} placeholder="Enter Message...">
         </StyledTextArea>
-        <StyledSendButton>Send Thank You</StyledSendButton>
-        <StyledInstructions>Please allow the app permission to access your location to tag where the message is coming from.</StyledInstructions>
+        <StyledSendButton onClick={sendLetter}>Send Thank You</StyledSendButton>
+        <StyledInstructions>Your approximate location is retrieved using your public IP Address to tag where the message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
       </StyledNewLetter>
     </StyledNewLetterWrapper>
   )
