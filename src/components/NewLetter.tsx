@@ -26,6 +26,7 @@ const StyledNewLetterWrapper = styled.div`
   left: 0;
   right: 0;
   height: 100%;
+  overflow: hidden;
   z-index: 3;
   width: 100%;
   align-items: center;
@@ -38,7 +39,7 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   background: #FFF;
   /* height: ${ ({ isSent }) => isSent ? '180px' : 'calc(100% - 40px)'}; */
   /* width: ${ ({ isSent }) => isSent ? '280px' : 'calc(100% - 20px)'}; */
-  height: calc(100% - 40px);
+  height: calc(100% - 80px);
   width: calc(100% - 20px);
   max-width: 768px;
   max-height: 900px;
@@ -131,6 +132,8 @@ const StyledCloseButton = styled.button`
 
 const StyledTextArea = styled.textarea`
   flex: 1;
+  /* height: 600px; */
+  max-height: 600px;
   margin: 10px;
   border-radius: 3px;
   outline: 1px dotted #f0f0f0;

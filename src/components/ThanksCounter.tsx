@@ -30,6 +30,7 @@ const StyledThanksCounterText = styled.h3`
   font-weight: 800;
   line-height: 1em;
   margin: 0;
+  margin-bottom: 10px;
 `
 
 const ThanksCounter = (props: Props) => {

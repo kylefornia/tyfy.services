@@ -80,6 +80,7 @@ const Globe = ({ letters = [] }: Props) => {
                   box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
                   max-width: 400px;
                   line-height: 1.7em;
+                  z-index: 99;
                   border-radius: 3px">
                   <span style="
                     font-weight: 800;

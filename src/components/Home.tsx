@@ -18,7 +18,7 @@ const StyledBottomContainer = styled.div`
   height: auto;
   z-index: 2;
   text-align: center;
-  padding: 0px 0px 70px 0px;
+  padding: 0px 0px 80px 0px;
 `
 
 const Home = (props: Props) => {

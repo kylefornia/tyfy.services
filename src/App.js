@@ -9,6 +9,7 @@ import FirebaseAPI from './services/FirebaseAPI';
 import BottomNavbar from './components/BottomNavbar';
 import Home from './components/Home';
 import Feed from './components/Feed';
+import Account from './components/Account';
 
 
 function App() {
@@ -19,11 +20,12 @@ function App() {
     <div className="App">
       <Router>
         <Switch>
-          <Route path="/" render={() => <Home />} />
+          <Route path="/" exact render={() => <Home />} />
           <Route path="/feed" render={() => <Feed />} />
+          <Route path="/account" render={() => <Account />} />
         </Switch>
+        <BottomNavbar />
       </Router>
-      {/* <BottomNavbar /> */}
     </div>
   );
 }
