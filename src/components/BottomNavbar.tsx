@@ -27,6 +27,7 @@ const StyledBottomNavItem = styled.div`
   text-align: center;
   font-family: 'Open Sans', sans-serif;
   height: 36px;
+  flex: 1;
 
   a {
     text-decoration: none;

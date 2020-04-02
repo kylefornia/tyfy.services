@@ -10,22 +10,35 @@ import BottomNavbar from './components/BottomNavbar';
 import Home from './components/Home';
 import Feed from './components/Feed';
 import Account from './components/Account';
+import AuthContext, { useAuth, useSession } from './contexts/AuthContext'
 
 
 function App() {
 
   FirebaseAPI.init()
 
+  // const providerValue = React.useMemo(() => ({intializing, user}), [input])
+
+  const { initializing, user } = useAuth()
+
+  console.log(initializing)
+
+
   return (
     <div className="App">
-      <Router>
-        <Switch>
-          <Route path="/" exact render={() => <Home />} />
-          <Route path="/feed" render={() => <Feed />} />
-          <Route path="/account" render={() => <Account />} />
-        </Switch>
-        <BottomNavbar />
-      </Router>
+      <AuthContext.Provider value={{ initializing, user }} >
+        <Router>
+          <Switch>
+            <Route path="/" exact render={() => <Home />} />
+            <Route path="/feed" render={() => <Feed />} />
+            <Route path="/account" render={() => 
+                <Account />
+              } />
+          </Switch>
+          <BottomNavbar />
+        </Router>
+      </AuthContext.Provider>
+
     </div>
   );
 }

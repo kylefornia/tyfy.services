@@ -9422,10 +9422,6 @@ react-error-overlay@^6.0.7:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.7.tgz#1dcfb459ab671d53f660a991513cb2f0a0553108"
   integrity sha512-TAv1KJFh3RhqxNvhzxj6LeT5NWklP6rDr2a0jaTfsZ5wSZWHOGeqQyejUp3xxLfPt2UpyJEcVQB/zyPcmonNFA==
 
-"react-geocode@git://github.com/pouncyisdead/react-geocode.git#feature/24-add_typescript_definition":
-  version "0.2.2"
-  resolved "git://github.com/pouncyisdead/react-geocode.git#eea7b5997f28caadec9d271d8d125d645467bdfc"
-
 react-globe.gl@^2.7.6:
   version "2.7.6"
   resolved "https://registry.yarnpkg.com/react-globe.gl/-/react-globe.gl-2.7.6.tgz#7de3b13e317adb2c06c0e410c689acd39c044872"
