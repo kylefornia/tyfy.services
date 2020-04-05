@@ -20,7 +20,7 @@ interface Props {
 
 const StyledNewLetterWrapper = styled.div`
   display: flex;
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
@@ -31,17 +31,18 @@ const StyledNewLetterWrapper = styled.div`
   width: 100%;
   align-items: center;
   justify-content: center;
+  background: rgba(0,0,0,0.3);
 `
 const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   display: flex;
   flex-flow: column nowrap;
-  justify-content: center;
   background: #FFF;
   /* height: ${ ({ isSent }) => isSent ? '180px' : 'calc(100% - 40px)'}; */
   /* width: ${ ({ isSent }) => isSent ? '280px' : 'calc(100% - 20px)'}; */
-  height: calc(100% - 80px);
   width: calc(100% - 20px);
   max-width: 768px;
+  height: auto;
+  max-height: calc(100% - 80px);
   max-height: 900px;
   transition: all 300ms ease-out;
   animation: ${ ({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'animate-in 300ms ease-out'} ;
@@ -98,6 +99,7 @@ const StyledNameInput = styled.input`
   padding: 12px;
   font-family: 'Merriweather', serif;
   border: 1px dashed #f0f0f0;
+  border-radius: 3px;
   font-size: 1em;
   flex: 1;
   max-width: 300px;
@@ -131,18 +133,22 @@ const StyledCloseButton = styled.button`
 `
 
 const StyledTextArea = styled.textarea`
+  min-height: 300px;
   flex: 1;
-  /* height: 600px; */
   max-height: 600px;
   margin: 10px;
   border-radius: 3px;
-  outline: 1px dotted #f0f0f0;
+  outline: 0;
   border: 1px dashed #f0f0f0;
   padding: 12px;
   font-size: 1em;
   font-family: 'Merriweather', serif;
   line-height: 1.4;
   resize: none;
+
+  &:active {
+    outline: 0;
+  }
 `
 
 const StyledSendButton = styled.button`
@@ -165,10 +171,14 @@ const StyledSendButton = styled.button`
 `
 
 const StyledInstructions = styled.p`
+  display: flex;
+  flex: 0;
+  align-items: flex-end;
   color: #ccc;
   font-size: 0.7em;
   font-family: 'Open Sans', sans-serif;
-  padding: 0px 20px;
+  padding: 10px 20px;
+  line-height: 18px;
 `
 
 const StyledMail = styled('div') <{ isSent: boolean }>`
@@ -377,7 +387,7 @@ const NewLetter = (props: Props) => {
               <StyledTextArea onChange={handleMessageChange} placeholder="Enter Message...">
               </StyledTextArea>
               <StyledSendButton onClick={sendLetter}>{isSending ? 'Sending...' : 'Send Thank You'}</StyledSendButton>
-              <StyledInstructions>Your approximate location is retrieved using your public IP Address to tag where the message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
+              <StyledInstructions>Your location is used to tag where message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
             </>
         }
       </StyledNewLetter>

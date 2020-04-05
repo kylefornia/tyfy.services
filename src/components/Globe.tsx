@@ -2,10 +2,11 @@ import React from 'react'
 import ReactGlobe from 'react-globe.gl';
 import styled from 'styled-components'
 import { Letter } from './NewLetter';
+import * as firebase from 'firebase/app'
+import "firebase/storage"
 
-const earthImg = require('../assets/8081_earthmap10k.jpg');
-const earthNightImg = require('../assets/earth-night.jpg');
-const earthVectortImg = require('../assets/earth-styled.jpg');
+
+// const fbImageUrl = require('../assets/earth-styled-resized.jpg');
 
 interface Props {
   letters: Letter[] | firebase.firestore.DocumentData;
@@ -51,16 +52,32 @@ const StyledGlobeContainer = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+  /* padding-top: 5vh; */
 `
 
 const Globe = ({ letters = [] }: Props) => {
+
+  let fbImageUrl = "https://firebasestorage.googleapis.com/v0/b/tyfyservices.appspot.com/o/earth-styled-resized.jpg?alt=media"
+
+
+
+  // useEffect(() => {
+  //   async function getImageURL() {
+  //     return firebase.storage()
+  //       .refFromURL("gs://tyfyservices.appspot.com/earth-styled.jpg")
+  //       .fullPath
+  //   }
+
+  //   getImageURL()
+  // }
+
 
   const { useState, useEffect, useRef } = React;
 
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
-    altitude: window.innerWidth > 480 ? 4 : 6 //if mobile, reduce globe size
+    altitude: window.innerWidth > 480 ? 4 : 5 //if mobile, reduce globe size
   })
 
   const globeEl = useRef<HTMLCanvasElement>(null) as any;
@@ -79,15 +96,17 @@ const Globe = ({ letters = [] }: Props) => {
                   font-family: 'Merriweather', serif;
                   box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
                   max-width: 400px;
+                  min-width: 200px !important;
                   line-height: 1.7em;
                   z-index: 99;
                   border-radius: 3px">
                   <span style="
-                    font-weight: 800;
-                    text-align: center;
+                    font-weight: 900;
                     font-family: 'Open Sans', sans-serif;
                     color: #45aaf2;
-                  ">${letter.name} ➡ Receipient</span>
+                    margin-top: 0;
+                    margin-bottom: 15px;
+                  ">${letter.name}</span>
             <p>${letter.message}</p>
           </div>
         `
@@ -97,7 +116,7 @@ const Globe = ({ letters = [] }: Props) => {
           startLng: letter.location.lon,
           endLat: (Math.random() - 0.5) * 180,
           endLng: (Math.random() - 0.5) * 360,
-          stroke: 2.5,
+          stroke: 3,
           // altitude: 0,
           // color: [['white', 'blue'][Math.round(Math.random() * 2)], ['white', 'blue'][Math.round(Math.random() * 2)]]
           color: ["blue", "green"],
@@ -136,12 +155,12 @@ const Globe = ({ letters = [] }: Props) => {
       setDimensions({
         height: window.innerHeight,
         width: window.innerWidth,
-        altitude: window.innerWidth > 480 ? 4 : 6 //if mobile, reduce globe size
+        altitude: window.innerWidth > 480 ? 4 : 5 //if mobile, reduce globe size
       })
     }
 
     //set perspective
-    globeEl.current.pointOfView({ altitude: window.innerWidth > 480 ? 3 : 4 }, 300)
+    globeEl.current.pointOfView({ altitude: window.innerWidth > 480 ? 4 : 5 }, 300)
 
     window.addEventListener('resize', debouncedDimensions)
 
@@ -178,8 +197,9 @@ const Globe = ({ letters = [] }: Props) => {
       <ReactGlobe
         //@ts-ignore
         ref={globeEl}
+        altitude={dimensions.altitude}
         animateIn={false}
-        globeImageUrl={earthVectortImg}
+        globeImageUrl={fbImageUrl}
         backgroundColor={'#7ec9f7'}
         showGraticules={false}
         height={dimensions.height}
@@ -190,13 +210,14 @@ const Globe = ({ letters = [] }: Props) => {
         arcColor="color"
         arcLabel="label"
         // arcDashLength={() => 0.8}
-        arcDashGap={() => 0.1}
+        arcDashGap={0.1}
         arcDashAnimateTime={1000}
         pointsData={pointsData}
         pointAltitude={'size'}
         pointRadius={'radius'}
         pointColor={'color'}
         pointLabel={'name'}
+        pointResolution={6}
         onArcClick={(arc) => handleArcClick(arc)}
         onArcHover={(arc) => handleArcHover(arc)}
         showAtmosphere={false}

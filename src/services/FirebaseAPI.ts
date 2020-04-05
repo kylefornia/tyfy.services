@@ -5,22 +5,20 @@ import "firebase/firestore";
 import { Letter } from '../components/NewLetter';
 
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBIgU2xef7EtjnvEgGeip-LLUtz07IMfq0",
+  authDomain: "tyfyservices.firebaseapp.com",
+  databaseURL: "https://tyfyservices.firebaseio.com",
+  projectId: "tyfyservices",
+  storageBucket: "tyfyservices.appspot.com",
+  messagingSenderId: "264448586516",
+  appId: "1:264448586516:web:d3743e3d1b6c369af9c801",
+  measurementId: "G-5ZNVFGTXGK"
+};
+
 class FirebaseAPI {
 
   public static init() {
-
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBIgU2xef7EtjnvEgGeip-LLUtz07IMfq0",
-      authDomain: "tyfyservices.firebaseapp.com",
-      databaseURL: "https://tyfyservices.firebaseio.com",
-      projectId: "tyfyservices",
-      storageBucket: "tyfyservices.appspot.com",
-      messagingSenderId: "264448586516",
-      appId: "1:264448586516:web:d3743e3d1b6c369af9c801",
-      measurementId: "G-5ZNVFGTXGK"
-    };
-
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig)
     }

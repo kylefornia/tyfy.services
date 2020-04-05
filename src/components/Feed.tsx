@@ -3,6 +3,7 @@ import FirebaseAPI from '../services/FirebaseAPI'
 import styled from 'styled-components';
 import NewLetter, { Letter } from './NewLetter';
 import NewLetterButton from './NewLetterButton';
+import SectionHeader from './SectionHeader';
 
 interface Props {
 
@@ -16,7 +17,7 @@ const StyledFeedItem = styled.div`
   margin: 0 auto;
   margin-bottom: 10px;
   /* width: 90%; */
-  max-width: 600px;
+  max-width: 468px;
   display: block;
   box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
   will-change: transform;
@@ -49,6 +50,7 @@ const StyledFeedContainer = styled.div`
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   position: relative;
+  padding-bottom: 80px;
 
 `
 
@@ -73,7 +75,6 @@ const StyledFeedWrapper = styled.div`
   /* margin-bottom: 80px; */
   /* overflow: hidden; */
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 80px;
   position: relative;
 `
 
@@ -82,17 +83,6 @@ const StyledNewLetter = styled.div`
  margin-bottom: 40px;
  text-align: center;
 `
-
-const StyledHeader = styled.h1`
-  color: #FFF;
-  text-align:center;
-  font-size: 2em;
-  font-weight: 900;
-  margin-bottom: 20px;
-  width: 100%;
-  padding: 20px 0;
-`
-
 const Feed = (props: Props) => {
 
   const [feedData, setFeedData] = React.useState<[]>([])
@@ -124,7 +114,7 @@ const Feed = (props: Props) => {
     <>
       <StyledFeedWrapper>
         <StyledFeedContainer>
-          <StyledHeader>Live Feed</StyledHeader>
+          <SectionHeader title="Live Feed" />
           <StyledNewLetter>
             <NewLetterButton
               onClick={() => setNewLetter({ ...newLetter, isNewLetter: true })}

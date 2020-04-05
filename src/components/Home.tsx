@@ -5,7 +5,7 @@ import NewLetterButton from './NewLetterButton';
 import FirebaseAPI from '../services/FirebaseAPI';
 import styled from 'styled-components';
 import NewLetter, { Letter } from './NewLetter';
-
+import HomeHeader from './HomeHeader';
 
 interface Props {
 
@@ -20,6 +20,71 @@ const StyledBottomContainer = styled.div`
   text-align: center;
   padding: 0px 0px 80px 0px;
 `
+
+const StyledLoadingContainer = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.8);
+  flex-flow: column nowrap;
+  position: absolute;
+  height: calc(100% - 60px);
+  width: 100%;
+  top: 0;
+  left: 0;
+  right:0;
+  bottom: 0;
+  overflow: hidden;
+
+
+  i {
+    float: none;
+    display: block;
+    font-size: 4em;
+    margin-bottom: 10px;
+  }
+
+`
+
+const StyledHomeContainer = styled.div`
+  display: flex;
+  flex: 1;
+  height: 100vh;
+  flex-flow: column nowrap;
+`
+const StyledTopContainer = styled.div`
+  z-index: 2;
+  width: 100%;
+  margin-top: 2vh;
+  text-align: center;
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+  font-size: 14px;
+
+  p {
+    padding: 10px 40px 0px 40px;
+    line-height: 18px;
+    color: rgba(255,255,255,0.8);
+
+    b {
+      font-weight: bold;
+      color: rgba(255,255,255, 0.9);
+    }
+
+  }
+
+  h2 {
+    color: #FFF;
+    font-family: 'Merriweather', 'Times New Roman', Times, serif;
+    margin-top: 20px;
+    margin-bottom: 24px;
+    font-size: 1.6em;
+    font-weight: 800;
+    line-height: 1.25em;
+  }
+
+`
+
 
 const Home = (props: Props) => {
 
@@ -38,19 +103,21 @@ const Home = (props: Props) => {
   })
 
   const [letters, setLetters] = React.useState({
-    letters: [] as firebase.firestore.DocumentData
+    letters: [] as firebase.firestore.DocumentData,
+    isLettersLoading: true,
   })
 
   const [letterCount, setLetterCount] = React.useState<firebase.firestore.DocumentData | number | null | undefined>(null)
 
+  let unsubscribeLetters: () => any = () => undefined, unsubscribeLetterCount: () => any = () => undefined
+
   React.useEffect(() => {
 
-    let unsubscribeLetters: () => any, unsubscribeLetterCount: () => any
 
     async function getData() {
       unsubscribeLetters = await FirebaseAPI.getAllLetters().onSnapshot((snap) => {
         const lettersSnap = snap.docs.map((letter) => letter.data())
-        setLetters({ letters: lettersSnap as Letter[] })
+        setLetters({ letters: lettersSnap as Letter[], isLettersLoading: false })
       })
 
       unsubscribeLetterCount = await FirebaseAPI.getLetterCount().onSnapshot((snap) => {
@@ -67,13 +134,23 @@ const Home = (props: Props) => {
 
 
   return (
-    <div>
-      <ThanksCounter count={letterCount || 0} />
-      <Globe letters={letters.letters} />
+    <StyledHomeContainer>
+      <HomeHeader onClick={() => setNewLetter({ ...newLetter, isNewLetter: true })} />
+      {
+        letters.isLettersLoading ?
+
+          <StyledLoadingContainer>
+            <i className="ri-earth-fill"></i>
+            Loading World...
+          </StyledLoadingContainer>
+          :
+          <>
+            <Globe letters={letters.letters} />
+          </>
+      }
+
       <StyledBottomContainer>
-        <NewLetterButton
-          onClick={() => setNewLetter({ ...newLetter, isNewLetter: true })}
-        />
+
       </StyledBottomContainer>
       {
         newLetter.isNewLetter ?
@@ -83,7 +160,7 @@ const Home = (props: Props) => {
           />
           : null
       }
-    </div>
+    </StyledHomeContainer >
   )
 }
 
