@@ -3,7 +3,12 @@ import * as firebase from 'firebase/app'
 import "firebase/auth"
 
 interface Props {
-    
+
+}
+
+export interface UserState {
+    user?: firebase.User | undefined | null;
+    isLoading?: boolean;
 }
 
 const userContext = React.createContext({
@@ -16,19 +21,21 @@ export const useSession = () => {
 }
 
 export const useAuth = () => {
+
     const [userState, setUserState] = React.useState(() => {
-        const user = firebase.auth().currentUser 
-        return { initializing: !user, user }
+        const user = firebase.auth().currentUser
+        return <UserState>({ isLoading: !user, user: user })
     })
 
-    function onChange(user){
-        setUserState({ initializing: false, user })
+    function onChange(user: firebase.User) {
+        setUserState({ isLoading: false, user: user })
+        window.localStorage.setItem('user', JSON.stringify(user))
+
     }
 
     React.useEffect(() => {
         //listen for auth changes
         const unsubscribe = firebase.auth().onAuthStateChanged(onChange)
-        
         // unsubscribe to the listener when unmounting
         return () => unsubscribe()
     }, [])
