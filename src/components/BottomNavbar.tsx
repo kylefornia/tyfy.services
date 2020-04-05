@@ -26,8 +26,8 @@ const StyledBottomNavItem = styled.div`
   color: #888;
   text-align: center;
   font-family: 'Open Sans', sans-serif;
-  height: 36px;
   flex: 1;
+  align-items: center;
 
   a {
     text-decoration: none;
@@ -42,6 +42,7 @@ const StyledBottomNavItem = styled.div`
 
   i {
     font-size: 1.2em;
+    line-height: 1.4em;
   }
 
   span {
