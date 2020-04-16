@@ -1,10 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
-import AuthContext, { useAuth, useSession, UserState } from '../contexts/AuthContext'
+import AuthContext, { useAuth, useSession, UserState, UserProfile } from '../contexts/AuthContext'
 import SignIn from './SignIn'
 import SectionHeader from './SectionHeader'
 import * as firebase from 'firebase/app'
 import Loaders from './Loaders'
+import AccountTypeSelector from './AccountTypeSelector'
+import AccountTypes from './AccountTypes'
+import { Letter, LetterMetadata } from './NewLetter'
+import AccountLocation from './AccountLocation'
+import moment from 'moment'
 
 interface Props {
 
@@ -13,20 +18,19 @@ interface Props {
 interface AccountPageProps {
   user?: firebase.auth.UserCredential | any | undefined;
   isLoading?: boolean;
+  userProfile?: UserProfile;
 }
 
 const StyledAccountContainer = styled.div`
-  /* margin-top: 20px; */
-  /* padding-bottom: 60px; */
-  /* min-height: 100vh; */
   font-family: 'Open Sans', sans-serif;
   height: calc(100% - 60px);
   flex: 1;
   font-size: 18px;
   position: relative;
-  /* overflow: hidden; */
+  overflow-y: auto;
   display: flex;
   flex-flow: column nowrap;
+
 `
 
 const StyledButton = styled.button`
@@ -72,7 +76,7 @@ const StyledButton = styled.button`
   }
 `
 
-const StyledProfileContainer = styled.div`
+const StyledProfileContainer = styled('div') <{ color: string; }>`
   display: flex;
   background: #FFF;
   margin: 10px auto;
@@ -84,19 +88,42 @@ const StyledProfileContainer = styled.div`
   flex-flow: column nowrap;
 
 
-
   .profile {
     display: flex;
-    border-bottom: 1px solid #f0f0f0;
+    /* border-bottom: 1px solid #f0f0f0; */
   }
 
-  img {
-    margin: 10px 15px 10px 15px;
-    height: auto;
-    width: 64px !important;
-    border-radius: 100%;
-    object-fit: cover;
+  .profile-image-container {
+    position: relative;
+
+    img {
+      margin: 10px 15px 10px 15px;
+      height: 54px;
+      width: 54px;
+      display: inline-block;
+      border-radius: 100%;
+      object-fit: cover;
+      background: #d5d5d5;
+    }
+    
+    i {
+      position: absolute;
+      height: 24px;
+      width: 24px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      top: 10px;
+      right: 10px;
+      border-radius: 100%;
+      background-color: ${({ color }) => color};
+      /* border: 1px solid #FFF; */
+    }
   }
+
+  
 
   .profile-details {
     flex: 1;
@@ -104,7 +131,7 @@ const StyledProfileContainer = styled.div`
     font-size: 14px;
     font-weight: 400;
     color: #aaa;
-    line-height: 20px;
+    /* line-height: 22px; */
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
@@ -114,7 +141,23 @@ const StyledProfileContainer = styled.div`
     .name {
       font-weight: bold;
       color: #444;
+      font-size: 16px;
+      font-family: 'Merriweather', 'Times New Roman', Times, serif;
+      line-height: 22px;
+    }
 
+    .account-type {
+      color: #45aaf2;
+      color: ${({ color }) => color};
+      font-weight: 600;
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      line-height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;    
+      
     }
   }
 
@@ -138,12 +181,20 @@ const StyledLettersContainer = styled.div`
   margin: 0 auto;
   width: 100%;
   height: 100%;
+
+  .letters-header {
+    text-align: center;
+    padding: 20px;
+    font-family: 'Merriweather', 'Times New Roman', Times, serif;
+    color: #666;
+    font-weight: 900;
+  }
 `
 
 const StyledSelectorContainer = styled.div`
   display: flex;
   position: relative;
-  
+  overflow-x: auto;
 
 
   .label {
@@ -190,67 +241,231 @@ const StyledSelectorContainer = styled.div`
   }
 `
 
-const AccountPage = ({ user = {}, isLoading }: AccountPageProps) => {
+const StyledNoLetters = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-flow: column nowrap;
+
+  i {
+    display: block;
+    float: none;
+    font-size: 42px;
+    padding: 20px;
+    border-radius: 100%;
+    background: #f8f8f8;
+    color: #888;
+  }
+
+  span {
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #888;
+
+  }
+`;
+
+const NoLetters = () => (
+  <StyledNoLetters>
+    <i className="ri-file-text-line"></i>
+    <span>You will see your letters here</span>
+  </StyledNoLetters>
+)
+
+const StyledGetLocation = styled.div`
+  
+`;
+
+
+const AccountPage = ({
+  user = {},
+  isLoading = true,
+  userProfile }: AccountPageProps) => {
+
+  const [accountPageState, setAccountPageState] =
+    React.useState<{
+      user: firebase.auth.UserCredential;
+      isLoading: boolean;
+      userProfile?: UserProfile;
+      userProfileLoading: boolean;
+      userLetters: LetterMetadata[] | [];
+      currentStep: number;
+      userLocation: any;
+    }>({
+      user: user,
+      isLoading: isLoading,
+      userProfile: userProfile,
+      userProfileLoading: true,
+      userLetters: [],
+      currentStep: 1,
+      userLocation: null,
+    })
+
+  const [userProfileState, setUserProfileState] = React.useState<UserProfile>(userProfile)
+
+
+  async function getUserProfile() {
+    return firebase.firestore()
+      .collection('users')
+      .doc(user.uid)
+      .onSnapshot((snap) => {
+        const profile = snap.data() as UserProfile;
+        setUserProfileState({ ...userProfileState, ...profile })
+        setAccountPageState({ ...accountPageState, userProfileLoading: false })
+      })
+  }
+
+  async function getUserLetters() {
+    return firebase.firestore()
+      .collection('userLetters')
+      .doc(user.uid)
+      .collection('letters')
+      .onSnapshot((snap) => {
+        const userLettersDoc = snap.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+
+        if (!!userLettersDoc) {
+          setAccountPageState({
+            ...accountPageState,
+            userLetters: userLettersDoc as LetterMetadata[],
+            isLoading: false, userProfileLoading: false
+          })
+        } else {
+          setAccountPageState({ ...accountPageState, userLetters: [] })
+        }
+
+      })
+  }
 
   function signOut() {
     firebase.auth().signOut()
   }
 
+  function nextStep() {
+    setAccountPageState({ ...accountPageState, currentStep: accountPageState.currentStep += 1 })
+  }
 
-  return (<StyledAccountContainer>
+  React.useEffect(() => {
+
+    let unsubProfile, unsubLetters
+
+    async function fetch() {
+
+      unsubProfile = await getUserProfile()
+      unsubLetters = await getUserLetters()
+
+    }
+
+    fetch()
+
+    return () => { unsubProfile(); unsubLetters(); }
+
+  }, [user])
+
+  const profileComplete = (!!userProfileState &&
+    !!userProfileState.accountType && !!userProfileState.location) || accountPageState.currentStep == 3
+
+  const accountTypeClassName = profileComplete ? userProfileState.accountType : ''
+
+  const profileAccountType = profileComplete && !isLoading ? AccountTypes.filter(({ type }) => type === userProfileState.accountType)[0] : undefined;
+
+
+  return (<>
     <SectionHeader title="Account"></SectionHeader>
 
-    <StyledProfileContainer>
+    <StyledProfileContainer color={profileAccountType && profileAccountType.color}>
       <div className="profile">
-        <img src={user.photoURL} />
+        <div className="profile-image-container">
+          <img src={user.photoURL} />
+          {profileComplete && <i className={profileAccountType.iconClassName} />}
+        </div>
         <div className="profile-details">
           <strong className="name">{user.displayName}</strong>
-          <p className="email">{user.email}</p>
+          {/* <p className="email">{user.email}</p> */}
+          {profileComplete ?
+            <span className="account-type">{userProfileState.accountType || ''}</span>
+            : <span className="account-type">&nbsp;</span>}
         </div>
       </div>
-      <StyledSelectorContainer>
-        {/* <div className="label">I am a&hellip;</div> */}
-        <ul>
-          <li className="active">
-            Frontliner</li>
-          <li>Health Worker</li>
-          <li>Law Enforcement</li>
-          <li>Donor</li>
-        </ul>
-      </StyledSelectorContainer>
     </StyledProfileContainer>
     <StyledContentContainer>
+      {
+        accountPageState.userProfileLoading ?
+          <Loaders.AccountLoader />
+          :
+          !profileComplete ?
+            [(
+              accountPageState.currentStep == 1 && <AccountTypeSelector
+                accountTypes={AccountTypes} user={user}
+                nextStep={nextStep} />)
+              , (
+              accountPageState.currentStep == 2 && <AccountLocation user={user} nextStep={nextStep} />
+            )]
+            :
+            (<StyledLettersContainer>
+              <div className="letters-header">
+                <h5>Your Letters</h5>
+              </div>
+              {
+                accountPageState.userLetters.length > 0 ?
+                  (accountPageState.userLetters || []).map((letter: LetterMetadata) => (
+                    <StyledUserLetter key={letter.id}>
+                      <div className="header">
+                        <span className="name">{letter.name}</span>
+                        <span className="date">{moment(letter.date.toDate()).fromNow()}</span>
+                      </div>
+                      <p className="message">{letter.message.length >= 40 ? (`${letter.message}\u2026`) : letter.message}</p>
+                    </StyledUserLetter>
 
+                  ))
+                  :
+                  <NoLetters />
+              }
+            </StyledLettersContainer>)
+      }
 
-
-      <StyledLettersContainer>
-
-      </StyledLettersContainer>
     </StyledContentContainer>
     <StyledButton onClick={signOut}>Sign Out</StyledButton>
-  </StyledAccountContainer>)
+  </>)
 }
 
 const Account = (props: Props) => {
+
 
   return (
     <StyledAccountContainer>
       <AuthContext.Consumer>
         {
-          ({ user = undefined, isLoading = true }: UserState) => (
+          ({
+            user = undefined,
+            isLoading = true,
+            userProfile = {
+              email: '',
+              uid: '',
+              accountType: '',
+              photoURL: '',
+              name: ''
+            } as UserProfile
+          }: UserState) => (
 
-            isLoading ?
+              isLoading ?
 
-              <Loaders.AccountLoader />
+                <Loaders.AccountLoader />
 
-              :
-
-              (!user ?
-                <SignIn />
                 :
-                <AccountPage user={user} isLoading={isLoading} />
-              )
-          )
+
+                (!user ?
+                  <SignIn />
+                  :
+                  <AccountPage
+                    user={user}
+                    isLoading={isLoading}
+                    userProfile={userProfile}
+                  />
+                )
+            )
         }
       </AuthContext.Consumer>
     </StyledAccountContainer>
@@ -258,3 +473,39 @@ const Account = (props: Props) => {
 }
 
 export default Account
+
+const StyledUserLetter = styled.div`
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .name {
+    font-family: 'Merriweather', 'Times New Roman', Times, serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #444;
+  }
+
+  .date {
+    font-size: 14px;
+    color: #777;
+    margin-left: 20px;
+  }
+
+  .message {
+    font-size: 14px;
+    color: #777;
+    /* width: 100%; */
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    line-height: 18px;
+  }
+
+`;
