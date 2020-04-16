@@ -1,18 +1,33 @@
 import React from 'react'
 import * as firebase from 'firebase/app'
 import "firebase/auth"
+import { UserLocation } from '../services/IPLocationAPI'
 
 interface Props {
 
 }
 
+export interface UserProfile {
+    email: string;
+    name: string;
+    photoURL: string;
+    accountType?: string;
+    uid: string;
+    location?: UserLocation
+}
+
 export interface UserState {
     user?: firebase.User | undefined | null;
     isLoading?: boolean;
+    userProfile?: UserProfile | any;
 }
+
+
 
 const userContext = React.createContext({
     user: undefined,
+    userProfile: {},
+    isLoading: true,
 })
 
 export const useSession = () => {
@@ -24,11 +39,12 @@ export const useAuth = () => {
 
     const [userState, setUserState] = React.useState(() => {
         const user = firebase.auth().currentUser
-        return <UserState>({ isLoading: !user, user: user })
+        return <UserState>({ isLoading: !user, user: user, userProfile: {} })
     })
 
-    function onChange(user: firebase.User) {
+    async function onChange(user: firebase.User) {
         setUserState({ isLoading: false, user: user })
+
         window.localStorage.setItem('user', JSON.stringify(user))
 
     }

@@ -135,10 +135,10 @@ const SignIn = (props: Props) => {
 
   async function storeUserAccount(loggedInUser: firebase.auth.UserCredential) {
 
-    firebase.firestore().collection('users').where("uid", "==", loggedInUser.user.uid).limit(1)
+    firebase.firestore().collection('users').doc(loggedInUser.user.uid)
       .get().then((snapshot) => {
-        if (snapshot.empty) {
-          firebase.firestore().collection('users').add({
+        if (!snapshot.exists) {
+          firebase.firestore().collection('users').doc(loggedInUser.user.uid).set({
             email: loggedInUser.user?.email,
             name: loggedInUser.user?.displayName,
             photoURL: loggedInUser.user?.photoURL,
@@ -146,7 +146,7 @@ const SignIn = (props: Props) => {
             // accessToken: loggedInUser.credential?.accessToken,
           })
         } else {
-          alert("User " + loggedInUser.user?.uid + " is in the database")
+          // alert("User " + loggedInUser.user?.uid + " is in the database")
         }
 
       })
