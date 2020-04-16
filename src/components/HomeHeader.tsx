@@ -42,7 +42,7 @@ const HomeHeader = (props: Props) => {
   return (
     <StyledTopContainer>
       <p>To all <b>Frontliners</b>, <b>Health Workers</b>, <b>Law Enforcement</b>, <b>Donors</b>, and others &hellip;</p>
-      <h2>Thank You For Your Services</h2>
+      <h2>Thank You For Your Service</h2>
       <NewLetterButton
         onClick={props.onClick}
       />
