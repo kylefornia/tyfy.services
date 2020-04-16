@@ -120,4 +120,10 @@ export const AccountLoader = () => (
   </StyledAccountContainer>
 )
 
+export const MoreLoader = () => (
+  <StyledAccountContainer>
+    <i className="ri-loader-fill spin"></i>
+  </StyledAccountContainer>
+)
+
 export default { Loaders, HomeLoader, FeedLoader, AccountLoader }
