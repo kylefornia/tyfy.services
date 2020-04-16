@@ -6,6 +6,9 @@ import FirebaseAPI from '../services/FirebaseAPI';
 import styled from 'styled-components';
 import NewLetter, { Letter } from './NewLetter';
 import HomeHeader from './HomeHeader';
+// import CheerButton from './CheerButton';
+
+const CheerButton = React.lazy(() => import('./CheerButton'))
 
 interface Props {
 
@@ -19,6 +22,7 @@ const StyledBottomContainer = styled.div`
   z-index: 2;
   text-align: center;
   padding: 0px 0px 80px 0px;
+
 `
 
 const StyledLoadingContainer = styled.div`
@@ -50,8 +54,10 @@ const StyledLoadingContainer = styled.div`
 const StyledHomeContainer = styled.div`
   display: flex;
   flex: 1;
-  height: 100vh;
+  height: 100%;
   flex-flow: column nowrap;
+  overflow: hidden;
+  position: relative;
 `
 const StyledTopContainer = styled.div`
   z-index: 2;
@@ -61,14 +67,15 @@ const StyledTopContainer = styled.div`
   font-family: 'Open Sans', Arial, Helvetica, sans-serif;
   font-size: 14px;
 
+
   p {
     padding: 10px 40px 0px 40px;
     line-height: 18px;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.9);
 
     b {
       font-weight: bold;
-      color: rgba(255,255,255, 0.9);
+      color: rgba(255,255,255, 1);
     }
 
   }
@@ -150,7 +157,7 @@ const Home = (props: Props) => {
       }
 
       <StyledBottomContainer>
-
+        <CheerButton />
       </StyledBottomContainer>
       {
         newLetter.isNewLetter ?
