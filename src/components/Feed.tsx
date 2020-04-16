@@ -16,7 +16,7 @@ const StyledFeedItem = styled.div`
   border-radius: 3px;
   margin: 0 auto;
   margin-bottom: 10px;
-  /* width: 90%; */
+  width: calc(100% - 60px);
   max-width: 468px;
   display: block;
   box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
@@ -45,7 +45,7 @@ const FeedItem = ({ name = '', message = '' }: Letter) => (
 )
 
 const StyledFeedContainer = styled.div`
-  padding: 20px;
+  /* padding: 20px; */
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;

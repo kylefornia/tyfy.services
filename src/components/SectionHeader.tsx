@@ -10,16 +10,20 @@ const StyledSectionHeader = styled.div`
   text-align:center;
   font-size: 2em;
   font-weight: 900;
-  margin-top: 1.2em;
-  margin-bottom: 1em;
+  /* margin-top: 20px; */
+  /* margin-bottom: 15px; */
   width: 100%;
-  padding: 20px 0;
+  padding: 30px 0 30px 0;
   display: block;
+  flex: 0 1 auto;
+  max-height: 350px;
+  /* font-family: 'Merriweather', 'Times New Roman', Times, serif; */
 
   @media only screen and (max-height: 600px){
     margin-top: 0.6em;
     padding: 0px;
     margin-bottom: 0.6em;
+    font-size: 24px;
   }
 `
 
