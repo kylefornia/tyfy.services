@@ -69,6 +69,7 @@ const BottomNavbar = (props: Props) => {
       <BottomNavbarItem to="/" exact iconClassName="ri-earth-line" text="World" />
       <BottomNavbarItem to="/feed" iconClassName="ri-rss-line" text="Feed" />
       <BottomNavbarItem to="/account" iconClassName="ri-user-line" text="Account" />
+      <BottomNavbarItem to="/more" iconClassName="ri-menu-line" text="More" />
     </StyledBottomNavContainer>
   )
 }
