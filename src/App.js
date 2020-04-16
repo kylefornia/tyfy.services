@@ -15,15 +15,16 @@ import Loaders from './components/Loaders';
 const Home = React.lazy(() => import('./components/Home'));
 const Feed = React.lazy(() => import('./components/Feed'));
 const Account = React.lazy(() => import('./components/Account'));
+const More = React.lazy(() => import('./components/More'));
 
 FirebaseAPI.init()
 
 function App() {
 
 
-  const { isLoading, user } = useAuth()
+  const { isLoading, user, userProfile } = useAuth()
 
-  const authProviderValue = useMemo(() => ({ isLoading, user }), [isLoading, user])
+  const authProviderValue = useMemo(() => ({ isLoading, user, userProfile }), [isLoading, user, userProfile])
 
   return (
     <div className="App">
@@ -43,6 +44,11 @@ function App() {
             <Route path="/account" render={() =>
               <Suspense fallback={<Loaders.AccountLoader />}>
                 <Account />
+              </Suspense>
+            } />
+            <Route path="/more" render={() =>
+              <Suspense fallback={<Loaders.AccountLoader />}>
+                <More />
               </Suspense>
             } />
           </Switch>
