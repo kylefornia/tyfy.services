@@ -1700,6 +1700,11 @@
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
 
+"@types/howler@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@types/howler/-/howler-2.1.2.tgz#318a9cac65eeb8ed7d453dd70c9367067d35137b"
+  integrity sha512-gK7snhJcWVvTdiE6cCBAjeZ9od9Q8LmB5lEyB/3n6jMJOLn7EQ8Zvmkz8XPhnN5xB+b7QzCiqxJY3YiHrM3Jpg==
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.1.tgz#42995b446db9a48a11a07ec083499a860e9138ff"
@@ -4141,6 +4146,11 @@ dom-accessibility-api@^0.3.0:
   resolved "https://registry.yarnpkg.com/dom-accessibility-api/-/dom-accessibility-api-0.3.0.tgz#511e5993dd673b97c87ea47dba0e3892f7e0c983"
   integrity sha512-PzwHEmsRP3IGY4gv/Ug+rMeaTIyTJvadCb+ujYXYeIylbHJezIyNToe8KfEgHTCEYyC+/bUghYOGg8yMGlZ6vA==
 
+dom-confetti@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/dom-confetti/-/dom-confetti-0.1.1.tgz#f53c355301286430e9f500567adac5041c827468"
+  integrity sha512-cyTs35FOqOlm+9rC8C5p0BFo0aHR2t6VWHdXmvgUEFHsF/P7tZeS5nw71oX6NifJrlxOmZ6VcmCH/hn99mqaAA==
+
 dom-converter@^0.2:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/dom-converter/-/dom-converter-0.2.0.tgz#6721a9daee2e293682955b6afe416771627bb768"
@@ -5344,17 +5354,17 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-globe.gl@^2.8.6:
-  version "2.8.6"
-  resolved "https://registry.yarnpkg.com/globe.gl/-/globe.gl-2.8.6.tgz#632d5da893388d25e7d54460e55db1e441cd3ce2"
-  integrity sha512-PY4utJ83+dvApdTLp7YOmeM07QUWZemu6RZOeiWsyGLgdoyhx1KdXVKoCq/oxIqF9jMfVNoI5KSIwHWNgMEWNw==
+globe.gl@^2.9.3:
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/globe.gl/-/globe.gl-2.9.3.tgz#36bc9bd235ae86f75d0d85c7e2a16b0a3a29651c"
+  integrity sha512-FgIjRFXzVIRjtzrmvaBYCQwZR3H/hwjVZCt2WfHelX+povKMYxNDQAFtJRLtm6nV1RevOKrOu0nuU9tyF+UhNA==
   dependencies:
     "@tweenjs/tween.js" "^18.5.0"
     accessor-fn "^1.3.0"
     kapsule "^1.13.3"
     three "^0.115.0"
-    three-globe "^2.6.9"
-    three-render-objects "^1.13.0"
+    three-globe "^2.7.0"
+    three-render-objects "^1.13.3"
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
   version "4.2.3"
@@ -5542,6 +5552,11 @@ hosted-git-info@^2.1.4:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.8.tgz#7539bd4bc1e0e0a895815a2e0262420b12858488"
   integrity sha512-f/wzC2QaWBs7t9IYqB4T3sR1xviIViXJRJTWBlx2Gf3g0Xi5vI7Yy4koXQ1c9OYDGHN9sBy1DQ2AB8fqZBWhUg==
+
+howler@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/howler/-/howler-2.1.3.tgz#07c88618f8767e879407a4d647fe2d6d5f15f121"
+  integrity sha512-PSGbOi1EYgw80C5UQbxtJM7TmzD+giJunIMBYyH3RVzHZx2fZLYBoes0SpVVHi/SFa1GoNtgXj/j6I7NOKYBxQ==
 
 hpack.js@^2.1.6:
   version "2.1.6"
@@ -6324,7 +6339,7 @@ istanbul-reports@^2.2.6:
   dependencies:
     html-escaper "^2.0.0"
 
-jerrypick@^1.0.2:
+jerrypick@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/jerrypick/-/jerrypick-1.0.3.tgz#9310d601af6940ce2b3c5b83b97016337043b359"
   integrity sha512-WAKRydAghCIeJTIcuYNPNWZE+pfGjL0vc48qzGj4dFIXzBkjHyyOoNCf959O3K5jhkI7IhpRnAYhA3N2xbX5uQ==
@@ -7504,6 +7519,11 @@ mkdirp@^0.5.1, mkdirp@^0.5.3, mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.5"
 
+moment@^2.24.0:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
+
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -8402,7 +8422,7 @@ pnp-webpack-plugin@1.6.4:
   dependencies:
     ts-pnp "^1.1.6"
 
-polished@^3.4.4:
+polished@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/polished/-/polished-3.5.1.tgz#657b6faf4c2308f3e0b1951196803a5e5d67b122"
   integrity sha512-GVbvskpBiDV5TknurGL6OyFfLHsCknxbU8w5iMppT8rW0tLEoQHrIRfrPNPqGXNj3HGhkjRvhmg59Fy7HSnCAw==
@@ -9377,6 +9397,11 @@ react-app-polyfill@^1.0.6:
     regenerator-runtime "^0.13.3"
     whatwg-fetch "^3.0.0"
 
+react-country-flag@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-country-flag/-/react-country-flag-2.0.1.tgz#1028e71cd456b9685adc0447e148b79770c04b4e"
+  integrity sha512-cZQp+MTQUfSkI++ypDJU6PNgNU2K6Z/9htO4ct4HzvWAs19DoMbnvhzyK31lkBnW1vfx9OkMwskxuaYbEcFjLw==
+
 react-dev-utils@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-10.2.1.tgz#f6de325ae25fa4d546d09df4bb1befdc6dd19c19"
@@ -9407,6 +9432,13 @@ react-dev-utils@^10.2.1:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
+react-dom-confetti@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/react-dom-confetti/-/react-dom-confetti-0.1.3.tgz#151bdbd4e494c5402c24f005d99e116851ae51a6"
+  integrity sha512-F6jRLhg5CAfGi/oNM6fGlv+cHF7wR3xZ6GMZRKt1NgCzC3mVjQ2ctxVDEhe007Tm6b3r6AOQAzZzVyuDdblDxA==
+  dependencies:
+    dom-confetti "0.1.1"
+
 react-dom@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"
@@ -9422,27 +9454,27 @@ react-error-overlay@^6.0.7:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.7.tgz#1dcfb459ab671d53f660a991513cb2f0a0553108"
   integrity sha512-TAv1KJFh3RhqxNvhzxj6LeT5NWklP6rDr2a0jaTfsZ5wSZWHOGeqQyejUp3xxLfPt2UpyJEcVQB/zyPcmonNFA==
 
-react-globe.gl@^2.7.6:
-  version "2.7.6"
-  resolved "https://registry.yarnpkg.com/react-globe.gl/-/react-globe.gl-2.7.6.tgz#7de3b13e317adb2c06c0e410c689acd39c044872"
-  integrity sha512-cKwAZaKlUrB2FlrXEezu9mRRX5nFujGG7+ICxNci2Zg1Og3sArUugHuaiMVsq022ub4Iswl/l3StpYdC7w8TXA==
+react-globe.gl@^2.7.7:
+  version "2.7.7"
+  resolved "https://registry.yarnpkg.com/react-globe.gl/-/react-globe.gl-2.7.7.tgz#73fddcc8a89b60359792cc44a775a8228d8d01b7"
+  integrity sha512-wfRVL/xS4vccpr4guUr8TNSa1WEF8c38VggrnuDPXW/zHkL3Ns92luY1aGICl/laaIFcprbto3G76zLV4VQXPg==
   dependencies:
-    globe.gl "^2.8.6"
+    globe.gl "^2.9.3"
     prop-types "^15.7.2"
-    react-kapsule "^2.1.7"
+    react-kapsule "^2.1.8"
 
 react-is@^16.12.0, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-kapsule@^2.1.7:
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/react-kapsule/-/react-kapsule-2.1.7.tgz#913124f979daf98b34d6b734bd15e581e41eee6f"
-  integrity sha512-jnyphodCtjoHVUZt8RK5Utw/VySgL6rGYL1A+0BdkHrR0/WeZdM+uVcoo8HA1HASlEeUqueC+J+B38rm4+I/7Q==
+react-kapsule@^2.1.8:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/react-kapsule/-/react-kapsule-2.1.8.tgz#8c68a0277f836ff8623ad1ca1304196e14c9a645"
+  integrity sha512-/TH2syGJZszdqfOF5PmTma9WyPmdi/H8rSmVtOg/u/E7Ca0S9Iby1kcpLQgYBpK8kLOxcfBJh641lKZrHDimiA==
   dependencies:
     fromentries "^1.2.0"
-    jerrypick "^1.0.2"
+    jerrypick "^1.0.3"
 
 react-number-format@^4.4.1:
   version "4.4.1"
@@ -10895,10 +10927,10 @@ three-geojson-geometry@^1.1.0:
   dependencies:
     earcut "^2.2.2"
 
-three-globe@^2.6.9:
-  version "2.6.9"
-  resolved "https://registry.yarnpkg.com/three-globe/-/three-globe-2.6.9.tgz#091a71cd007bcaab2c4aa5a870961679bbbdd3ef"
-  integrity sha512-F1jkYdWNIJgQup4T0uOJaULphov1RkCRloMGASDTqKWJ2F7f7RQHGp4wSz598q77RlZ99UO6+7kmh7x8oxOBzA==
+three-globe@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/three-globe/-/three-globe-2.7.0.tgz#d96f78caa2979e9dc2a2bfaa9efbe89f0bf0c48e"
+  integrity sha512-T6cfax85TqqjeOQNGFy6h3DsillR5q4jpF63D93CsZoH7p/kamGvGFkicf8oKMWBYsC4Ar3Lm4wa+3HiOTozZQ==
   dependencies:
     "@tweenjs/tween.js" "^18.5.0"
     accessor-fn "^1.3.0"
@@ -10927,15 +10959,15 @@ three-orbit-controls@^82.1.0:
   resolved "https://registry.yarnpkg.com/three-orbit-controls/-/three-orbit-controls-82.1.0.tgz#11a7f33d0a20ecec98f098b37780f6537374fab4"
   integrity sha1-EafzPQog7OyY8Jizd4D2U3N0+rQ=
 
-three-render-objects@^1.13.0:
-  version "1.13.2"
-  resolved "https://registry.yarnpkg.com/three-render-objects/-/three-render-objects-1.13.2.tgz#16c9ef9f2709fa916a35e1a2d4f627ec8c53f962"
-  integrity sha512-mphmdYbwvk3sRynqrMhK/Le+ZkAeyo4TpvtcnvZ376t08K3kvqvpPTrzexhDE5yRUEon9qrGbAdhKCICLUUePA==
+three-render-objects@^1.13.3:
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/three-render-objects/-/three-render-objects-1.13.3.tgz#c59280edac9073057f16bb16d70289011e2d5e4a"
+  integrity sha512-fAwJoHuotMiJrgXb/BH+LqW3gsTwG54vjoJJ8NvckSVhHoMYib+rSSlh+zwnzDJpMmsHKqwwLgBebawIo0FfDg==
   dependencies:
     "@tweenjs/tween.js" "^18.5.0"
     accessor-fn "^1.3.0"
     kapsule "^1.13.3"
-    polished "^3.4.4"
+    polished "^3.5.1"
     three-fly-controls "^2.0.0"
     three-orbit-controls "^82.1.0"
     three-trackballcontrols "^0.0.8"
