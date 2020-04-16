@@ -1,4 +1,15 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Thank Your For Your Service
+
+This is dedicated to all the Frontliners, Health Workers, Law Enforcement, Donors, Volunteers, and everyone who are helping the world during these tough times. The project is open source and free to use without any charge. Let's show our appreciation to these brave people risking their lives and I hope this can help brighten up someone's day.
+
+### Tech Stack
+- React
+- Firebase
+- Typescript
+- Styled Components
+- Three.js
+- Howler.js
+
 
 ## Available Scripts
 
