@@ -4,9 +4,10 @@ import styled from 'styled-components'
 import { Letter } from './NewLetter';
 import * as firebase from 'firebase/app'
 import "firebase/storage"
+import * as THREE from 'three';
 
 
-// const fbImageUrl = require('../assets/earth-styled-resized.jpg');
+// const fbImageUrl = require('../assets/earth-night.jpg');
 
 interface Props {
   letters: Letter[] | firebase.firestore.DocumentData;
@@ -88,8 +89,7 @@ const Globe = ({ letters = [] }: Props) => {
     const formattedArcs = letters.length > 0 ?
       lettersData.map((letter: Letter): ArcData => {
 
-        const tooltip = `
-          <div 
+        const tooltip = `<div 
             style="background: #FFF; 
                   padding: 16px;
                   color: #444;
@@ -114,8 +114,8 @@ const Globe = ({ letters = [] }: Props) => {
         return {
           startLat: letter.location.lat,
           startLng: letter.location.lon,
-          endLat: (Math.random() - 0.5) * 180,
-          endLng: (Math.random() - 0.5) * 360,
+          endLat: !!letter.receipient ? +letter.receipient.location.lat.toFixed(6) : ((Math.random() - 0.5) * 180),
+          endLng: !!letter.receipient ? +letter.receipient.location.lon.toFixed(6) : ((Math.random() - 0.5) * 360),
           stroke: 3,
           // altitude: 0,
           // color: [['white', 'blue'][Math.round(Math.random() * 2)], ['white', 'blue'][Math.round(Math.random() * 2)]]
@@ -135,7 +135,7 @@ const Globe = ({ letters = [] }: Props) => {
           color: '#26de81',
           radius: 1,
           name: letter.name,
-          ...letter
+          // ...letter
         }
       }) : []
     setArcData(formattedArcs)
@@ -149,6 +149,12 @@ const Globe = ({ letters = [] }: Props) => {
     //auto-rotate
     globeEl.current.controls().autoRotate = true;
     globeEl.current.controls().autoRotateSpeed = 0.025;
+
+    const globeMaterial = globeEl.current.globeMaterial();
+
+    var color = new THREE.Color("#5196CD");
+
+    globeMaterial.color = color
 
 
     const debouncedDimensions = function initGlobeDimensions() {
@@ -195,23 +201,21 @@ const Globe = ({ letters = [] }: Props) => {
   return (
     <StyledGlobeContainer>
       <ReactGlobe
-        //@ts-ignore
         ref={globeEl}
-        altitude={dimensions.altitude}
         animateIn={false}
         globeImageUrl={fbImageUrl}
         backgroundColor={'#7ec9f7'}
         showGraticules={false}
         height={dimensions.height}
         width={dimensions.width}
-        waitForGlobeReady={true}
+        waitForGlobeReady={false}
         arcsData={arcData}
         arcStroke="stroke"
         arcColor="color"
         arcLabel="label"
         // arcDashLength={() => 0.8}
         arcDashGap={0.1}
-        arcDashAnimateTime={1000}
+        arcDashAnimateTime={3000}
         pointsData={pointsData}
         pointAltitude={'size'}
         pointRadius={'radius'}
