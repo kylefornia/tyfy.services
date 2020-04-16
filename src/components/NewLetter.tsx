@@ -2,7 +2,10 @@ import React, { Dispatch, SetStateAction } from 'react'
 import styled from 'styled-components';
 import IPLocationAPI from '../services/IPLocationAPI';
 import FirebaseAPI from '../services/FirebaseAPI';
+import * as firebase from 'firebase/app'
 import { UserLocation } from '../services/IPLocationAPI'
+import { UserProfile } from '../contexts/AuthContext';
+import AccountTypes, { AccountType } from './AccountTypes';
 
 export interface Letter {
   id?: string;
@@ -10,6 +13,15 @@ export interface Letter {
   name: string;
   message: string;
   location?: UserLocation;
+  receipient?: UserProfile
+}
+
+export interface LetterMetadata {
+  id?: string;
+  name: string;
+  location: UserLocation;
+  date: firebase.firestore.Timestamp;
+  message: string;
 }
 
 interface Props {
@@ -17,6 +29,193 @@ interface Props {
   newLetter: Letter;
 
 }
+
+const NewLetter = (props: Props) => {
+
+  const [isSent, setIsSent] = React.useState(false);
+  const [isSending, setIsSending] = React.useState(false);
+  const [receipient, setReceipient] = React.useState<{
+    user: UserProfile; isLoadingReceipient: boolean;
+    accountType: AccountType | undefined;
+  }>({
+    user: null, isLoadingReceipient: true, accountType: undefined
+  });
+
+  function closeLetter() {
+    props.setNewLetter({ ...props.newLetter, isNewLetter: false })
+  }
+
+  function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    props.setNewLetter({ ...props.newLetter, name: e.target.value })
+  }
+
+  function handleMessageChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    props.setNewLetter({ ...props.newLetter, message: e.target.value })
+  }
+
+  async function getUserLocation(): Promise<any> {
+
+    if (navigator.geolocation) {
+
+      return new Promise((resolve, reject) => {
+        const getGeolocation = async (position: any) => {
+
+          if (!position) return alert('Cannot get your location')
+
+          let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIP();
+
+          const location: UserLocation = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+            city,
+            country_name,
+            country_code,
+            region,
+          }
+
+          return resolve(location)
+        }
+
+        navigator.geolocation.getCurrentPosition(getGeolocation)
+      });
+
+
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+
+  }
+
+  async function sendLetter() {
+
+    setIsSending(true)
+
+    let { lat = 0, lon = 0, city, country_name, country_code, region }: UserLocation = await getUserLocation();
+
+    if (!city) {
+      return alert('Cannot get location. Unable to send letter')
+    }
+
+    await FirebaseAPI.addNewLetter({
+      name: props.newLetter.name,
+      message: props.newLetter.message,
+      location: {
+        lat: lat,
+        lon: lon,
+        city: city,
+        country_name: country_name,
+        country_code: country_code,
+        region: region,
+      },
+      receipient: receipient.user
+    }).then(() => {
+      setIsSending(false)
+      setIsSent(true)
+      setTimeout(() => {
+        closeLetter()
+
+      }, 2000);
+    })
+
+
+  }
+
+  async function getReceipient() {
+
+    const limit = 8; // could change
+
+    await firebase.firestore()
+      .collection('userLetters')
+      .orderBy('letterCount', 'asc')
+      .limit(limit)
+      .get().then((snap) => {
+
+        //randomize user
+        const randomNumber = Math.floor(Math.random() * snap.docs.length)
+        const randomReceipient = snap.docs[randomNumber].id
+
+        firebase.firestore().collection('users')
+          .doc(randomReceipient).get()
+          .then((profileSnap) => {
+
+            const accountType = AccountTypes.filter(({ type }) => type == profileSnap.data().accountType)[0]
+
+            setReceipient({
+              user: profileSnap.data() as UserProfile,
+              isLoadingReceipient: false,
+              accountType: accountType as AccountType
+            })
+          })
+
+
+
+      })
+  }
+
+  React.useEffect(() => {
+    getReceipient()
+  }, [])
+
+
+  return (
+    <StyledNewLetterWrapper >
+
+      <StyledMail isSent={isSent}>
+        <StyledMailCover></StyledMailCover>
+        <StyledMailContent>{props.newLetter.message}</StyledMailContent>
+      </StyledMail>
+
+      <StyledNewLetter isSent={isSent}>
+        {
+          isSent ?
+            null
+            :
+            <>
+              <div>
+                <StyledCloseButton onClick={closeLetter}><i className="ri-delete-bin-2-line"></i> Discard</StyledCloseButton>
+              </div>
+              <StyledHeader>
+                <span className="label">From: </span>
+                <StyledNameInput onChange={handleNameChange} placeholder="Your Name" type="text" />
+              </StyledHeader>
+              <StyledReceipient color={!receipient.isLoadingReceipient ? receipient.accountType.color : ''}>
+                {
+                  receipient.isLoadingReceipient ?
+                    <>
+                      <span className="label">To: </span>
+                      <div className="profile">
+                        <div className="icon"><i className="ri-user-fill" /></div>
+                        <div className="profile-content">
+                          <span className="name placeholder">████ ██████</span>
+                          <span className="account-type placeholder">███████</span>
+                        </div>
+                      </div>
+                    </>
+                    :
+                    <>
+                      <span className="label">To: </span>
+                      <div className="profile">
+                        <div className="icon"><i className={receipient.accountType.iconClassName} /></div>
+                        <div className="profile-content">
+                          <span className="name">{receipient.user.name}</span>
+                          <span className="account-type">{receipient.accountType.type}</span>
+                        </div>
+                      </div>
+                    </>
+                }
+              </StyledReceipient>
+              <StyledTextArea onChange={handleMessageChange} placeholder="Enter Message...">
+              </StyledTextArea>
+              <StyledSendButton onClick={sendLetter}>{isSending ? 'Sending...' : 'Send Thank You'}</StyledSendButton>
+              <StyledInstructions>Your location is used to tag where message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
+            </>
+        }
+      </StyledNewLetter>
+    </StyledNewLetterWrapper>
+  )
+}
+
+export default NewLetter
 
 const StyledNewLetterWrapper = styled.div`
   display: flex;
@@ -31,7 +230,19 @@ const StyledNewLetterWrapper = styled.div`
   width: 100%;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.25);
+
+  .label {
+      margin-right: 10px;
+      font-size: 14px;
+      /* flex: 0; */
+      width: 54px;
+      display: inline-block;
+    }
+
+  .placeholder {
+    opacity: 0.5;
+  }
 `
 const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   display: flex;
@@ -41,19 +252,20 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   /* width: ${ ({ isSent }) => isSent ? '280px' : 'calc(100% - 20px)'}; */
   width: calc(100% - 20px);
   max-width: 768px;
-  height: auto;
-  max-height: calc(100% - 80px);
+  /* height: 90%; */
+  height: calc(100% - 60px);
   max-height: 900px;
   transition: all 300ms ease-out;
-  animation: ${ ({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'animate-in 300ms ease-out'} ;
+  animation: ${ ({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'animate-in 200ms ease-out'} ;
   will-change: transform, opacity;
   font-family: 'Merriweather', serif;
   font-size: 1.1em;
   box-shadow: 0 3px 15px rgba(0,0,0,0.1);
   border-radius: 3px;
-  padding: 10px 0;
+  padding: 20px 0 10px 0;
   position: ${ ({ isSent }) => isSent ? 'absolute' : 'relative'};
   z-index: 3;
+  overflow: auto;
 
   @keyframes animate-in {
     0% {
@@ -90,17 +302,17 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
 
 const StyledHeader = styled.div`
   display: flex;
-  padding: 10px;
+  padding: 20px 10px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: stretch;
 `
 
 const StyledNameInput = styled.input`
   padding: 12px;
   font-family: 'Merriweather', serif;
-  border: 1px dashed #f0f0f0;
+  border: 2px solid #f8f8f8;
   border-radius: 3px;
-  font-size: 1em;
+  font-size: 14px;
   flex: 1;
   max-width: 300px;
 `
@@ -114,18 +326,21 @@ const StyledCloseButton = styled.button`
   font-size: 0.8em;
   font-weight: bold;
   text-transform: uppercase;
-  margin: 0 0 0 10px;
+  margin: 0 10px 0 10px;
   color: #fc5c65;
-  padding: 10px;
-  /* border-radius: 30px; */
+  padding: 5px 20px;
+  border-radius: 30px;
   font-family: 'Open Sans', sans-serif;
+  float: right;
 
   &:hover {
     opacity: 0.8;
+    background: #fc5c65;
+    color: #FFF;
   }
 
   i {
-    font-size: 2em;
+    font-size: 18px;
     margin-right: 10px;
     font-weight: 400;
 
@@ -133,13 +348,14 @@ const StyledCloseButton = styled.button`
 `
 
 const StyledTextArea = styled.textarea`
-  min-height: 300px;
+  min-height: 60px;
+  height: auto;
   flex: 1;
   max-height: 600px;
   margin: 10px;
   border-radius: 3px;
   outline: 0;
-  border: 1px dashed #f0f0f0;
+  border: 2px solid #f8f8f8;
   padding: 12px;
   font-size: 1em;
   font-family: 'Merriweather', serif;
@@ -174,11 +390,11 @@ const StyledInstructions = styled.p`
   display: flex;
   flex: 0;
   align-items: flex-end;
-  color: #ccc;
+  color: #bababa;
   font-size: 0.7em;
   font-family: 'Open Sans', sans-serif;
   padding: 10px 20px;
-  line-height: 18px;
+  line-height: 14px;
 `
 
 const StyledMail = styled('div') <{ isSent: boolean }>`
@@ -281,118 +497,55 @@ const StyledMailCover = styled.div`
   }
 `
 
+const StyledReceipient = styled('div') <{ color: string; }>`
+  padding: 10px;
+  font-size: 14px;
+  display: flex;
+  flex-flow: row nowrap;
 
-const NewLetter = (props: Props) => {
+  .profile {
+    flex: 1;
+    display: flex;
+    padding: 10px;
+    border: 2px solid #f8f8f8;
+    border-radius: 3px;
+    max-width: 300px;
 
-  const [isSent, setIsSent] = React.useState(false);
-  const [isSending, setIsSending] = React.useState(false);
-
-  function closeLetter() {
-    props.setNewLetter({ ...props.newLetter, isNewLetter: false })
-  }
-
-  function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
-    props.setNewLetter({ ...props.newLetter, name: e.target.value })
-  }
-
-  function handleMessageChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    props.setNewLetter({ ...props.newLetter, message: e.target.value })
-  }
-
-  async function getUserLocation(): Promise<any> {
-
-    if (navigator.geolocation) {
-
-      return new Promise((resolve, reject) => {
-        const getGeolocation = async (position: any) => {
-
-          if (!position) return alert('Cannot get your location')
-
-          let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIP();
-
-          const location: UserLocation = {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-            city,
-            country_name,
-            country_code,
-            region,
-          }
-
-          return resolve(location)
-        }
-
-        navigator.geolocation.getCurrentPosition(getGeolocation)
-      });
-
-
-    } else {
-      alert("Geolocation is not supported by this browser.");
+  
+    .icon {
+      border-radius: 100%;
+      width: 36px;
+      height: 36px;
+      background-color: #d3d3d3;
+      background-color: ${({ color }) => color};
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      font-size: 18px;
     }
 
-  }
+    .profile-content {
+      flex: 1;
 
-  async function sendLetter() {
-
-    setIsSending(true)
-
-    let { lat = 0, lon = 0, city, country_name, country_code, region }: UserLocation = await getUserLocation();
-
-    if (!city) {
-      return alert('Cannot get location. Unable to send letter')
-    }
-
-    await FirebaseAPI.addNewLetter({
-      name: props.newLetter.name,
-      message: props.newLetter.message,
-      location: {
-        lat: lat,
-        lon: lon,
-        city: city,
-        country_name: country_name,
-        country_code: country_code,
-        region: region,
+      .name {
+        color: #444;
+        display: block;
+        font-weight: bold;
+        line-height: 18px;
       }
-    }).then(() => {
-      setIsSending(false)
-      setIsSent(true)
-      setTimeout(() => {
-        closeLetter()
 
-      }, 2000);
-    })
-
-
+      .account-type {
+        color: #666;
+        color: ${({ color }) => color};
+        font-weight: 600;
+        font-size: 12.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.9px;
+        line-height: 18px;
+        font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+      }
+    }
   }
-
-
-  return (
-    <StyledNewLetterWrapper >
-
-      <StyledMail isSent={isSent}>
-        <StyledMailCover></StyledMailCover>
-        <StyledMailContent>{props.newLetter.message}</StyledMailContent>
-      </StyledMail>
-
-      <StyledNewLetter isSent={isSent}>
-        {
-          isSent ?
-            null
-            :
-            <>
-              <StyledHeader>
-                <StyledNameInput onChange={handleNameChange} placeholder="Your Name" type="text" />
-                <StyledCloseButton onClick={closeLetter}><i className="ri-delete-bin-2-line"></i></StyledCloseButton>
-              </StyledHeader>
-              <StyledTextArea onChange={handleMessageChange} placeholder="Enter Message...">
-              </StyledTextArea>
-              <StyledSendButton onClick={sendLetter}>{isSending ? 'Sending...' : 'Send Thank You'}</StyledSendButton>
-              <StyledInstructions>Your location is used to tag where message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
-            </>
-        }
-      </StyledNewLetter>
-    </StyledNewLetterWrapper>
-  )
-}
-
-export default NewLetter
+`

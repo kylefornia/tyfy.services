@@ -24,11 +24,14 @@ class FirebaseAPI {
     }
   }
 
-  public static addNewLetter({ name, message, location }: Letter) {
+  public static addNewLetter({ name, message, location, receipient }: Letter) {
     const lettersRef = firebase.firestore().collection('letters')
     const newLetterRef = lettersRef.doc()
     const increment = firebase.firestore.FieldValue.increment(1);
     const letterCountRef = firebase.firestore().collection('counters').doc('letterCount')
+    const userLettersRef = firebase.firestore().collection('userLetters').doc(receipient.uid)
+
+    const timestamp = firebase.firestore.Timestamp.now()
 
     const batch = firebase.firestore().batch();
 
@@ -36,10 +39,22 @@ class FirebaseAPI {
       name: name,
       message: message,
       location: location,
-      date: firebase.firestore.Timestamp.now(),
+      date: timestamp,
+      receipient: receipient
     })
 
     batch.update(letterCountRef, { totalLetters: increment })
+
+    batch.set(userLettersRef.collection('letters').doc(newLetterRef.id), {
+      name: name,
+      date: timestamp,
+      location: location,
+      message: message.slice(0, 50)
+    })
+
+    batch.update(userLettersRef, {
+      letterCount: increment
+    })
 
 
     return batch.commit()
