@@ -11,6 +11,8 @@ import BottomNavbar from './components/BottomNavbar';
 // import Account from './components/Account';
 import AuthContext, { useAuth, useSession } from './contexts/AuthContext'
 import Loaders from './components/Loaders';
+import ViewLetter from './components/ViewLetter';
+import PrivacyPolicy from './components/PrivacyPolicy';
 
 const Home = React.lazy(() => import('./components/Home'));
 const Feed = React.lazy(() => import('./components/Feed'));
@@ -49,6 +51,16 @@ function App() {
             <Route path="/more" render={() =>
               <Suspense fallback={<Loaders.AccountLoader />}>
                 <More />
+              </Suspense>
+            } />
+            <Route path="/letter/:id" render={() =>
+              <Suspense fallback={<Loaders.AccountLoader />}>
+                <ViewLetter />
+              </Suspense>
+            } />
+            <Route path="/privacy" render={() =>
+              <Suspense fallback={<Loaders.AccountLoader />}>
+                <PrivacyPolicy />
               </Suspense>
             } />
           </Switch>
