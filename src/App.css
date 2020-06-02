@@ -48,12 +48,12 @@ html, body{
   height: 100%;
   width: 100%;
   position: relative;
-  background-color: #7ec9f7;
+  background-color: #56aade;
 font-family: 'Open Sans', sans-serif;
 }
 
 #root, .App {
   height: 100%;
   width: 100%;
-
+  touch-action: manipulation;
 }

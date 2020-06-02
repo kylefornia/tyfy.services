@@ -36,7 +36,7 @@ const StyledBottomNavItem = styled.div`
   
 
   .active * {
-    color: #7ec9f7;
+    color: #56aade;
   }
 
 
