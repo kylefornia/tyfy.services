@@ -2,6 +2,7 @@ import React from 'react'
 import * as firebase from 'firebase/app'
 import "firebase/auth"
 import { UserLocation } from '../services/IPLocationAPI'
+import { AccountType } from '../components/AccountTypes'
 
 interface Props {
 

@@ -172,7 +172,7 @@ const StyledGetLocationButton = styled.button`
   letter-spacing: 1px;
   text-transform: uppercase;
   font-weight: bold;
-  background: #7ec9f7;
+  background: #56aade;
   padding: 8px 30px;
   margin: 0 auto;
 `;

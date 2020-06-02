@@ -10,6 +10,7 @@ import AccountTypes from './AccountTypes'
 import { Letter, LetterMetadata } from './NewLetter'
 import AccountLocation from './AccountLocation'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 
 interface Props {
 
@@ -20,6 +21,7 @@ interface AccountPageProps {
   isLoading?: boolean;
   userProfile?: UserProfile;
 }
+
 
 const StyledAccountContainer = styled.div`
   font-family: 'Open Sans', sans-serif;
@@ -47,7 +49,7 @@ const StyledButton = styled.button`
   font-weight: 800;
   font-family: 'Open Sans', sans-serif;
   font-size: 1em;
-  color: #7ec9f7;
+  color: #56aade;
   align-items: center;
   margin-bottom: 10px;
   letter-spacing: 1px;
@@ -183,11 +185,14 @@ const StyledLettersContainer = styled.div`
   height: 100%;
 
   .letters-header {
-    text-align: center;
-    padding: 20px;
-    font-family: 'Merriweather', 'Times New Roman', Times, serif;
+    border-radius: 5px 5px 0 0;
+    text-align: left;
+    padding: 20px 20px;
+    /* font-family: 'Merriweather', 'Times New Roman', Times, serif; */
     color: #666;
-    font-weight: 900;
+    font-weight: 600;
+    /* border-bottom: 2px solid #f0f0f0; */
+    background: #e7f5fd;
   }
 `
 
@@ -323,6 +328,7 @@ const AccountPage = ({
       .collection('userLetters')
       .doc(user.uid)
       .collection('letters')
+      .orderBy('date', 'desc')
       .onSnapshot((snap) => {
         const userLettersDoc = snap.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 
@@ -347,6 +353,7 @@ const AccountPage = ({
     setAccountPageState({ ...accountPageState, currentStep: accountPageState.currentStep += 1 })
   }
 
+
   React.useEffect(() => {
 
     let unsubProfile, unsubLetters
@@ -359,6 +366,9 @@ const AccountPage = ({
     }
 
     fetch()
+
+
+
 
     return () => { unsubProfile(); unsubLetters(); }
 
@@ -406,19 +416,20 @@ const AccountPage = ({
             :
             (<StyledLettersContainer>
               <div className="letters-header">
-                <h5>Your Letters</h5>
+                <h5>Inbox</h5>
               </div>
               {
                 accountPageState.userLetters.length > 0 ?
                   (accountPageState.userLetters || []).map((letter: LetterMetadata) => (
                     <StyledUserLetter key={letter.id}>
-                      <div className="header">
-                        <span className="name">{letter.name}</span>
-                        <span className="date">{moment(letter.date.toDate()).fromNow()}</span>
-                      </div>
-                      <p className="message">{letter.message.length >= 40 ? (`${letter.message}\u2026`) : letter.message}</p>
+                      <Link to={`/letter/${letter.id}`}>
+                        <div className="header">
+                          <span className="name">{letter.name}</span>
+                          <span className="date">{moment(letter.date.toDate()).fromNow()}</span>
+                        </div>
+                        <p className="message">{letter.message.length >= 40 ? (`${letter.message}\u2026`) : letter.message}</p>
+                      </Link>
                     </StyledUserLetter>
-
                   ))
                   :
                   <NoLetters />
@@ -433,6 +444,25 @@ const AccountPage = ({
 
 const Account = (props: Props) => {
 
+  const [accountState, setAccountState] = React.useState<{
+    redirectUser: firebase.auth.UserCredential;
+  }>({
+    redirectUser: null,
+  })
+
+  React.useEffect(() => {
+
+
+    firebase.auth().getRedirectResult().then((cred) => {
+      console.log('triggered redirect');
+      console.log(cred);
+      if (!!cred.user) {
+        setAccountState({ ...accountState, redirectUser: cred })
+      }
+      // if (cred.user) storeUserAccount(cred)
+
+    })
+  }, [])
 
   return (
     <StyledAccountContainer>
@@ -457,7 +487,7 @@ const Account = (props: Props) => {
                 :
 
                 (!user ?
-                  <SignIn />
+                  <SignIn redirectUser={accountState.redirectUser} />
                   :
                   <AccountPage
                     user={user}
@@ -475,7 +505,6 @@ const Account = (props: Props) => {
 export default Account
 
 const StyledUserLetter = styled.div`
-  padding: 20px;
   border-bottom: 1px solid #f0f0f0;
 
   
@@ -503,9 +532,24 @@ const StyledUserLetter = styled.div`
     color: #777;
     /* width: 100%; */
     white-space: nowrap;
+    overflow-y: hidden;
     overflow-x: hidden;
     text-overflow: ellipsis;
     line-height: 18px;
+  }
+
+  &:last-of-type {
+    /* border-bottom: none; */
+  }
+
+  &:hover {
+    background: #f8f8f8;
+  }
+
+  a, a:visited {
+    text-decoration: none;
+    padding: 20px;
+    display: block;
   }
 
 `;

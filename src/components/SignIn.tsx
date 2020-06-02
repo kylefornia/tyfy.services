@@ -5,9 +5,11 @@ import SectionHeader from './SectionHeader';
 
 const GoogleLogoBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAADNElEQVQ4T2NkwAP+rwpl/vbOxv3fj+8m/xn+sTOwsN1nZP6/iTez9BUubYzYJL7MnKz7+/GDOb+vXjRh+PSRCUUNMzMDs5rmKzYNrVbenNJJ6PoxDPzc2zrt2/6dGYzfv2O1DNkAVmOLW4wKmhYCWVnvYeIomj60VG/9tX+XF75gQJETFvrL4+ptw5WadwLDwE/9rR0/tmwoR9HAzsHAoqt3k0VY9CgjM+vX/58/6fy8c936//PnbAzCQn85HT1ceDMLDyDrAbvw644qyS8zTjxh/PwZHl4squof2U3MHLlT8s4ja/g/aRL7h88v17KIinfzpuUdxBqGf67GrPv38kHgp+kMDP/e/WRgkpX7zuboKMsXn/OWaO9DFYJd+PO44Wemr1d4GFllGb5sUWdgkndJ5sspnkeqYSD1jP+fNXD9ud75leH/H7D+f5waP9itL3OiG1ay9Ovtz98YRXCmP+b//2Ykcokw/r/bYPLnfutpmML/AnYP2Ez2KqJrjJn+5cezdwzs+FwdY86ijGkgr/1DNvM9CuQYGG7Dqgf1ctdXhv+/wWZ849T6wW99EcPLGXO/vXn39S8/skUfvjGy/PmLEIm25+YDR8qvE0afGL9c5n3AqstQ8cmUwVrGPKHIMGkhPu817P/Pcf78l6+fvzOCk5oYL8PvFXk8bGAD/1xJXLv3w9eglhfMDN///GJQ4JP+5qBoLJejGY8z2bRt/L58z5W/ETBLTRSZr3RFceqCDTxxb7Z4zcWjzz78RCRsNT65j6Ziuk6FJknnUFz6n4Gxd+/9CTtPi+b9+YeQCTJjDc9xZV8Fz8ttp6a3r7u3pwJZMzszG4O+kPptUW6h40xMLF+//fqmeufjQ6vnX19z6bEmMNy6ZgNWbizHeLc7llsFnA6RDag9NnHL9keHvIlN0Eb8jgy/nkR9s5VnV012436GYSBIoPX0jCk7HxzO+vb3B8HiS1dY7ZWWmKFFqX7YfZgjsGqadG6J1uNvz+ZefHvL9N3398zILmZmZGZQE1R8py2kPK3COK2OgZHhP7I8flf8Z2CcdnmZ3dc/343//2fg4GBie8jDw74rSTXsNa5gAQB0cT2E42+E7AAAAABJRU5ErkJggg=="
 
+const ShareScreenshot = 'https://firebasestorage.googleapis.com/v0/b/tyfyservices.appspot.com/o/share%20cropped%20transparent.png?alt=media&token=8315d490-0061-46b4-a2c4-d17bc1a899fd'
+const OpenSafariScreenshot = 'https://firebasestorage.googleapis.com/v0/b/tyfyservices.appspot.com/o/open%20safari.png?alt=media&token=a3351234-671a-40dd-8b0e-5e7aea6496eb'
 
 interface Props {
-
+  redirectUser: firebase.auth.UserCredential;
 }
 
 const StyledSignInButton = styled.button`
@@ -108,32 +110,142 @@ const StyledFacebookLogin = styled(StyledSignInButton)`
 const StyledInstructions = styled.p`
   text-align: center;
   color: #FFF;
-  margin: 0px 0 40px 0;
+  margin: 2px 0 20px 0;
   font-size: 16px;
+  line-height: 1.8em;
 `
+
+const StyledFBIOS = styled.div`
+
+  a, a:visited {
+    /* color: #FFF !important; */
+    color: #FFF;
+    background: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    padding: 4px 6px;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  section {
+    color: #FFF;
+    width: 100%;
+    text-align: center;
+
+
+    p {
+      margin: 0 auto;
+      padding: 20px;
+      width: calc(100% - 40px);
+      max-width: 468px;
+      text-align: left;
+      line-height: 1.6em;
+      font-size: 16px;
+
+     
+    }
+
+    img {
+      margin: 0 auto;
+      width: calc(100% - 60px);
+      max-width: 468px;
+    
+    }
+
+    &:first-of-type {
+
+      img {
+        margin-left: 50px;
+      }
+    @media only screen and (min-width: 500px) {
+    }
+    }
+    
+
+    
+
+  }
+`;
 
 const SignIn = (props: Props) => {
 
-  async function signInWithGoogle() {
-    let provider = new firebase.auth.GoogleAuthProvider();
+  let FBProvider = new firebase.auth.FacebookAuthProvider();
+  let GoogleProvider = new firebase.auth.GoogleAuthProvider();
 
-    firebase.auth().signInWithPopup(provider).then((result) => {
-      console.log(result.user);
-      console.log(result.credential);
-      storeUserAccount(result)
+  // function isFBIOS(): Boolean {
+  //   return (navigator.userAgent.match(/(iPod|iPhone|iPad)/) && navigator.userAgent.match(/FBAV/i)) ? true : false
+  // }
+
+
+
+
+  async function signInWithGoogle() {
+
+    firebase.auth().signInWithRedirect(GoogleProvider).then((result) => {
+      // console.log(result.user);
+      // console.log(result.credential);
+      // storeUserAccount(result)
+    }).catch((err) => {
+      if (err.code === 'auth/account-exists-with-different-credential') {
+        let pendingCred = err.credential;
+        let email = err.email;
+
+        firebase.auth().fetchSignInMethodsForEmail(email).then((methods) => {
+
+          // alert(`An account with the email ${email} already exists.`)
+          if (methods[0] === 'facebook.com') {
+            firebase.auth().signInWithPopup(FBProvider).then((result) => {
+              result.user.linkWithRedirect(GoogleProvider)
+            })
+          }
+
+          firebase.auth().getRedirectResult().then((cred) => {
+            storeUserAccount(cred)
+
+            console.log(cred);
+          })
+        })
+
+      }
     })
 
   }
 
   async function signInWithFacebook() {
-    let provider = new firebase.auth.FacebookAuthProvider();
-    firebase.auth().signInWithPopup(provider).then((result) => {
-      console.log(result.user);
-      console.log(result.credential);
+    firebase.auth().signInWithRedirect(FBProvider).then((result) => {
+      // console.log(result);
+      // storeUserAccount(result)
+    }).catch((err) => {
+      console.log(err);
+      if (err.code === 'auth/account-exists-with-different-credential') {
+        let pendingCred = err.credential;
+        let email = err.email;
+
+        console.log('error yeet');
+
+        firebase.auth().fetchSignInMethodsForEmail(email).then((methods) => {
+
+          // alert(`An account with the email ${email} already exists.`)
+          if (methods[0] === 'google.com') {
+            firebase.auth().signInWithPopup(GoogleProvider).then((result) => {
+              result.user.linkWithRedirect(FBProvider)
+            })
+          }
+
+
+        })
+
+
+      }
     })
   }
 
+
   async function storeUserAccount(loggedInUser: firebase.auth.UserCredential) {
+    console.log('storing ');
+    console.log(loggedInUser);
 
     firebase.firestore().collection('users').doc(loggedInUser.user.uid)
       .get().then((snapshot) => {
@@ -155,19 +267,62 @@ const SignIn = (props: Props) => {
 
   }
 
+  const [isFBIOS, setIsFBIOS] = React.useState<Boolean>(
+    false
+  )
+
+  firebase.auth().getRedirectResult().then((cred) => {
+    console.log('triggered redirect');
+    console.log(cred);
+    // if (cred.user) storeUserAccount(cred)
+
+  })
+
+
   React.useEffect(() => {
 
+    setIsFBIOS(
+      (navigator.userAgent.match(/(iPod|iPhone|iPad)/)
+        &&
+        navigator.userAgent.match(/FBAV/i) ? true : false
+      ))
 
+
+
+    // alert('yes: ' + yes)
     // firebase.auth().onAuthStateChanged((user) => {
     //   window.localStorage.setItem('user', JSON.stringify(user))
     // })
-  })
+  }, [])
+
+  if (isFBIOS) {
+    return (
+      <StyledFBIOS>
+        <SectionHeader title="Sign In" />
+        <StyledInstructions>
+          For a more secure browsing experience please follow the instructions below: <br />
+        </StyledInstructions>
+        <section>
+          <p>1. Tap the <strong>Share</strong> icon on the lower right corner.</p>
+          <img src={ShareScreenshot} />
+        </section>
+        <section>
+          <p>2. Tap <strong>Open in Safari</strong></p>
+          <img src={OpenSafariScreenshot} />
+
+        </section>
+        <StyledInstructions>
+          or visit <a href="https://tyfy.services/account">https://tyfy.services/account</a> on your <strong>Safari Web Browser</strong>.
+        </StyledInstructions>
+      </StyledFBIOS>
+    )
+  }
 
 
   return (
     <div>
       <SectionHeader title="Sign In" />
-      <StyledInstructions>Frontliners, please sign in to see your letters.</StyledInstructions>
+      <StyledInstructions>Start Receiving Letters</StyledInstructions>
       <StyledGoogleSignIn onClick={signInWithGoogle}>
         <div className="icon"><img className="ri-google-fill" src={GoogleLogoBase64} /></div>
         <div className="button-text">
@@ -183,5 +338,7 @@ const SignIn = (props: Props) => {
     </div>
   )
 }
+
+
 
 export default SignIn

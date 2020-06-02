@@ -75,7 +75,7 @@ const AccountTypeItem = styled.div`
   }
 
   &.active {
-    border-color: #7ec9f7;
+    border-color: #56aade;
     h5 { color: #333; }
     /* transform:scale(1.04); */
     box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
@@ -128,7 +128,7 @@ const StyledSaveButton = styled.button`
   min-width: 200px;
   border-radius: 30px;
   color: #FFF;
-  background: #7ec9f7;
+  background: #56aade;
   border: 0;
   padding: 10px 40px;
   font-weight: 600;
