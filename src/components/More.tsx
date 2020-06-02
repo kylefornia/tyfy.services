@@ -15,7 +15,7 @@ const More = (props: Props) => {
         <h4>Kyle Vanderfox</h4>
         <span className="creds">Developer</span>
         <p className="message">This is dedicated to all the Frontliners, Health Workers, Law Enforcement, Donors, Volunteers, and everyone who are helping the world during these tough times.
-        The project is open source and free to use without any charge. Let's show our appreciation to these brave people risking their lives and I hope this can help brighten up someone's day.
+        The project is open source and free to use without any charge. Let's show our appreciation for these brave heroes who are risking their lives everyday by sending them thank you notes to brighten up their day.
         </p>
         <div className="links">
           <span className="links-title">Links</span>
