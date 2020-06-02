@@ -204,7 +204,7 @@ const Globe = ({ letters = [] }: Props) => {
         ref={globeEl}
         animateIn={false}
         globeImageUrl={fbImageUrl}
-        backgroundColor={'#7ec9f7'}
+        backgroundColor={'#56aade'}
         showGraticules={false}
         height={dimensions.height}
         width={dimensions.width}
