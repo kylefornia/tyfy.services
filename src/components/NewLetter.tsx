@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, FormEventHandler } from 'react'
 import styled from 'styled-components';
 import IPLocationAPI from '../services/IPLocationAPI';
 import FirebaseAPI from '../services/FirebaseAPI';
@@ -13,7 +13,8 @@ export interface Letter {
   name: string;
   message: string;
   location?: UserLocation;
-  receipient?: UserProfile
+  receipient?: UserProfile;
+  date?: firebase.firestore.Timestamp;
 }
 
 export interface LetterMetadata {
@@ -41,7 +42,9 @@ const NewLetter = (props: Props) => {
     user: null, isLoadingReceipient: true, accountType: undefined
   });
 
-  function closeLetter() {
+  function closeLetter(e: undefined | React.FormEvent<HTMLFormElement>) {
+    !!e && e.preventDefault();
+
     props.setNewLetter({ ...props.newLetter, isNewLetter: false })
   }
 
@@ -86,7 +89,9 @@ const NewLetter = (props: Props) => {
 
   }
 
-  async function sendLetter() {
+  async function sendLetter(e: React.FormEvent<HTMLFormElement> | undefined) {
+
+    !!e && e.preventDefault();
 
     setIsSending(true)
 
@@ -112,7 +117,7 @@ const NewLetter = (props: Props) => {
       setIsSending(false)
       setIsSent(true)
       setTimeout(() => {
-        closeLetter()
+        closeLetter(undefined)
 
       }, 2000);
     })
@@ -166,50 +171,52 @@ const NewLetter = (props: Props) => {
       </StyledMail>
 
       <StyledNewLetter isSent={isSent}>
-        {
-          isSent ?
-            null
-            :
-            <>
-              <div>
-                <StyledCloseButton onClick={closeLetter}><i className="ri-delete-bin-2-line"></i> Discard</StyledCloseButton>
-              </div>
-              <StyledHeader>
-                <span className="label">From: </span>
-                <StyledNameInput onChange={handleNameChange} placeholder="Your Name" type="text" />
-              </StyledHeader>
-              <StyledReceipient color={!receipient.isLoadingReceipient ? receipient.accountType.color : ''}>
-                {
-                  receipient.isLoadingReceipient ?
-                    <>
-                      <span className="label">To: </span>
-                      <div className="profile">
-                        <div className="icon"><i className="ri-user-fill" /></div>
-                        <div className="profile-content">
-                          <span className="name placeholder">████ ██████</span>
-                          <span className="account-type placeholder">███████</span>
+        <form onSubmit={sendLetter}>
+          {
+            isSent ?
+              null
+              :
+              <>
+                <div>
+                  <StyledCloseButton onClick={(e: any) => { e.preventDefault(); closeLetter(e); }}><i className="ri-delete-bin-2-line"></i> Discard Letter</StyledCloseButton>
+                </div>
+                <StyledHeader>
+                  <span className="label">From: </span>
+                  <StyledNameInput required onChange={handleNameChange} placeholder="Your Name" type="text" />
+                </StyledHeader>
+                <StyledReceipient color={!receipient.isLoadingReceipient ? receipient.accountType.color : ''}>
+                  {
+                    receipient.isLoadingReceipient ?
+                      <>
+                        <span className="label">To: </span>
+                        <div className="profile">
+                          <div className="icon"><i className="ri-user-fill" /></div>
+                          <div className="profile-content">
+                            <span className="name placeholder">████ ██████</span>
+                            <span className="account-type placeholder">███████</span>
+                          </div>
                         </div>
-                      </div>
-                    </>
-                    :
-                    <>
-                      <span className="label">To: </span>
-                      <div className="profile">
-                        <div className="icon"><i className={receipient.accountType.iconClassName} /></div>
-                        <div className="profile-content">
-                          <span className="name">{receipient.user.name}</span>
-                          <span className="account-type">{receipient.accountType.type}</span>
+                      </>
+                      :
+                      <>
+                        <span className="label">To: </span>
+                        <div className="profile">
+                          <div className="icon"><i className={receipient.accountType.iconClassName} /></div>
+                          <div className="profile-content">
+                            <span className="name">{receipient.user.name}</span>
+                            <span className="account-type">{receipient.accountType.type}</span>
+                          </div>
                         </div>
-                      </div>
-                    </>
-                }
-              </StyledReceipient>
-              <StyledTextArea onChange={handleMessageChange} placeholder="Enter Message...">
-              </StyledTextArea>
-              <StyledSendButton onClick={sendLetter}>{isSending ? 'Sending...' : 'Send Thank You'}</StyledSendButton>
-              <StyledInstructions>Your location is used to tag where message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
-            </>
-        }
+                      </>
+                  }
+                </StyledReceipient>
+                <StyledTextArea required onChange={handleMessageChange} placeholder="Enter Message...">
+                </StyledTextArea>
+                <StyledSendButton type="submit">{isSending ? 'Sending...' : 'Send Thank You'}</StyledSendButton>
+                <StyledInstructions>Your location is used to tag where message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
+              </>
+          }
+        </form>
       </StyledNewLetter>
     </StyledNewLetterWrapper>
   )
@@ -234,10 +241,18 @@ const StyledNewLetterWrapper = styled.div`
 
   .label {
       margin-right: 10px;
-      font-size: 14px;
+      font-size: 12px;
       /* flex: 0; */
       width: 54px;
       display: inline-block;
+      /* font-size: 0.7em; */
+      margin-right: 10px;
+      /* margin-left: 20px; */
+      text-transform: uppercase;
+      font-weight: bold;
+      color: #aaa;
+      /* width: 60px; */
+      font-family: 'Open Sans', Arial, Helvetica, sans-serif;
     }
 
   .placeholder {
@@ -259,13 +274,20 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   animation: ${ ({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'animate-in 200ms ease-out'} ;
   will-change: transform, opacity;
   font-family: 'Merriweather', serif;
-  font-size: 1.1em;
+  font-size: 1em;
   box-shadow: 0 3px 15px rgba(0,0,0,0.1);
   border-radius: 3px;
   padding: 20px 0 10px 0;
   position: ${ ({ isSent }) => isSent ? 'absolute' : 'relative'};
   z-index: 3;
   overflow: auto;
+
+  form {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: 1;
+    background: #FFF;
+  }
 
   @keyframes animate-in {
     0% {
@@ -302,19 +324,35 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
 
 const StyledHeader = styled.div`
   display: flex;
-  padding: 20px 10px;
-  align-items: center;
+  padding: 20px 20px;
+  /* align-items: center; */
   justify-content: stretch;
+  background: #FFF;
+
 `
 
 const StyledNameInput = styled.input`
   padding: 12px;
   font-family: 'Merriweather', serif;
-  border: 2px solid #f8f8f8;
+  border: 2px solid #e5e5e5;
   border-radius: 3px;
   font-size: 14px;
   flex: 1;
   max-width: 300px;
+
+  &:placeholder-shown {
+    border: 2px solid #e5e5e5;
+  }
+
+  &:not(placeholder-shown) {
+    border: 2px solid #56aade;
+  }
+
+  &:active, &:focus {
+    border: 2px solid #56aade;
+    outline: 0;
+  }
+
 `
 
 const StyledCloseButton = styled.button`
@@ -326,16 +364,18 @@ const StyledCloseButton = styled.button`
   font-size: 0.8em;
   font-weight: bold;
   text-transform: uppercase;
-  margin: 0 10px 0 10px;
-  color: #fc5c65;
+  margin: 0 10px 20px 10px;
+  color: #888;
   padding: 5px 20px;
   border-radius: 30px;
+  border: 2px solid #e5e5e5;
   font-family: 'Open Sans', sans-serif;
   float: right;
 
   &:hover {
     opacity: 0.8;
     background: #fc5c65;
+    border: 2px solid #fc5c65;
     color: #FFF;
   }
 
@@ -355,20 +395,21 @@ const StyledTextArea = styled.textarea`
   margin: 10px;
   border-radius: 3px;
   outline: 0;
-  border: 2px solid #f8f8f8;
+  border: 2px solid #e5e5e5;
   padding: 12px;
   font-size: 1em;
   font-family: 'Merriweather', serif;
-  line-height: 1.4;
+  line-height: 1.8em;
   resize: none;
 
-  &:active {
+  &:active, &:focus {
+    border: 2px solid #56aade;
     outline: 0;
   }
 `
 
 const StyledSendButton = styled.button`
-  background: #7ec9f7;
+  background: #56aade;
   width: auto;
   margin: 10px auto;
   padding: 10px 20px;
@@ -498,18 +539,21 @@ const StyledMailCover = styled.div`
 `
 
 const StyledReceipient = styled('div') <{ color: string; }>`
-  padding: 10px;
+  padding: 10px 20px;
   font-size: 14px;
   display: flex;
   flex-flow: row nowrap;
+  background: #FFF;
+
 
   .profile {
     flex: 1;
     display: flex;
     padding: 10px;
-    border: 2px solid #f8f8f8;
+    border: 2px solid #56aade;
     border-radius: 3px;
     max-width: 300px;
+    background: #FFF;
 
   
     .icon {
