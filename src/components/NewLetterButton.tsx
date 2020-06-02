@@ -9,7 +9,7 @@ const StyledNewLetterButton = styled.button`
   border: 2px solid white;
   outline: 0;
   background: #FFF;
-  color: #7ec9f7;
+  color: #56aade;
   text-transform: uppercase;
   border-radius: 30px;
   padding: 5px 20px;
