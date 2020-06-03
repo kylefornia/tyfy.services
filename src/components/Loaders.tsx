@@ -11,7 +11,7 @@ interface Props {
 const StyledHomeContainer = styled.div`
   display: flex;
   flex: 1;
-  height: 100vh;
+  height: calc(100vh - 60px);
   flex-flow: column nowrap;
 `
 

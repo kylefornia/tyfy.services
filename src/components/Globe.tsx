@@ -54,6 +54,10 @@ const StyledGlobeContainer = styled.div`
   right: 0;
   bottom: 0;
   /* padding-top: 5vh; */
+
+  @media only screen and (min-width: 500px) {
+    top: 60px;
+  }
 `
 
 const Globe = ({ letters = [] }: Props) => {

@@ -22,6 +22,10 @@ const StyledBottomContainer = styled.div`
   z-index: 2;
   text-align: center;
   padding: 0px 0px 80px 0px;
+  
+  @media only screen and (min-width: 500px) {
+    padding-bottom: 20px;
+  }
 
 `
 

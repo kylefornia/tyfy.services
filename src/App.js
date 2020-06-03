@@ -6,6 +6,7 @@ import ThanksCounter from './components/ThanksCounter.tsx';
 import NewLetter from './components/NewLetter.tsx';
 import FirebaseAPI from './services/FirebaseAPI';
 import BottomNavbar from './components/BottomNavbar';
+import TopNav from './components/TopNav';
 // import Home from './components/Home';
 // import Feed from './components/Feed';
 // import Account from './components/Account';
@@ -28,10 +29,20 @@ function App() {
 
   const authProviderValue = useMemo(() => ({ isLoading, user, userProfile }), [isLoading, user, userProfile])
 
+  window.isMobile = window.innerWidth < 500
+
+  console.log(window.isMobile)
+
   return (
     <div className="App">
       <AuthContext.Provider value={authProviderValue} >
         <Router>
+          {
+            !window.isMobile && (
+              <TopNav />
+            )
+          }
+          <div className="App-content">
           <Switch>
             <Route path="/" exact render={() =>
               <Suspense fallback={<Loaders.HomeLoader />}>
@@ -64,7 +75,12 @@ function App() {
               </Suspense>
             } />
           </Switch>
-          <BottomNavbar />
+          {
+            window.isMobile && (
+              <BottomNavbar />
+            )
+          }
+          </div>
         </Router>
       </AuthContext.Provider>
 
