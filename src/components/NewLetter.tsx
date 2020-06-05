@@ -184,7 +184,10 @@ const NewLetter = (props: Props) => {
                   <span className="label">From: </span>
                   <StyledNameInput required onChange={handleNameChange} placeholder="Your Name" type="text" />
                 </StyledHeader>
-                <StyledReceipient color={!receipient.isLoadingReceipient ? receipient.accountType.color : ''}>
+                <StyledReceipient
+                  isLoadingReceipient={receipient.isLoadingReceipient}
+                  color={!receipient.isLoadingReceipient ? receipient.accountType.color : ''}
+                >
                   {
                     receipient.isLoadingReceipient ?
                       <>
@@ -538,7 +541,7 @@ const StyledMailCover = styled.div`
   }
 `
 
-const StyledReceipient = styled('div') <{ color: string; }>`
+const StyledReceipient = styled('div') <{ color: string; isLoadingReceipient: boolean; }>`
   padding: 10px 20px;
   font-size: 14px;
   display: flex;
@@ -551,6 +554,7 @@ const StyledReceipient = styled('div') <{ color: string; }>`
     display: flex;
     padding: 10px;
     border: 2px solid #56aade;
+    border-color: ${({ isLoadingReceipient }) => isLoadingReceipient ? '#d3d3d3' : '#56ade'};
     border-radius: 3px;
     max-width: 300px;
     background: #FFF;
