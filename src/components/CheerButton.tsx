@@ -29,7 +29,10 @@ const StyledCheerButtonWrapper = styled.div`
 `;
 
 const StyledCheerCounter = styled.aside`
-  background: #56aade;
+  /* background: #56aade; */
+  text-shadow: 0px 0px 2px #56aade,
+               0px 0px 5px #56aade;
+
   font-size: 14px;
   color: #FFF;
   font-weight: bold;
@@ -51,7 +54,7 @@ const StyledCheerCounter = styled.aside`
   right: 0;
   top: -30px;
   z-index: 8;
-  animation: animate-in 500ms ease-out forwards;
+  animation: animate-in 600ms ease-out forwards;
   opacity: 0;
   will-change: opacity transform;
 
@@ -171,6 +174,7 @@ const CheerButton = (props: Props) => {
   const [cheer1Audio, setCheer1Audio] = React.useState<Howl>();
   const [timerId, setTimerId] = React.useState<any>(undefined);
   const [cheerArr, setCheerArr] = React.useState<CheerClick[]>([]);
+  const [holdCount, setHoldCount] = React.useState<number>(0)
 
 
   function throttleCount(func, delay) {
@@ -210,12 +214,24 @@ const CheerButton = (props: Props) => {
 
     throttleCount(() => {
       cheer1Audio.play()
-      setAudioState({ ...audioState, isCelebrating: false })
+      setAudioState({ ...audioState, isCelebrating: true })
 
     }, 1200)
 
 
   }
+
+  // let counter
+
+  // function handleButtonHold() {
+  //   counter = setInterval(() => {
+  //     handleButtonClick()
+  //   }, 500)
+  // }
+
+  // function cancelButtonHold() {
+  //   clearInterval(counter)
+  // }
 
 
 
@@ -232,6 +248,10 @@ const CheerButton = (props: Props) => {
         preload: true,
         onend: (id) => {
           setCheerArr([])
+          setAudioState({ ...audioState, isCelebrating: false, isPlaying: false, isLoaded: true })
+        },
+        onload: () => {
+          setAudioState({ ...audioState, isLoaded: true })
         }
       })
 
@@ -266,7 +286,6 @@ const CheerButton = (props: Props) => {
     getCheerCount()
 
     // return () => {
-    // console.log(cheer1Audio);
     // }
 
   }, [])
@@ -288,7 +307,11 @@ const CheerButton = (props: Props) => {
         ))
       }
       {/* <audio preload="auto" controls={false} id="audio-el" /> */}
-      <StyledCheerButton onClick={(e: any) => { handleButtonClick(); e.target.focus() }}>
+      <StyledCheerButton
+        onClick={(e: any) => { handleButtonClick(); e.target.focus() }}
+      // onMouseDown={handleButtonHold}
+      // onMouseUp={cancelButtonHold}
+      >
         <span>👏</span>
       </StyledCheerButton>
       <Confetti active={audioState.isCelebrating} config={audioState.config} />
