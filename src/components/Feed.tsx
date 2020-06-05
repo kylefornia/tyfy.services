@@ -108,7 +108,7 @@ const StyledFeedItem = styled.div`
     color: #444;
     line-height: 1.8em;
     padding: 20px 16px;
-    min-height: 80px;
+    min-height: 120px;
     font-size: 1em;
     border-radius: 0 0 5px 5px;
   }
