@@ -63,8 +63,8 @@ const StyledGoogleSignIn = styled(StyledSignInButton)`
   .icon {
     display: inline-block;
     margin: 0;
-    height: 18px;
-    width: 18px;
+    height: 48px;
+    width: 48px;
     font-size: 1.2em;
     background: #FFF;
     padding: 15px;
@@ -183,10 +183,7 @@ const SignIn = (props: Props) => {
 
   async function signInWithGoogle() {
 
-    firebase.auth().signInWithRedirect(GoogleProvider).then((result) => {
-      // console.log(result.user);
-      // console.log(result.credential);
-      // storeUserAccount(result)
+    firebase.auth().signInWithRedirect(GoogleProvider).then(() => {
     }).catch((err) => {
       if (err.code === 'auth/account-exists-with-different-credential') {
         let pendingCred = err.credential;
@@ -200,12 +197,6 @@ const SignIn = (props: Props) => {
               result.user.linkWithRedirect(GoogleProvider)
             })
           }
-
-          firebase.auth().getRedirectResult().then((cred) => {
-            storeUserAccount(cred)
-
-            console.log(cred);
-          })
         })
 
       }
@@ -215,15 +206,11 @@ const SignIn = (props: Props) => {
 
   async function signInWithFacebook() {
     firebase.auth().signInWithRedirect(FBProvider).then((result) => {
-      // console.log(result);
-      // storeUserAccount(result)
     }).catch((err) => {
       console.log(err);
       if (err.code === 'auth/account-exists-with-different-credential') {
         let pendingCred = err.credential;
         let email = err.email;
-
-        console.log('error yeet');
 
         firebase.auth().fetchSignInMethodsForEmail(email).then((methods) => {
 
@@ -244,8 +231,6 @@ const SignIn = (props: Props) => {
 
 
   async function storeUserAccount(loggedInUser: firebase.auth.UserCredential) {
-    console.log('storing ');
-    console.log(loggedInUser);
 
     firebase.firestore().collection('users').doc(loggedInUser.user.uid)
       .get().then((snapshot) => {
@@ -270,14 +255,6 @@ const SignIn = (props: Props) => {
   const [isFBIOS, setIsFBIOS] = React.useState<Boolean>(
     false
   )
-
-  firebase.auth().getRedirectResult().then((cred) => {
-    console.log('triggered redirect');
-    console.log(cred);
-    // if (cred.user) storeUserAccount(cred)
-
-  })
-
 
   React.useEffect(() => {
 

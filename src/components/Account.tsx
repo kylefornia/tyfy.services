@@ -6,11 +6,12 @@ import SectionHeader from './SectionHeader'
 import * as firebase from 'firebase/app'
 import Loaders from './Loaders'
 import AccountTypeSelector from './AccountTypeSelector'
-import AccountTypes from './AccountTypes'
+import AccountTypes, { AccountType } from './AccountTypes'
 import { Letter, LetterMetadata } from './NewLetter'
 import AccountLocation from './AccountLocation'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
+import AccountBio from './AccountBio'
 
 interface Props {
 
@@ -78,7 +79,7 @@ const StyledButton = styled.button`
   }
 `
 
-const StyledProfileContainer = styled('div') <{ color: string; }>`
+export const StyledProfileContainer = styled('div') <{ color: string; }>`
   display: flex;
   background: #FFF;
   margin: 10px auto;
@@ -183,6 +184,8 @@ const StyledLettersContainer = styled.div`
   margin: 0 auto;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
 
   .letters-header {
     border-radius: 5px 5px 0 0;
@@ -293,24 +296,22 @@ const AccountPage = ({
   const [accountPageState, setAccountPageState] =
     React.useState<{
       user: firebase.auth.UserCredential;
-      isLoading: boolean;
       userProfile?: UserProfile;
-      userProfileLoading: boolean;
       userLetters: LetterMetadata[] | [];
       currentStep: number;
       userLocation: any;
     }>({
       user: user,
-      isLoading: isLoading,
       userProfile: userProfile,
-      userProfileLoading: true,
       userLetters: [],
-      currentStep: 1,
+      currentStep: 0,
       userLocation: null,
     })
 
+  const [userProfileLoading, setUserProfileLoading] = React.useState<boolean>(true)
+  const [isLettersLoading, setIsLettersLoading] = React.useState<boolean>(true)
   const [userProfileState, setUserProfileState] = React.useState<UserProfile>(userProfile)
-
+  const [profileAccountType, setProfileAccountType] = React.useState<AccountType>({ iconClassName: '', color: '', id: null, type: '' });
 
   async function getUserProfile() {
     return firebase.firestore()
@@ -318,8 +319,15 @@ const AccountPage = ({
       .doc(user.uid)
       .onSnapshot((snap) => {
         const profile = snap.data() as UserProfile;
+        // console.log(!!profile.accountType);
+        const accountType = (snap.exists && !!profile.accountType) ? AccountTypes.filter(({ type }) => type === profile.accountType)[0]
+          :
+          {
+            iconClassName: '', color: '', id: null, type: ''
+          };
+        setProfileAccountType(accountType)
         setUserProfileState({ ...userProfileState, ...profile })
-        setAccountPageState({ ...accountPageState, userProfileLoading: false })
+        setUserProfileLoading(false)
       })
   }
 
@@ -336,8 +344,8 @@ const AccountPage = ({
           setAccountPageState({
             ...accountPageState,
             userLetters: userLettersDoc as LetterMetadata[],
-            isLoading: false, userProfileLoading: false
           })
+          setIsLettersLoading(false)
         } else {
           setAccountPageState({ ...accountPageState, userLetters: [] })
         }
@@ -345,12 +353,38 @@ const AccountPage = ({
       })
   }
 
+  async function saveBio(name, about) {
+    firebase.app().firestore().collection('users').doc(user.uid).update({
+      name: name,
+      about: about
+    }).then(() => nextStep())
+      .catch((err) => console.log(err))
+  }
+
   function signOut() {
     firebase.auth().signOut()
   }
 
   function nextStep() {
+
     setAccountPageState({ ...accountPageState, currentStep: accountPageState.currentStep += 1 })
+
+  }
+
+  function completeProfile() {
+    if (
+      !!userProfileState.email &&
+      !!userProfileState.name &&
+      !!userProfileState.accountType &&
+      !!userProfileState.location &&
+      !!userProfileState.about
+    ) {
+      firebase.app().firestore().collection('users').doc(user.uid).update({
+        isProfileComplete: true
+      })
+        .then(() => getUserLetters())
+        .catch((err) => console.log(err))
+    }
   }
 
 
@@ -367,51 +401,81 @@ const AccountPage = ({
 
     fetch()
 
-
-
-
     return () => { unsubProfile(); unsubLetters(); }
 
   }, [user])
 
-  const profileComplete = (!!userProfileState &&
-    !!userProfileState.accountType && !!userProfileState.location) || accountPageState.currentStep == 3
+  // Fetch letters when profile is complete
+  React.useEffect(() => {
+    userProfileState.isProfileComplete && getUserLetters()
+  }, [userProfileState.isProfileComplete])
+
+  const profileComplete = userProfileState.isProfileComplete
+
+  // const profileComplete = (!!userProfileState &&
+  //   !!userProfileState.about &&
+  //   !!userProfileState.accountType && !!userProfileState.location) || accountPageState.currentStep == 3
 
   const accountTypeClassName = profileComplete ? userProfileState.accountType : ''
-
-  const profileAccountType = profileComplete && !isLoading ? AccountTypes.filter(({ type }) => type === userProfileState.accountType)[0] : undefined;
 
 
   return (<>
     <SectionHeader title="Account"></SectionHeader>
 
-    <StyledProfileContainer color={profileAccountType && profileAccountType.color}>
-      <div className="profile">
-        <div className="profile-image-container">
-          <img src={user.photoURL} />
-          {profileComplete && <i className={profileAccountType.iconClassName} />}
-        </div>
-        <div className="profile-details">
-          <strong className="name">{user.displayName}</strong>
-          {/* <p className="email">{user.email}</p> */}
-          {profileComplete ?
-            <span className="account-type">{userProfileState.accountType || ''}</span>
-            : <span className="account-type">&nbsp;</span>}
-        </div>
-      </div>
-    </StyledProfileContainer>
+    {userProfileLoading ?
+      <Loaders.AccountProfileLoader />
+      :
+      profileComplete && (
+        <StyledProfileContainer color={profileAccountType && profileAccountType.color}>
+          <div className="profile">
+            <div className="profile-image-container">
+              <img src={user.photoURL} />
+              {profileComplete && <i className={profileAccountType.iconClassName} />}
+            </div>
+            <div className="profile-details">
+              <strong className="name">{userProfileState.name}</strong>
+              {/* <p className="email">{user.email}</p> */}
+              {profileComplete ?
+                <span className="account-type">{userProfileState.accountType || ''}</span>
+                : <span className="account-type">&nbsp;</span>}
+            </div>
+          </div>
+        </StyledProfileContainer>
+      )
+    }
+
     <StyledContentContainer>
       {
-        accountPageState.userProfileLoading ?
-          <Loaders.AccountLoader />
+        userProfileLoading ?
+          <Loaders.LettersLoader />
           :
           !profileComplete ?
             [(
-              accountPageState.currentStep == 1 && <AccountTypeSelector
-                accountTypes={AccountTypes} user={user}
-                nextStep={nextStep} />)
+              accountPageState.currentStep == 0 &&
+              <AccountBio
+                user={user}
+                userProfile={userProfileState}
+                saveBio={saveBio}
+                key='account-bio'
+              />
+            ), (
+              accountPageState.currentStep == 1 &&
+              <AccountTypeSelector
+                accountTypes={AccountTypes}
+                user={user}
+                userProfile={userProfileState}
+                profileAccountType={profileAccountType}
+                nextStep={nextStep}
+                key='account-type'
+              />)
               , (
-              accountPageState.currentStep == 2 && <AccountLocation user={user} nextStep={nextStep} />
+              accountPageState.currentStep == 2 &&
+              <AccountLocation
+                user={user}
+                nextStep={nextStep}
+                completeProfile={completeProfile}
+                key='account-location'
+              />
             )]
             :
             (<StyledLettersContainer>
@@ -438,7 +502,10 @@ const AccountPage = ({
       }
 
     </StyledContentContainer>
-    <StyledButton onClick={signOut}>Sign Out</StyledButton>
+    {
+      profileComplete &&
+      <StyledButton onClick={signOut}>Sign Out</StyledButton>
+    }
   </>)
 }
 
@@ -450,16 +517,32 @@ const Account = (props: Props) => {
     redirectUser: null,
   })
 
+  async function storeUserAccount(loggedInUser: firebase.auth.UserCredential) {
+
+    firebase.firestore().collection('users').doc(loggedInUser.user.uid)
+      .get().then((snapshot) => {
+        if (!snapshot.exists) {
+          firebase.firestore().collection('users').doc(loggedInUser.user.uid).set({
+            email: loggedInUser.user?.email,
+            name: loggedInUser.user?.displayName,
+            photoURL: loggedInUser.user?.photoURL,
+            uid: loggedInUser.user?.uid,
+            // accessToken: loggedInUser.credential?.accessToken,
+          })
+        } else {
+          // alert("User " + loggedInUser.user?.uid + " is in the database")
+        }
+
+      })
+  }
+
+
   React.useEffect(() => {
-
-
-    firebase.auth().getRedirectResult().then((cred) => {
-      console.log('triggered redirect');
-      console.log(cred);
+    firebase.auth().getRedirectResult().then((cred: firebase.auth.UserCredential) => {
       if (!!cred.user) {
         setAccountState({ ...accountState, redirectUser: cred })
+        storeUserAccount(cred)
       }
-      // if (cred.user) storeUserAccount(cred)
 
     })
   }, [])

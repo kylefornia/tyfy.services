@@ -14,6 +14,8 @@ export interface UserProfile {
     photoURL: string;
     accountType?: string;
     uid: string;
+    about?: string;
+    isProfileComplete?: boolean;
     location?: UserLocation
 }
 

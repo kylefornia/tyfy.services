@@ -7,6 +7,7 @@ import * as firebase from 'firebase/app'
 interface Props {
   user: firebase.User;
   nextStep: () => void;
+  completeProfile: () => void;
 }
 
 
@@ -53,13 +54,11 @@ const AccountLocation = (props: Props) => {
   async function saveUserLocation() {
     let location = await getUserLocation()
 
-    console.log(location);
-
     firebase.firestore().collection('users').doc(props.user.uid)
       .update({
         location: location
       }).then(() => {
-        props.nextStep()
+        props.completeProfile()
       })
 
   }
