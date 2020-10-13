@@ -6,6 +6,7 @@ import * as firebase from 'firebase/app'
 import { UserLocation } from '../services/IPLocationAPI'
 import { UserProfile } from '../contexts/AuthContext';
 import AccountTypes, { AccountType } from './AccountTypes';
+import GlobeContextProvider, { GlobeContext, useGlobe } from '../contexts/GlobeContext';
 
 export interface Letter {
   id?: string;
@@ -33,6 +34,8 @@ interface Props {
 
 const NewLetter = (props: Props) => {
 
+  const { suspendGlobe, unsuspendGlobe } = React.useContext(GlobeContext)
+
   const [isSent, setIsSent] = React.useState(false);
   const [isSending, setIsSending] = React.useState(false);
   const [receipient, setReceipient] = React.useState<{
@@ -46,6 +49,7 @@ const NewLetter = (props: Props) => {
     !!e && e.preventDefault();
 
     props.setNewLetter({ ...props.newLetter, isNewLetter: false })
+    unsuspendGlobe();
   }
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -157,8 +161,21 @@ const NewLetter = (props: Props) => {
       })
   }
 
+  // async function suspendGlobe() {
+  //   const { suspendGlobe } = useGlobe()
+  //   suspendGlobe()
+  // }
+  // React.useEffect(() => {
+  //   console.log(props);
+  // }, [])
+
   React.useEffect(() => {
-    getReceipient()
+
+    (async () => {
+      getReceipient()
+      suspendGlobe()
+    })()
+
   }, [])
 
 
@@ -178,7 +195,9 @@ const NewLetter = (props: Props) => {
               :
               <>
                 <div>
-                  <StyledCloseButton onClick={(e: any) => { e.preventDefault(); closeLetter(e); }}><i className="ri-delete-bin-2-line"></i> Discard Letter</StyledCloseButton>
+                  <StyledCloseButton onClick={(e: any) => { e.preventDefault(); closeLetter(e); }}>
+                    <i className="ri-delete-bin-2-line"></i>
+                  </StyledCloseButton>
                 </div>
                 <StyledHeader>
                   <span className="label">From: </span>
@@ -241,6 +260,7 @@ const StyledNewLetterWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(5px);
 
   .label {
       margin-right: 10px;
@@ -253,7 +273,7 @@ const StyledNewLetterWrapper = styled.div`
       /* margin-left: 20px; */
       text-transform: uppercase;
       font-weight: bold;
-      color: #aaa;
+      color: #a1abb1;
       /* width: 60px; */
       font-family: 'Open Sans', Arial, Helvetica, sans-serif;
     }
@@ -265,23 +285,23 @@ const StyledNewLetterWrapper = styled.div`
 const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   display: flex;
   flex-flow: column nowrap;
-  background: #FFF;
-  /* height: ${ ({ isSent }) => isSent ? '180px' : 'calc(100% - 40px)'}; */
-  /* width: ${ ({ isSent }) => isSent ? '280px' : 'calc(100% - 20px)'}; */
+  background: #E7F5FD;
+  /* height: ${({ isSent }) => isSent ? '180px' : 'calc(100% - 40px)'}; */
+  /* width: ${({ isSent }) => isSent ? '280px' : 'calc(100% - 20px)'}; */
   width: calc(100% - 20px);
   max-width: 768px;
   /* height: 90%; */
   height: calc(100% - 60px);
   max-height: 900px;
   transition: all 300ms ease-out;
-  animation: ${ ({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'animate-in 200ms ease-out'} ;
+  animation: ${({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'animate-in 200ms ease-out'} ;
   will-change: transform, opacity;
   font-family: 'Merriweather', serif;
   font-size: 1em;
   box-shadow: 0 3px 15px rgba(0,0,0,0.1);
   border-radius: 3px;
   padding: 20px 0 10px 0;
-  position: ${ ({ isSent }) => isSent ? 'absolute' : 'relative'};
+  position: ${({ isSent }) => isSent ? 'absolute' : 'relative'};
   z-index: 3;
   overflow: auto;
 
@@ -289,7 +309,7 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
     display: flex;
     flex-flow: column nowrap;
     flex: 1;
-    background: #FFF;
+    /* background: #FFF; */
   }
 
   @keyframes animate-in {
@@ -330,21 +350,21 @@ const StyledHeader = styled.div`
   padding: 20px 20px;
   /* align-items: center; */
   justify-content: stretch;
-  background: #FFF;
+  background: #E7F5FD;
 
 `
 
 const StyledNameInput = styled.input`
   padding: 12px;
   font-family: 'Merriweather', serif;
-  border: 2px solid #e5e5e5;
+  border: 2px solid #d6dfe3;
   border-radius: 3px;
   font-size: 14px;
   flex: 1;
   max-width: 300px;
 
   &:placeholder-shown {
-    border: 2px solid #e5e5e5;
+    border: 2px solid #d6dfe3;
   }
 
   &:not(placeholder-shown) {
@@ -371,7 +391,7 @@ const StyledCloseButton = styled.button`
   color: #888;
   padding: 5px 20px;
   border-radius: 30px;
-  border: 2px solid #e5e5e5;
+  border: 2px solid #d6dfe3;
   font-family: 'Open Sans', sans-serif;
   float: right;
 
@@ -384,7 +404,7 @@ const StyledCloseButton = styled.button`
 
   i {
     font-size: 18px;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     font-weight: 400;
 
   }
@@ -398,16 +418,22 @@ const StyledTextArea = styled.textarea`
   margin: 10px;
   border-radius: 3px;
   outline: 0;
-  border: 2px solid #e5e5e5;
+  border: 2px solid #d6dfe3;
   padding: 12px;
   font-size: 1em;
   font-family: 'Merriweather', serif;
   line-height: 1.8em;
   resize: none;
+  background: rgba(255,255,255,0.8);
+
+  &:hover {
+    background: rgba(255,255,255,0.9);
+  }
 
   &:active, &:focus {
     border: 2px solid #56aade;
     outline: 0;
+    background: rgba(255,255,255,1);
   }
 `
 
@@ -434,7 +460,7 @@ const StyledInstructions = styled.p`
   display: flex;
   flex: 0;
   align-items: flex-end;
-  color: #bababa;
+  color: #a1abb1;
   font-size: 0.7em;
   font-family: 'Open Sans', sans-serif;
   padding: 10px 20px;
@@ -442,7 +468,7 @@ const StyledInstructions = styled.p`
 `
 
 const StyledMail = styled('div') <{ isSent: boolean }>`
-  display: ${ ({ isSent }) => isSent ? 'block' : 'none'} ;
+  display: ${({ isSent }) => isSent ? 'block' : 'none'} ;
   width: 300px;
   height: 200px;
   background: #ff8789;
@@ -451,7 +477,7 @@ const StyledMail = styled('div') <{ isSent: boolean }>`
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   z-index: 4;
-  animation: ${ ({ isSent }) => isSent ? 'flyRight 2000ms ease forwards' : 'none'};
+  animation: ${({ isSent }) => isSent ? 'flyRight 2000ms ease forwards' : 'none'};
 
 
   &:before{
@@ -546,7 +572,7 @@ const StyledReceipient = styled('div') <{ color: string; isLoadingReceipient: bo
   font-size: 14px;
   display: flex;
   flex-flow: row nowrap;
-  background: #FFF;
+  /* background: #FFF; */
 
 
   .profile {
@@ -554,7 +580,7 @@ const StyledReceipient = styled('div') <{ color: string; isLoadingReceipient: bo
     display: flex;
     padding: 10px;
     border: 2px solid #56aade;
-    border-color: ${({ isLoadingReceipient }) => isLoadingReceipient ? '#d3d3d3' : '#56ade'};
+    border-color: ${({ isLoadingReceipient, color }) => isLoadingReceipient ? '#d3d3d3' : color};
     border-radius: 3px;
     max-width: 300px;
     background: #FFF;
