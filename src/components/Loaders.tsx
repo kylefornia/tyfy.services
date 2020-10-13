@@ -17,12 +17,36 @@ const StyledHomeContainer = styled.div`
 `
 
 const StyledFeedContainer = styled.div`
-  padding: 20px;
+  /* padding: 20px; */
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   position: relative;
   text-align: center;
+  height: 100vh;
+  overflow: hidden;
+  
+  ul {
+    margin-top: 40px;
+  }
+`
+
+
+const StyledFeedItem = styled.div`
+  background: #FFF;
+  border-radius: 5px;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  width: calc(100% - 20px);
+  max-width: 468px;
+  display: block;
+  /* box-shadow: 0px 3px 5px rgba(0,0,0,0.1); */
+  will-change: transform;
+  -webkit-transition: box-shadow 120ms ease-out;
+  transition: box-shadow 120ms ease-out;
+  /* border: 2px solid #e7f5fd; */
+  height: 215px;
+  opacity: 0.25;
 `
 
 const StyledLoadingContainer = styled.div`
@@ -135,6 +159,29 @@ const StyledAccountProfileLoader = styled(StyledProfileContainer)`
     span { color: #d8d8d8 !important; }
 `;
 
+const StyledViewLetterContainer = styled(StyledLoadingContainer)`
+
+  i {
+    animation: grow 2s ease forwards;
+  }
+  
+    @keyframes grow {
+      0% {
+        transform: scale(1);
+      }
+
+      20% {
+        transform: scale(2);
+      }
+
+      100% {
+        transform: scale(2.3);
+      }
+    }
+
+`
+
+
 const Loaders = (props: Props) => {
   return (
     <div>
@@ -153,6 +200,13 @@ export const FeedLoader = () => (
   <StyledFeedContainer>
     <SectionHeader title="Live Feed" />
     <NewLetterButton onClick={() => undefined}></NewLetterButton>
+    <ul>
+      <li><StyledFeedItem /></li>
+      <li><StyledFeedItem /></li>
+      <li><StyledFeedItem /></li>
+      <li><StyledFeedItem /></li>
+      <li><StyledFeedItem /></li>
+    </ul>
   </StyledFeedContainer>
 )
 
@@ -160,6 +214,11 @@ export const AccountLoader = () => (
   <StyledAccountContainer>
     <i className="ri-loader-fill spin"></i>
   </StyledAccountContainer>
+)
+export const ViewLetterLoader = () => (
+  <StyledViewLetterContainer>
+    <i className="ri-mail-open-fill grow"></i>
+  </StyledViewLetterContainer>
 )
 
 export const AccountProfileLoader = () => (
@@ -194,4 +253,4 @@ export const MoreLoader = () => (
   </StyledAccountContainer>
 )
 
-export default { Loaders, HomeLoader, FeedLoader, AccountLoader, LettersLoader, AccountProfileLoader }
+export default { Loaders, HomeLoader, FeedLoader, AccountLoader, LettersLoader, AccountProfileLoader, ViewLetterLoader }

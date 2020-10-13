@@ -14,6 +14,25 @@ interface Props {
 }
 
 
+const FeedItemPlaceholder = styled.div`
+  background: #FFF;
+  border-radius: 5px;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  width: calc(100% - 20px);
+  max-width: 468px;
+  display: block;
+  /* box-shadow: 0px 3px 5px rgba(0,0,0,0.1); */
+  will-change: transform;
+  -webkit-transition: box-shadow 120ms ease-out;
+  transition: box-shadow 120ms ease-out;
+  /* border: 2px solid #e7f5fd; */
+  height: 215px;
+  opacity: 0.25;
+`
+
+
+
 const StyledFeedItem = styled.div`
   background: #FFF;
   border-radius: 5px;
@@ -405,9 +424,18 @@ const Feed = (props: Props) => {
             />
           </StyledNewLetter>
           {
-            feedData.map((letter, i) => (
-              <FeedItem key={i} {...letter} />
-            ))
+            feedData.length == 0 ?
+              [
+                <FeedItemPlaceholder />,
+                <FeedItemPlaceholder />,
+                <FeedItemPlaceholder />,
+                <FeedItemPlaceholder />,
+                <FeedItemPlaceholder />,
+              ]
+              :
+              feedData.map((letter, i) => (
+                <FeedItem key={i} {...letter} />
+              ))
           }
         </StyledFeedContainer>
 

@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import AuthContext, { useAuth, useSession, UserState, UserProfile } from '../contexts/AuthContext'
-import SignIn from './SignIn'
 import SectionHeader from './SectionHeader'
 import * as firebase from 'firebase/app'
 import Loaders from './Loaders'
@@ -12,6 +11,9 @@ import AccountLocation from './AccountLocation'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 import AccountBio from './AccountBio'
+
+const SignIn = React.lazy(() => import('./SignIn'));
+
 
 interface Props {
 
