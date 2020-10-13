@@ -1,22 +1,25 @@
 import React from 'react'
 import styled from 'styled-components';
 import * as firebase from 'firebase/app'
+import { UserProfile } from '../contexts/AuthContext';
+import { AccountType } from './AccountTypes';
 
 const AccountTypeSelectorContainer = styled.div`
   display: flex;
   flex-flow: column nowrap;
   flex: 1;
+  align-items: center;
+  justify-content: center;
   /* height: 100%; */
 
   /* padding: 5px; */
 `;
 
 const AccountTypeItem = styled.div`
-  flex: 1;
   /* float: left; */
   /* flex-basis: calc(50% - 24px); */
   flex: 1;
-  margin: 5px;
+  margin: 10px 10px;
   border-radius: 3px;
   /* width: 50%; */
   /* padding: 20px; */
@@ -28,6 +31,9 @@ const AccountTypeItem = styled.div`
   flex-flow: row nowrap;
   cursor: pointer;
   padding: 10px 10px;
+  width: calc(100% - 20px);
+  max-width: 300px;
+  max-height: 80px;
 
   transition: transform 200ms cubic-bezier(0.64, 0.57, 0.67, 1.53);
 
@@ -154,18 +160,20 @@ const AccountTypeWrapper = styled.div`
 
 interface Props {
   user: firebase.User;
+  userProfile: UserProfile;
   accountTypes: {
     id: number; type: string; iconClassName: string;
   }[];
+  profileAccountType: AccountType;
   nextStep: () => void;
 }
 
-const AccountTypeSelector = ({ user, accountTypes, nextStep }: Props) => {
+const AccountTypeSelector = ({ user, accountTypes, nextStep, userProfile, profileAccountType }: Props) => {
 
   const [accountTypeState, setAccounTypeState] = React.useState<{
     selected: { type: string; id: number } | undefined;
   }>({
-    selected: undefined,
+    selected: profileAccountType,
   })
 
 

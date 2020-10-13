@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import NewLetterButton from './NewLetterButton';
 import SectionHeader from './SectionHeader';
 import HomeHeader from './HomeHeader';
+import Account, { StyledProfileContainer } from './Account';
 
 interface Props {
 
@@ -40,19 +41,7 @@ const StyledLoadingContainer = styled.div`
     margin-bottom: 10px;
   }
 
-  .spin {
-    animation: rotate 10000ms linear infinite;
-  }
-
-  @keyframes rotate {
-    0% {
-      transform: rotate(0deg);
-    }
-
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+  
 
 `
 
@@ -88,10 +77,63 @@ const StyledAccountContainer = styled(StyledLoadingContainer)`
 
   i {
     font-size: 2.5em;
-    animation-duration: 300ms;
   }
 
 `
+
+const StyledLettersContainer = styled.div`
+  background: #FFF;
+  max-width: 468px;
+  border-radius: 5px;
+  box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
+  flex: 1;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+
+  .letters-header {
+    border-radius: 5px 5px 0 0;
+    text-align: left;
+    padding: 20px 20px;
+    /* font-family: 'Merriweather', 'Times New Roman', Times, serif; */
+    color: #666;
+    font-weight: 600;
+    /* border-bottom: 2px solid #f0f0f0; */
+    background: #e7f5fd;
+  }
+
+  .letters-content {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      color: #c3c3c3;
+      font-size: 1.5em;
+    }
+  }
+`;
+
+const StyledAccountProfileLoader = styled(StyledProfileContainer)`
+
+ 
+
+  .img {
+      margin: 10px 15px 10px 15px;
+      height: 54px;
+      width: 54px;
+      display: inline-block;
+      border-radius: 100%;
+      object-fit: cover;
+      background: #f8f8f8;
+    }
+
+    strong { color: #c3c3c3 !important; }
+    span { color: #d8d8d8 !important; }
+`;
 
 const Loaders = (props: Props) => {
   return (
@@ -120,10 +162,36 @@ export const AccountLoader = () => (
   </StyledAccountContainer>
 )
 
+export const AccountProfileLoader = () => (
+  <StyledAccountProfileLoader color="#d5d5d5">
+    <div className="profile">
+      <div className="profile-image-container">
+        <div className="img" />
+        <i className='ri-loader-2-line spin' />
+      </div>
+      <div className="profile-details">
+        <strong className="name">█████ ███████</strong>
+        <span className="account-type">██████</span>
+      </div>
+    </div>
+  </StyledAccountProfileLoader>
+)
+
+export const LettersLoader = () => (
+  <StyledLettersContainer>
+    <div className="letters-header">
+      <h5>Inbox</h5>
+    </div>
+    <div className="letters-content">
+      <i className='ri-loader-2-line spin' />
+    </div>
+  </StyledLettersContainer>
+)
+
 export const MoreLoader = () => (
   <StyledAccountContainer>
     <i className="ri-loader-fill spin"></i>
   </StyledAccountContainer>
 )
 
-export default { Loaders, HomeLoader, FeedLoader, AccountLoader }
+export default { Loaders, HomeLoader, FeedLoader, AccountLoader, LettersLoader, AccountProfileLoader }
