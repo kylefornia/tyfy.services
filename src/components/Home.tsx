@@ -1,14 +1,16 @@
 import React from 'react'
 import ThanksCounter from './ThanksCounter'
-import Globe from './Globe'
+// import Globe from './Globe'
 import NewLetterButton from './NewLetterButton';
 import FirebaseAPI from '../services/FirebaseAPI';
 import styled from 'styled-components';
 import NewLetter, { Letter } from './NewLetter';
 import HomeHeader from './HomeHeader';
+import GlobeContextProvider from '../contexts/GlobeContext';
 // import CheerButton from './CheerButton';
 
 const CheerButton = React.lazy(() => import('./CheerButton'))
+const Globe = React.lazy(() => import('./Globe'))
 
 interface Props {
 
@@ -21,10 +23,10 @@ const StyledBottomContainer = styled.div`
   height: auto;
   z-index: 2;
   text-align: center;
-  padding: 0px 0px 80px 0px;
+  padding: 0px 0px 90px 0px;
   
   @media only screen and (min-width: 500px) {
-    padding-bottom: 20px;
+    padding-bottom: 0px;
   }
 
 `
@@ -145,33 +147,36 @@ const Home = (props: Props) => {
 
 
   return (
-    <StyledHomeContainer>
-      <HomeHeader onClick={() => setNewLetter({ ...newLetter, isNewLetter: true })} />
-      {
-        letters.isLettersLoading ?
+    <GlobeContextProvider>
 
-          <StyledLoadingContainer>
-            <i className="ri-earth-fill"></i>
+      <StyledHomeContainer>
+        <HomeHeader onClick={() => setNewLetter({ ...newLetter, isNewLetter: true })} />
+        {
+          letters.isLettersLoading ?
+
+            <StyledLoadingContainer>
+              <i className="ri-earth-fill"></i>
             Loading World...
           </StyledLoadingContainer>
-          :
-          <>
-            <Globe letters={letters.letters} />
-          </>
-      }
+            :
+            <>
+              <Globe letters={letters.letters} />
+            </>
+        }
 
-      <StyledBottomContainer>
-        <CheerButton />
-      </StyledBottomContainer>
-      {
-        newLetter.isNewLetter ?
-          <NewLetter
-            setNewLetter={setNewLetter}
-            newLetter={newLetter}
-          />
-          : null
-      }
-    </StyledHomeContainer >
+        <StyledBottomContainer>
+          <CheerButton />
+        </StyledBottomContainer>
+        {
+          newLetter.isNewLetter ?
+            <NewLetter
+              setNewLetter={setNewLetter}
+              newLetter={newLetter}
+            />
+            : null
+        }
+      </StyledHomeContainer >
+    </GlobeContextProvider>
   )
 }
 

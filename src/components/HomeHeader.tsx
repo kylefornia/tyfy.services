@@ -9,7 +9,7 @@ interface Props {
 const StyledTopContainer = styled.div`
   z-index: 2;
   width: 100%;
-  margin-top: 2vh;
+  margin-top: 20px;
   text-align: center;
   font-family: 'Open Sans', Arial, Helvetica, sans-serif;
   font-size: 14px;

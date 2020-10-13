@@ -5,6 +5,9 @@ import { Letter } from './NewLetter';
 import * as firebase from 'firebase/app'
 import "firebase/storage"
 import * as THREE from 'three';
+import GlobeContextProvider, { GlobeContext } from '../contexts/GlobeContext';
+
+const NewLetter = React.lazy(() => import('./NewLetter'))
 
 
 // const fbImageUrl = require('../assets/earth-night.jpg');
@@ -62,7 +65,8 @@ const StyledGlobeContainer = styled.div`
 
 const Globe = ({ letters = [] }: Props) => {
 
-  let fbImageUrl = "https://firebasestorage.googleapis.com/v0/b/tyfyservices.appspot.com/o/earth-styled-resized.jpg?alt=media"
+  // let fbImageUrl = "https://firebasestorage.googleapis.com/v0/b/tyfyservices.appspot.com/o/earth-styled-resized.jpg?alt=media"
+  let fbImageUrl = "https://firebasestorage.googleapis.com/v0/b/tyfyservices.appspot.com/o/earth-styled-compressed.jpg?alt=media"
 
 
 
@@ -77,7 +81,9 @@ const Globe = ({ letters = [] }: Props) => {
   // }
 
 
-  const { useState, useEffect, useRef } = React;
+  const { useState, useEffect, useRef, useContext } = React;
+
+  const { isSuspended, suspendGlobe } = useContext(GlobeContext)
 
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
@@ -147,12 +153,17 @@ const Globe = ({ letters = [] }: Props) => {
 
   }
 
+
   //init globe
   useEffect(() => {
+    // console.log(globeEl);
+    // if (!globeEl.current) return () => { }
+
+    // console.log('this triggered');
 
     //auto-rotate
-    globeEl.current.controls().autoRotate = true;
-    globeEl.current.controls().autoRotateSpeed = 0.025;
+    globeEl.current.pointOfView({ altitude: window.innerWidth > 480 ? 4 : 5 }, 0)
+
 
     const globeMaterial = globeEl.current.globeMaterial();
 
@@ -170,9 +181,12 @@ const Globe = ({ letters = [] }: Props) => {
     }
 
     //set perspective
-    globeEl.current.pointOfView({ altitude: window.innerWidth > 480 ? 4 : 5 }, 300)
+    globeEl.current.pointOfView({ altitude: window.innerWidth > 480 ? 4 : 5 }, 0)
 
     window.addEventListener('resize', debouncedDimensions)
+
+
+
 
     return () => {
       window.removeEventListener('resize', debouncedDimensions)
@@ -181,6 +195,8 @@ const Globe = ({ letters = [] }: Props) => {
 
   useEffect(() => {
     formatPoints(letters as Letter[])
+    globeEl.current.controls().autoRotate = true;
+    globeEl.current.controls().autoRotateSpeed = 0.025;
   }, [letters])
 
   function handleArcHover(arc: any) {
@@ -195,6 +211,14 @@ const Globe = ({ letters = [] }: Props) => {
 
   }
 
+  useEffect(() => {
+    if (!!globeEl.current) {
+      isSuspended ?
+        globeEl.current.pauseAnimation() :
+        globeEl.current.resumeAnimation()
+    }
+  }, [isSuspended])
+
   function handleArcClick(arc: any) {
     // TODO: Click function
 
@@ -206,7 +230,7 @@ const Globe = ({ letters = [] }: Props) => {
     <StyledGlobeContainer>
       <ReactGlobe
         ref={globeEl}
-        animateIn={false}
+        animateIn={true}
         globeImageUrl={fbImageUrl}
         backgroundColor={'#56aade'}
         showGraticules={false}
