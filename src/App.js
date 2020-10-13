@@ -31,8 +31,6 @@ function App() {
 
   window.isMobile = window.innerWidth < 500
 
-  console.log(window.isMobile)
-
   return (
     <div className="App">
       <AuthContext.Provider value={authProviderValue} >
@@ -43,43 +41,43 @@ function App() {
             )
           }
           <div className="App-content">
-          <Switch>
-            <Route path="/" exact render={() =>
-              <Suspense fallback={<Loaders.HomeLoader />}>
-                <Home />
-              </Suspense>
-            } />
-            <Route path="/feed" render={() =>
-              <Suspense fallback={<Loaders.FeedLoader />}>
-                <Feed />
-              </Suspense>
-            } />
-            <Route path="/account" render={() =>
-              <Suspense fallback={<Loaders.AccountLoader />}>
-                <Account />
-              </Suspense>
-            } />
-            <Route path="/more" render={() =>
-              <Suspense fallback={<Loaders.AccountLoader />}>
-                <More />
-              </Suspense>
-            } />
-            <Route path="/letter/:id" render={() =>
-              <Suspense fallback={<Loaders.AccountLoader />}>
-                <ViewLetter />
-              </Suspense>
-            } />
-            <Route path="/privacy" render={() =>
-              <Suspense fallback={<Loaders.AccountLoader />}>
-                <PrivacyPolicy />
-              </Suspense>
-            } />
-          </Switch>
-          {
-            window.isMobile && (
-              <BottomNavbar />
-            )
-          }
+            <Switch>
+              <Route path="/" exact render={() =>
+                <Suspense fallback={<Loaders.HomeLoader />}>
+                  <Home />
+                </Suspense>
+              } />
+              <Route path="/feed" render={() =>
+                <Suspense fallback={<Loaders.FeedLoader />}>
+                  <Feed />
+                </Suspense>
+              } />
+              <Route path="/account" render={() =>
+                <Suspense fallback={<Loaders.AccountLoader />}>
+                  <Account />
+                </Suspense>
+              } />
+              <Route path="/more" render={() =>
+                <Suspense fallback={<Loaders.AccountLoader />}>
+                  <More />
+                </Suspense>
+              } />
+              <Route path="/letter/:id" render={() =>
+                <Suspense fallback={<Loaders.AccountLoader />}>
+                  <ViewLetter />
+                </Suspense>
+              } />
+              <Route path="/privacy" render={() =>
+                <Suspense fallback={<Loaders.AccountLoader />}>
+                  <PrivacyPolicy />
+                </Suspense>
+              } />
+            </Switch>
+            {
+              window.isMobile && (
+                <BottomNavbar />
+              )
+            }
           </div>
         </Router>
       </AuthContext.Provider>

@@ -72,6 +72,10 @@ html, body{
 	.App-content {
 		padding-top: 58px;
 		height: calc(100% - 60px);
+
+	
+}}
+
 .spin {
 	animation: rotate 5000ms linear infinite;
 }
