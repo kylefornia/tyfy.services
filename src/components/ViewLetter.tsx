@@ -41,8 +41,6 @@ const ViewLetter = (props: Props) => {
   }
 
   function goBack() {
-    console.log(props);
-    // const location = useLocation();
     props.history && props.history.goBack();
   }
 
@@ -55,7 +53,7 @@ const ViewLetter = (props: Props) => {
 
       {
         letterData.loading ?
-          <Loaders.AccountLoader />
+          <Loaders.ViewLetterLoader />
           :
           <>
             {/* <Toolbar>
@@ -64,13 +62,15 @@ const ViewLetter = (props: Props) => {
             </button>
             </Toolbar> */}
             <LetterContentContainer>
-              <LetterContent>
-                <div className="letter-header">
-                  <Toolbar>
-                    <button onClick={goBack} className="back-button">
-                      <i className="ri-arrow-left-line" /> Back
+              {/* <Toolbar>
+                <button onClick={goBack} className="back-button">
+                  <i className="ri-arrow-left-line" /> Back
                   </button>
-                  </Toolbar>
+              </Toolbar> */}
+              <LetterContent>
+                <div className="paper"></div>
+                <div className="letter-header">
+
                   <div className="from-container">
                     <span className="label">From: </span>
                     <div className="from-profile">
@@ -113,11 +113,13 @@ const ViewLetter = (props: Props) => {
                   }
                 </div>
 
+                <div className="letter-message-container">
 
-                <p className="letter-message">
-                  {letterData.letter.message}
-                </p>
-                <span className="date">{moment(letterData.letter.date.toDate()).fromNow()}</span>
+                  <p className="letter-message">
+                    {letterData.letter.message}
+                  </p>
+                  <span className="date">{moment(letterData.letter.date.toDate()).fromNow()}</span>
+                </div>
 
               </LetterContent>
             </LetterContentContainer>
@@ -137,32 +139,56 @@ const LetterContainer = styled.div`
   height: calc(100% - 60px);
   flex-flow: column nowrap;
 
+  }
+
   /* margin-bottom: 70px; */
 
   .letter-header {
     background: #e7f5fd;
-    padding: 20px 0 0px 0;
-    border-radius: 5px 5px 0 0;
+    padding: 40px 0 0px 0;
+    /* border-radius: 5px 5px 0 0; */
+    transform-origin: 50% 100%;
+    animation: open-header 800ms ease;
+
+    @keyframes open-header {
+      0% {
+        transform: perspective(350px) rotateX(-120deg);
+      }
+
+      100% {
+        transform: perspective(250px) rotate(0deg);
+      }
+    }
   }
+
+ 
 
 `;
 
 
 const LetterContent = styled.div`
-  background: #FFF;
+  /* background: #FFF; */
   padding: 0 0px;
   /* width: calc(100% - 60px); */
   /* max-width: 468px; */
   width: 100%;
   margin: 0 auto;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   /* margin-bottom: 60px; */
   /* overflow: auto; */
-  max-height: calc(100% - 90px);
-  flex: 1;
+  height: calc(100% - 60px);
+  max-height: 605px;
+  /* height: 605px; */
+  /* flex: 1; */
+  display: flex;
+  flex-flow: column nowrap;
 
-
-  box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+  /* background-color: #fff; */
+  /* overflow: hidden; */
+  position: relative;
+  backface-visibility: hidden;
+  /* box-shadow: 0px 5px 20px rgba(0,0,0,0.1); */
 
   .date {
     font-size: 0.7em;
@@ -173,6 +199,8 @@ const LetterContent = styled.div`
     text-transform: uppercase;
     padding: 20px 20px;
     font-weight: bold;
+    animation: open-contents-text 800ms linear forwards;
+
   }
 
   .from-container, .to-container {
@@ -262,6 +290,8 @@ const LetterContent = styled.div`
 
     }
 
+    
+
 
   }
 
@@ -270,6 +300,40 @@ const LetterContent = styled.div`
 
   }
 
+  .letter-message-container {
+    flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    background: #fff;
+
+    animation: open-contents 800ms ease-out forwards;
+    transform-origin: 50% 0%;
+    /* transform: rotateX(180deg); */
+    backface-visibility: visible;
+    /* border-radius: 0% 0% 5px 5px; */
+    
+
+
+    @keyframes open-contents {
+      0% {
+        /* box-shadow: 0px 0px 50px rgba(0,0,20,0.2); */
+        /* background: #f3f3f3; */
+        transform:  rotateX(-145deg);
+      }
+
+      20% {
+        transform:  rotateX(-145deg);
+      }
+
+      100% {
+        /* box-shadow: none; */
+        /* background: #FFF; */
+        transform:  rotateX(0deg);
+      }
+  }
+
+
+
 
   .letter-message {
     min-height: 200px;
@@ -277,13 +341,60 @@ const LetterContent = styled.div`
     font-size: 1em;
     padding: 20px;
     font-family: 'Merriweather', 'Times New Roman', Times, serif;
+    flex: 1;
+
+    animation: open-contents-text 800ms linear forwards;
+
+
+    @keyframes open-contents-text {
+      0% {
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
   }
+
+    
+    }
+    
+  }
+
+  animation: open-container 500ms ease;
+  @keyframes open-container {
+      /* 0% {
+        background: transparent;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0);
+
+      }
+
+      90% {
+        background: transparent;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+
+      }
+
+      100% {
+        background: #FFF;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+
+      } */
+    }
+
+  
 
 `;
 
 const Toolbar = styled.div`
-  padding: 0 0 40px 16px;
+  padding: 10px 0 10px 0px;
   display: flex;
+  justify-content: flex-start;
+  width: 100%;
   /* margin-left: 16px; */
   /* margin-bottom: 10px; */
   /* width: calc(100% - 60px); */
@@ -292,7 +403,7 @@ const Toolbar = styled.div`
   /* margin-top: 40px; */
 
   @media only screen and (max-width: 500px) {
-    padding-bottom: 20px;
+    /* padding-bottom: 20px; */
   }
 
 
@@ -300,8 +411,8 @@ const Toolbar = styled.div`
 
   .back-button {
     padding: 8px 20px;
-    /* border: 2px solid #e7f5fd; */
-    border: 0;
+    border: 2px solid #FFF;
+    /* border: 0; */
     background: rgba(255,255,255,0.9);
     border-radius: 5px;
     text-transform: uppercase;
@@ -318,6 +429,11 @@ const Toolbar = styled.div`
       font-size: 18px;
       margin-right: 16px;
     }
+
+    &:hover {
+      border: 2px solid #57DECE;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -327,7 +443,87 @@ const LetterContentContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: calc(100% - 20px);
-  overflow-x: hidden;
+  position: relative;
+  /* overflow-x: hidden; */
   max-width: 468px;
   margin: 0 auto;
+  flex-flow: column nowrap;
+  /* animation: open-content 500ms ease; */
+  transform-origin: 50% 50%;
+  /* background: #FFF; */
+
+
+  @keyframes open-content {
+      0% {
+        opacity: 0;
+        /* transform: perspective(350px) rotateX(-180deg); */
+
+      }
+
+      80% {
+        /* opacity: 0; */
+        /* transform: perspective(-350px) rotateX(-90deg); */
+      }
+
+      100% {
+        opacity: 1;
+        /* transform: perspective(250px) rotate(0deg); */
+        
+      }
+    }
+
+  .paper {
+    /* background-color: #eee; */
+    background-image: -webkit-linear-gradient(hsla(0,0%,0%,.025), hsla(0,0%,100%,.05) 33%, hsla(0,0%,0%,.05) 33%, hsla(0,0%,100%,.05) 67%, hsla(0,0%,0%,.05) 67%, hsla(0,0%,100%,.025));
+    box-shadow: inset 0 0 0 .1em hsla(0,0%,0%,.1),
+                inset 0 0 1em hsla(0,0%,0%,.05),
+                0 .1em .25em hsla(0,0%,0%,.1);
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    height: 100%;
+    width: 100%;
+    animation: open-paper 800ms linear;
+    opacity: 0.75;
+    /* border-radius: 5px; */
+
+
+    @keyframes open-paper {
+      0% {
+        opacity: 0;
+        /* transform: perspective(-350px) rotateX(-180deg); */
+
+      }
+
+     85% {
+        opacity: 0;
+        /* transform: perspective(-350px) rotateX(-90deg); */
+      }
+
+      100% {
+        opacity: 0.75;
+        /* transform: perspective(-250px) rotate(0deg); */
+        
+      }
+    }
+
+}
+
+animation: open-letter 500ms ease-out forwards;
+  @keyframes open-letter {
+    0% {
+      transform: scale(0);
+    }
+
+    60% {
+      transform: scale(1.1);
+
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  
 `;
