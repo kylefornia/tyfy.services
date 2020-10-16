@@ -426,11 +426,11 @@ const Feed = (props: Props) => {
           {
             feedData.length == 0 ?
               [
-                <FeedItemPlaceholder />,
-                <FeedItemPlaceholder />,
-                <FeedItemPlaceholder />,
-                <FeedItemPlaceholder />,
-                <FeedItemPlaceholder />,
+                <FeedItemPlaceholder key='fip-1' />,
+                <FeedItemPlaceholder key='fip-2' />,
+                <FeedItemPlaceholder key='fip-3' />,
+                <FeedItemPlaceholder key='fip-4' />,
+                <FeedItemPlaceholder key='fip-5' />,
               ]
               :
               feedData.map((letter, i) => (
