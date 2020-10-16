@@ -5,7 +5,7 @@ import Confetti from 'react-dom-confetti'
 import * as firebase from 'firebase/app';
 import { Howl } from 'howler'
 
-const CHEER_MP3_URL = 'https://firebasestorage.googleapis.com/v0/b/tyfyservices.appspot.com/o/Big-crowd-cheering.mp3?alt=media&token=d8e78870-82a5-4a37-b0ab-42518b02f0c1'
+const CHEER_MP3_URL = 'https://firebasestorage.googleapis.com/v0/b/tyfyservices.appspot.com/o/Big-crowd-cheering-comp2.mp3?alt=media&token=36ebde2e-42d5-4e67-aa4b-ebca610d9f58'
 
 const defaultConfettiConfig = {
   stagger: 0,
@@ -17,6 +17,7 @@ const StyledCheerButtonWrapper = styled.div`
   display: block;
   position: relative;
   width: 100%;
+  padding-bottom: 20px;
 
   div {
     margin: 0 auto;
@@ -193,6 +194,8 @@ const CheerButton = (props: Props) => {
     // window.navigator.vibrate(1);
     // setClicks(clicks += 1)
 
+    cheer1Audio.load()
+
     setAudioState({
       ...audioState,
       isCelebrating: true,
@@ -245,7 +248,7 @@ const CheerButton = (props: Props) => {
 
       const sound = new Howl({
         src: [CHEER_MP3_URL],
-        preload: true,
+        preload: false,
         onend: (id) => {
           setCheerArr([])
           setAudioState({ ...audioState, isCelebrating: false, isPlaying: false, isLoaded: true })
