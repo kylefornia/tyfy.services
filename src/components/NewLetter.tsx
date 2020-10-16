@@ -294,7 +294,7 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   height: calc(100% - 60px);
   max-height: 900px;
   transition: all 300ms ease-out;
-  animation: ${({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'animate-in 200ms ease-out'} ;
+  animation: ${({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'new-letter-animate-in 200ms forwards'} ;
   will-change: transform, opacity;
   font-family: 'Merriweather', serif;
   font-size: 1em;
@@ -304,6 +304,7 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   position: ${({ isSent }) => isSent ? 'absolute' : 'relative'};
   z-index: 3;
   overflow: auto;
+  transform-origin: 50% 50%;
 
   form {
     display: flex;
@@ -312,14 +313,14 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
     /* background: #FFF; */
   }
 
-  @keyframes animate-in {
+  @keyframes new-letter-animate-in {
     0% {
-      transform: translateY(100px);
-      opacity: 0;
+      /* transform: translateY(-100px); */
+      /* opacity: 0; */
     }
     100% {
-      transform: translateY(0);
-      opacity: 1;
+      /* transform: translateY(0); */
+      /* opacity: 1; */
     }
 
   }
