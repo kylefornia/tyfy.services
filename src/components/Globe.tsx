@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactGlobe from 'react-globe.gl';
 import styled from 'styled-components'
-import { Letter } from './NewLetter';
+import NewLetter, { Letter } from './NewLetter';
 import * as firebase from 'firebase/app'
 import "firebase/storage"
 import * as THREE from 'three';
 import GlobeContextProvider, { GlobeContext } from '../contexts/GlobeContext';
 
-const NewLetter = React.lazy(() => import('./NewLetter'))
+// const NewLetter = React.lazy(() => import('./NewLetter'))
 
 
 // const fbImageUrl = require('../assets/earth-night.jpg');
@@ -56,10 +56,15 @@ const StyledGlobeContainer = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+  
   /* padding-top: 5vh; */
 
   @media only screen and (min-width: 500px) {
     top: 60px;
+  }
+
+  & div :focus{
+    outline: 0;
   }
 `
 
@@ -230,7 +235,7 @@ const Globe = ({ letters = [] }: Props) => {
     <StyledGlobeContainer>
       <ReactGlobe
         ref={globeEl}
-        animateIn={true}
+        animateIn={false}
         globeImageUrl={fbImageUrl}
         backgroundColor={'#56aade'}
         showGraticules={false}

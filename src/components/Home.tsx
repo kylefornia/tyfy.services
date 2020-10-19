@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import ThanksCounter from './ThanksCounter'
 // import Globe from './Globe'
 import NewLetterButton from './NewLetterButton';
@@ -7,7 +7,9 @@ import styled from 'styled-components';
 import NewLetter, { Letter } from './NewLetter';
 import HomeHeader from './HomeHeader';
 import GlobeContextProvider from '../contexts/GlobeContext';
+import { TourContext } from '../contexts/TourContext';
 // import CheerButton from './CheerButton';
+
 
 const CheerButton = React.lazy(() => import('./CheerButton'))
 const Globe = React.lazy(() => import('./Globe'))
@@ -68,7 +70,6 @@ const Home = (props: Props) => {
 
   return (
     <GlobeContextProvider>
-
       <StyledHomeContainer>
         <HomeHeader onClick={() => setNewLetter({ ...newLetter, isNewLetter: true })} />
         {
@@ -79,13 +80,23 @@ const Home = (props: Props) => {
             Loading World...
           </StyledLoadingContainer>
             :
-            <>
+            <Suspense fallback={
+              <StyledLoadingContainer>
+                <i className="ri-earth-fill"></i>
+            Loading World...
+          </StyledLoadingContainer>
+            }>
               <Globe letters={letters.letters} />
-            </>
+            </Suspense>
         }
 
         <StyledBottomContainer>
-          <CheerButton />
+
+          <Suspense fallback={
+            <div style={{ height: 80, width: 80, borderRadius: '100%', background: '#FFF', margin: '0 auto' }} />
+          }>
+            <CheerButton />
+          </Suspense>
         </StyledBottomContainer>
         {
           newLetter.isNewLetter ?
@@ -95,8 +106,16 @@ const Home = (props: Props) => {
             />
             : null
         }
-      </StyledHomeContainer >
-    </GlobeContextProvider>
+      </StyledHomeContainer>
+      <TourContext.Consumer>
+        {({ isTouring, startTour }) => (
+          <div>
+            <div>touring: {isTouring.toString()}</div>
+            <button onClick={startTour}>start tour</button>
+          </div>
+        )}
+      </TourContext.Consumer>
+    </GlobeContextProvider >
   )
 }
 
