@@ -14,6 +14,7 @@ import AuthContext, { useAuth, useSession } from './contexts/AuthContext'
 import Loaders from './components/Loaders';
 import ViewLetter from './components/ViewLetter';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import TourContextProvider from './contexts/TourContext';
 
 const Home = React.lazy(() => import('./components/Home'));
 const Feed = React.lazy(() => import('./components/Feed'));
@@ -34,6 +35,7 @@ function App() {
   return (
     <div className="App">
       <AuthContext.Provider value={authProviderValue} >
+        <TourContextProvider>
         <Router>
           {
             !window.isMobile && (
@@ -80,6 +82,7 @@ function App() {
             }
           </div>
         </Router>
+        </TourContextProvider>
       </AuthContext.Provider>
 
 

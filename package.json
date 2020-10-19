@@ -24,6 +24,7 @@
     "react-number-format": "^4.4.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
+    "reactour": "^1.18.0",
     "styled-components": "^5.2.0",
     "typescript": "^3.8.3"
   },
