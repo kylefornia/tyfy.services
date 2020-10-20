@@ -28,8 +28,8 @@ export const useTour = () => {
 
 const TourContextProvider = ({ children }) => {
 
-  
-  
+
+
 
   const [tourState, setTourState] = useState<TourState>
     (({
@@ -47,32 +47,32 @@ const TourContextProvider = ({ children }) => {
   }
 
   function setTourStep(stepNum) {
-    setTourState(prevState => ({... prevState, tourStep: +stepNum }))
+    setTourState(prevState => ({ ...prevState, tourStep: +stepNum }))
   }
 
   async function setShouldTour(shouldTourVal) {
     await localforage.setItem('shouldTour', shouldTourVal)
-    setTourState(prevState => ({ ...prevState, shouldTour: shouldTourVal}))
+    setTourState(prevState => ({ ...prevState, shouldTour: shouldTourVal }))
   }
+
+  //@ts-ignore
+  window.startTour = startTour
 
   useEffect(() => {
     // check if user has toured
     async function checkShouldTour() {
-      
-      let shouldTour:boolean | null = true
-      try {
-          shouldTour = await localforage.getItem('shouldTour') as boolean | null
-          console.log(typeof shouldTour)
-          console.log(shouldTour)
-          if(shouldTour !== null && !shouldTour) {
-            setShouldTour(false)
-            stopTour()
-          } else if(shouldTour === null || shouldTour) {
-            setShouldTour(true)
-            startTour()
-          }
 
-          console.log(tourState)
+      let shouldTour: boolean | null = true
+      try {
+        shouldTour = await localforage.getItem('shouldTour') as boolean | null
+
+        if (shouldTour !== null && !shouldTour) {
+          setShouldTour(false)
+          stopTour()
+        } else if (shouldTour === null || shouldTour) {
+          setShouldTour(true)
+          startTour()
+        }
       } catch (error) {
         console.log(error)
       }
@@ -83,15 +83,15 @@ const TourContextProvider = ({ children }) => {
 
 
   return (
-      <TourContext.Provider value={{
-        ...tourState,
-        startTour: startTour,
-        stopTour: stopTour,
-        setTourStep: setTourStep,
-        setShouldTour: setShouldTour
-      }}>
-        {children}
-      </TourContext.Provider>
+    <TourContext.Provider value={{
+      ...tourState,
+      startTour: startTour,
+      stopTour: stopTour,
+      setTourStep: setTourStep,
+      setShouldTour: setShouldTour
+    }}>
+      {children}
+    </TourContext.Provider>
   )
 }
 

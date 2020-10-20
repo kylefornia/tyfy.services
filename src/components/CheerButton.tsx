@@ -83,7 +83,9 @@ const StyledCheerCounter = styled.aside`
 
 `;
 
-const StyledCheerButton = styled.button`
+const StyledCheerButton = styled('button').attrs({
+  'data-tour': 'step-2'
+})`
   height: 80px;
   width: 80px;
   border: 0px solid #f0f0f0;

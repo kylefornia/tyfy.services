@@ -107,7 +107,7 @@ const Home = (props: Props) => {
             : null
         }
       </StyledHomeContainer>
-    
+
     </GlobeContextProvider >
   )
 }

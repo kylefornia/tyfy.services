@@ -15,6 +15,7 @@ import Loaders from './components/Loaders';
 import ViewLetter from './components/ViewLetter';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TourContextProvider, { TourContext } from './contexts/TourContext';
+import GlobeContextProvider from './contexts/GlobeContext';
 
 const Home = React.lazy(() => import('./components/Home'));
 const Feed = React.lazy(() => import('./components/Feed'));
@@ -82,22 +83,20 @@ function App() {
                 <BottomNavbar />
               )
             }
+            <GlobeContextProvider>
               <TourContext.Consumer>
               {({ isTouring, startTour, stopTour, setShouldTour }) => (
-                <div>
-                  <div>touring: {isTouring.toString()}</div>
-                  <button onClick={startTour}>start tour</button>
-                  <Suspense fallback=''>
+          
                   <Tour 
                     isTouring={isTouring}
                     startTour={startTour}
                     stopTour={stopTour}
                     setShouldTour={setShouldTour}
                   />
-                  </Suspense>
-                </div>
+             
               )}
             </TourContext.Consumer>
+            </GlobeContextProvider>
           </div>
         </Router>
         </TourContextProvider>

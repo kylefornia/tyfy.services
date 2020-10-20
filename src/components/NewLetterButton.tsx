@@ -28,7 +28,7 @@ const StyledNewLetterButton = styled.button`
 
 const NewLetterButton = (props: Props) => {
   return (
-    <StyledNewLetterButton {...props}>
+    <StyledNewLetterButton {...props} data-tour="step-1">
       Say Thank You
     </StyledNewLetterButton>
   )

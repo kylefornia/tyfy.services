@@ -47,7 +47,9 @@ function debounce(fn: any, ms: number) {
   };
 }
 
-const StyledGlobeContainer = styled.div`
+const StyledGlobeContainer = styled('div').attrs({
+  'data-tour': 'step-0'
+})`
   width: 100%;
   height: 100%;
   margin: 0;
@@ -105,7 +107,8 @@ const Globe = ({ letters = [] }: Props) => {
       lettersData.map((letter: Letter): ArcData => {
 
         const tooltip = `<div 
-            style="background: #FFF; 
+            style="background: rgba(255,255,255,0.5);
+                  backdrop-filter: blur(10px); 
                   padding: 16px;
                   color: #444;
                   font-family: 'Merriweather', serif;
@@ -227,6 +230,10 @@ const Globe = ({ letters = [] }: Props) => {
   function handleArcClick(arc: any) {
     // TODO: Click function
 
+
+  }
+
+  function handleGlobeLoad(globe) {
 
   }
 
