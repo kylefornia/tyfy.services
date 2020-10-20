@@ -15,6 +15,7 @@
     "axios": "^0.20.0",
     "firebase": "^7.21.1",
     "howler": "^2.2.0",
+    "localforage": "^1.9.0",
     "moment": "^2.29.0",
     "react": "^16.13.1",
     "react-country-flag": "^2.3.0",

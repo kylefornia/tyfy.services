@@ -107,14 +107,7 @@ const Home = (props: Props) => {
             : null
         }
       </StyledHomeContainer>
-      <TourContext.Consumer>
-        {({ isTouring, startTour }) => (
-          <div>
-            <div>touring: {isTouring.toString()}</div>
-            <button onClick={startTour}>start tour</button>
-          </div>
-        )}
-      </TourContext.Consumer>
+    
     </GlobeContextProvider >
   )
 }

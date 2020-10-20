@@ -14,12 +14,14 @@ import AuthContext, { useAuth, useSession } from './contexts/AuthContext'
 import Loaders from './components/Loaders';
 import ViewLetter from './components/ViewLetter';
 import PrivacyPolicy from './components/PrivacyPolicy';
-import TourContextProvider from './contexts/TourContext';
+import TourContextProvider, { TourContext } from './contexts/TourContext';
 
 const Home = React.lazy(() => import('./components/Home'));
 const Feed = React.lazy(() => import('./components/Feed'));
 const Account = React.lazy(() => import('./components/Account'));
 const More = React.lazy(() => import('./components/More'));
+const Tour = React.lazy(() => import('./components/Tour'));
+
 
 FirebaseAPI.init()
 
@@ -80,6 +82,22 @@ function App() {
                 <BottomNavbar />
               )
             }
+              <TourContext.Consumer>
+              {({ isTouring, startTour, stopTour, setShouldTour }) => (
+                <div>
+                  <div>touring: {isTouring.toString()}</div>
+                  <button onClick={startTour}>start tour</button>
+                  <Suspense fallback=''>
+                  <Tour 
+                    isTouring={isTouring}
+                    startTour={startTour}
+                    stopTour={stopTour}
+                    setShouldTour={setShouldTour}
+                  />
+                  </Suspense>
+                </div>
+              )}
+            </TourContext.Consumer>
           </div>
         </Router>
         </TourContextProvider>
