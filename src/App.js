@@ -86,14 +86,14 @@ function App() {
             <GlobeContextProvider>
               <TourContext.Consumer>
               {({ isTouring, startTour, stopTour, setShouldTour }) => (
-          
-                  <Tour 
-                    isTouring={isTouring}
-                    startTour={startTour}
-                    stopTour={stopTour}
-                    setShouldTour={setShouldTour}
-                  />
-             
+                  <Suspense fallback=''>
+                    <Tour 
+                      isTouring={isTouring}
+                      startTour={startTour}
+                      stopTour={stopTour}
+                      setShouldTour={setShouldTour}
+                    />
+                  </Suspense>
               )}
             </TourContext.Consumer>
             </GlobeContextProvider>

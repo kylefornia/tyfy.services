@@ -180,3 +180,7 @@ body {
 		transform: rotate(360deg);
 	}
 }
+
+.tour-mask-style {
+	opacity: 0.35;
+}
