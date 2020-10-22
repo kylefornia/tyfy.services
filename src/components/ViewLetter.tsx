@@ -139,6 +139,7 @@ const LetterContainer = styled('div').attrs({
   /* justify-content: center; */
   /* flex: 1; */
   height: calc(100% - 60px);
+  overflow: hidden;
   flex-flow: column nowrap;
 
   }
@@ -511,14 +512,14 @@ const LetterContentContainer = styled.div`
 
 }
 
-animation: open-letter 500ms ease-out forwards;
+animation: open-letter 1000ms ease-out forwards;
   @keyframes open-letter {
     0% {
-      transform: scale(0);
+      transform: scale(0.2);
     }
 
-    60% {
-      transform: scale(1.1);
+    20% {
+      transform: scale(1.2);
 
     }
 
