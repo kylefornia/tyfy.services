@@ -172,6 +172,7 @@ const StyledContentContainer = styled.div`
   display: flex;
   flex: 1;
   height: 100%;
+  max-height: 800px;
   width: calc(100% - 20px); 
   margin: 0 auto;
   margin-bottom: 10px;
@@ -379,8 +380,7 @@ const AccountPage = ({
       !!userProfileState.email &&
       !!userProfileState.name &&
       !!userProfileState.accountType &&
-      !!userProfileState.location &&
-      !!userProfileState.about
+      !!userProfileState.location
     ) {
       firebase.app().firestore().collection('users').doc(user.uid).update({
         isProfileComplete: true
@@ -422,94 +422,95 @@ const AccountPage = ({
   const accountTypeClassName = profileComplete ? userProfileState.accountType : ''
 
 
-  return (<>
-    <SectionHeader title="Account"></SectionHeader>
+  return (
+    <AccountPageContainer>
+      <SectionHeader title="Account"></SectionHeader>
 
-    {userProfileLoading ?
-      <Loaders.AccountProfileLoader />
-      :
-      profileComplete && (
-        <StyledProfileContainer color={profileAccountType && profileAccountType.color}>
-          <div className="profile">
-            <div className="profile-image-container">
-              <img src={user.photoURL} />
-              {profileComplete && <i className={profileAccountType.iconClassName} />}
-            </div>
-            <div className="profile-details">
-              <strong className="name">{userProfileState.name}</strong>
-              {/* <p className="email">{user.email}</p> */}
-              {profileComplete ?
-                <span className="account-type">{userProfileState.accountType || ''}</span>
-                : <span className="account-type">&nbsp;</span>}
-            </div>
-          </div>
-        </StyledProfileContainer>
-      )
-    }
-
-    <StyledContentContainer>
-      {
-        userProfileLoading ?
-          <Loaders.LettersLoader />
-          :
-          !profileComplete ?
-            [(
-              accountPageState.currentStep == 0 &&
-              <AccountBio
-                user={user}
-                userProfile={userProfileState}
-                saveBio={saveBio}
-                key='account-bio'
-              />
-            ), (
-              accountPageState.currentStep == 1 &&
-              <AccountTypeSelector
-                accountTypes={AccountTypes}
-                user={user}
-                userProfile={userProfileState}
-                profileAccountType={profileAccountType}
-                nextStep={nextStep}
-                key='account-type'
-              />)
-              , (
-              accountPageState.currentStep == 2 &&
-              <AccountLocation
-                user={user}
-                nextStep={nextStep}
-                completeProfile={completeProfile}
-                key='account-location'
-              />
-            )]
-            :
-            (<StyledLettersContainer>
-              <div className="letters-header">
-                <h5>Inbox</h5>
+      {userProfileLoading ?
+        <Loaders.AccountProfileLoader />
+        :
+        profileComplete && (
+          <StyledProfileContainer color={profileAccountType && profileAccountType.color}>
+            <div className="profile">
+              <div className="profile-image-container">
+                <img src={user.photoURL} />
+                {profileComplete && <i className={profileAccountType.iconClassName} />}
               </div>
-              {
-                accountPageState.userLetters.length > 0 ?
-                  (accountPageState.userLetters || []).map((letter: LetterMetadata) => (
-                    <StyledUserLetter key={letter.id}>
-                      <Link to={`/letter/${letter.id}`}>
-                        <div className="header">
-                          <span className="name">{letter.name}</span>
-                          <span className="date">{moment(letter.date.toDate()).fromNow()}</span>
-                        </div>
-                        <p className="message">{letter.message.length >= 40 ? (`${letter.message}\u2026`) : letter.message}</p>
-                      </Link>
-                    </StyledUserLetter>
-                  ))
-                  :
-                  <NoLetters />
-              }
-            </StyledLettersContainer>)
+              <div className="profile-details">
+                <strong className="name">{userProfileState.name}</strong>
+                {/* <p className="email">{user.email}</p> */}
+                {profileComplete ?
+                  <span className="account-type">{userProfileState.accountType || ''}</span>
+                  : <span className="account-type">&nbsp;</span>}
+              </div>
+            </div>
+          </StyledProfileContainer>
+        )
       }
 
-    </StyledContentContainer>
-    {
-      profileComplete &&
-      <StyledButton onClick={signOut}>Sign Out</StyledButton>
-    }
-  </>)
+      <StyledContentContainer>
+        {
+          userProfileLoading ?
+            <Loaders.LettersLoader />
+            :
+            !profileComplete ?
+              [(
+                accountPageState.currentStep == 0 &&
+                <AccountBio
+                  user={user}
+                  userProfile={userProfileState}
+                  saveBio={saveBio}
+                  key='account-bio'
+                />
+              ), (
+                accountPageState.currentStep == 1 &&
+                <AccountTypeSelector
+                  accountTypes={AccountTypes}
+                  user={user}
+                  userProfile={userProfileState}
+                  profileAccountType={profileAccountType}
+                  nextStep={nextStep}
+                  key='account-type'
+                />)
+                , (
+                accountPageState.currentStep == 2 &&
+                <AccountLocation
+                  user={user}
+                  nextStep={nextStep}
+                  completeProfile={completeProfile}
+                  key='account-location'
+                />
+              )]
+              :
+              (<StyledLettersContainer>
+                <div className="letters-header">
+                  <h5>Inbox</h5>
+                </div>
+                {
+                  accountPageState.userLetters.length > 0 ?
+                    (accountPageState.userLetters || []).map((letter: LetterMetadata) => (
+                      <StyledUserLetter key={letter.id}>
+                        <Link to={`/letter/${letter.id}`}>
+                          <div className="header">
+                            <span className="name">{letter.name}</span>
+                            <span className="date">{moment(letter.date.toDate()).fromNow()}</span>
+                          </div>
+                          <p className="message">{letter.message.length >= 40 ? (`${letter.message}\u2026`) : letter.message}</p>
+                        </Link>
+                      </StyledUserLetter>
+                    ))
+                    :
+                    <NoLetters />
+                }
+              </StyledLettersContainer>)
+        }
+
+      </StyledContentContainer>
+      {
+        profileComplete &&
+        <StyledButton onClick={signOut}>Sign Out</StyledButton>
+      }
+    </AccountPageContainer>)
 }
 
 const Account = (props: Props) => {
@@ -639,3 +640,9 @@ const StyledUserLetter = styled.div`
   }
 
 `;
+
+const AccountPageContainer = styled.div`
+  height: calc(100% - 58px);
+  display: flex;
+  flex-flow: column nowrap;
+`

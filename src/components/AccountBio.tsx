@@ -65,7 +65,7 @@ const AccountBio = (props: Props) => {
 const StyledAccountBioWrapper = styled.div`
   display: flex;
   position: relative;
-  flex: 1;
+  /* flex: 1; */
   background: #FFF;
   width: 100%;
   /* max-width: 468px; */
@@ -76,6 +76,7 @@ const StyledAccountBioWrapper = styled.div`
   margin: 0 auto;
   width: 100%;
   max-width: 468px;
+
 
   .input-group {
     padding: 20px 0px 0px 0px;
@@ -159,6 +160,7 @@ const StyledSaveButton = styled.button`
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0 auto;
+  margin-bottom: 40px;
   text-align: center;
   display: inline-block;
 `;
