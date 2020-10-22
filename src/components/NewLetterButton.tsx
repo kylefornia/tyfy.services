@@ -19,6 +19,7 @@ const StyledNewLetterButton = styled.button`
   letter-spacing: 1px;
   transition: transform 120ms ease-out;
   box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+  pointer-events: all;
 
 
   &:hover {

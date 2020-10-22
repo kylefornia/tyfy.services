@@ -259,8 +259,8 @@ const StyledNewLetterWrapper = styled.div`
   width: 100%;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.25);
-  backdrop-filter: blur(5px);
+  background: rgba(86, 170, 222,0.5);
+  /* backdrop-filter: blur(5px); */
 
   .label {
       margin-right: 10px;
@@ -289,10 +289,10 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   /* height: ${({ isSent }) => isSent ? '180px' : 'calc(100% - 40px)'}; */
   /* width: ${({ isSent }) => isSent ? '280px' : 'calc(100% - 20px)'}; */
   width: calc(100% - 20px);
-  max-width: 768px;
+  max-width: 468px;
   /* height: 90%; */
   height: calc(100% - 60px);
-  max-height: 900px;
+  max-height: 600px;
   transition: all 300ms ease-out;
   animation: ${({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'new-letter-animate-in 200ms forwards'} ;
   will-change: transform, opacity;
@@ -304,7 +304,7 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   position: ${({ isSent }) => isSent ? 'absolute' : 'relative'};
   z-index: 3;
   overflow: auto;
-  transform-origin: 50% 50%;
+  transform-origin: 50% 0%;
 
   form {
     display: flex;
@@ -315,12 +315,12 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
 
   @keyframes new-letter-animate-in {
     0% {
-      /* transform: translateY(-100px); */
-      /* opacity: 0; */
+      transform: translateY(-100px) scale(0);
+      opacity: 0;
     }
     100% {
-      /* transform: translateY(0); */
-      /* opacity: 1; */
+      transform: translateY(0) scale(1);
+      opacity: 1;
     }
 
   }
@@ -388,23 +388,23 @@ const StyledCloseButton = styled.button`
   font-size: 0.8em;
   font-weight: bold;
   text-transform: uppercase;
-  margin: 0 10px 20px 10px;
+  margin: 0 10px 20px 0px;
   color: #888;
   padding: 5px 20px;
   border-radius: 30px;
-  border: 2px solid #d6dfe3;
+  /* border: 2px solid #d6dfe3; */
   font-family: 'Open Sans', sans-serif;
   float: right;
 
   &:hover {
     opacity: 0.8;
-    background: #fc5c65;
-    border: 2px solid #fc5c65;
-    color: #FFF;
+    /* background: #fc5c65; */
+    /* border: 2px solid #fc5c65; */
+    color: #444;
   }
 
   i {
-    font-size: 18px;
+    font-size: 20px;
     /* margin-right: 10px; */
     font-weight: 400;
 
@@ -412,18 +412,18 @@ const StyledCloseButton = styled.button`
 `
 
 const StyledTextArea = styled.textarea`
-  min-height: 60px;
+  min-height: 120px;
   height: auto;
   flex: 1;
   max-height: 600px;
-  margin: 10px;
+  margin: 20px 20px 20px 20px;
   border-radius: 3px;
   outline: 0;
   border: 2px solid #d6dfe3;
   padding: 12px;
   font-size: 1em;
   font-family: 'Merriweather', serif;
-  line-height: 1.8em;
+  line-height: 1.5em;
   resize: none;
   background: rgba(255,255,255,0.8);
 
