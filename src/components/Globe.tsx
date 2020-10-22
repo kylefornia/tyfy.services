@@ -113,24 +113,55 @@ const Globe = ({ letters = [] }: Props) => {
         .map((letter: Letter): ArcData => {
 
           const tooltip = `<div 
-            style="background: rgba(255,255,255,1);
-                  padding: 16px;
+            style="
                   color: #444;
                   font-family: 'Merriweather', serif;
-                  box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
-                  max-width: 400px;
+                  box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
+                    0 2px 4px rgba(0,0,0,0.07), 
+                    0 4px 8px rgba(0,0,0,0.07), 
+                    0 8px 16px rgba(0,0,0,0.07),
+                    0 16px 32px rgba(0,0,0,0.07), 
+                    0 32px 64px rgba(0,0,0,0.07);
+                  max-width: 350px;
                   min-width: 200px !important;
                   line-height: 1.7em;
                   z-index: 99;
-                  border-radius: 3px">
-                  <span style="
-                    font-weight: 900;
-                    font-family: 'Open Sans', sans-serif;
-                    color: #45aaf2;
-                    margin-top: 0;
-                    margin-bottom: 15px;
-                  ">${letter.name} → ${letter.receipient && letter.receipient?.name}</span>
-            <p>${letter.message}</p>
+                  border-radius: 5px;
+                  ">
+                  <div style="
+                    background: rgb(231, 245, 253, 1);
+                    padding: 12px 16px;
+                    border-radius: 5px 5px 0% 0%;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    justify-content:center;
+                  ">
+                  <div style="font-weight: bold;
+                    whitespace: nowrap;
+                    overflow: ellipsis;
+                    width: 100%;
+                    text-align: center;
+                  ">
+                    ${letter.name}
+                  <div style="
+                    margin: 0 10px; color: #888;
+                    display: inline-block;
+                  ">
+                  →
+                  </div>
+                  ${letter.receipient && letter.receipient?.name.split(' ')[0]}
+
+                  </div>
+                  </div>
+                  <div style="
+                    background: rgba(255,255,255,1);
+                    padding: 16px;
+                    border-radius: 0 0 5px 5px;
+                    display: block;
+                    width: 100%;
+                  ">
+                    <p>${letter.message}</p>
+                  </div>
           </div>
         `
 
@@ -246,9 +277,12 @@ const Globe = ({ letters = [] }: Props) => {
       lat: arc.endLat,
       lng: arc.endLng,
       // altitude: 2.5
-    }, 500)
+    }, 300)
 
-    history.push(`/quick/${arc.letterMetadata.id}`)
+    setTimeout(() => {
+      // suspendGlobe()
+      history.push(`/quick/${arc.letterMetadata.id}`)
+    }, 500);
 
 
   }
