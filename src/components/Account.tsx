@@ -28,7 +28,8 @@ interface AccountPageProps {
 
 const StyledAccountContainer = styled.div`
   font-family: 'Open Sans', sans-serif;
-  height: calc(100% - 60px);
+  /* height: calc(100% - 60px); */
+  height: 100%;
   flex: 1;
   font-size: 18px;
   position: relative;

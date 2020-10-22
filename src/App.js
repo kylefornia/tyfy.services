@@ -38,6 +38,7 @@ function App() {
   return (
     <div className="App">
       <AuthContext.Provider value={authProviderValue} >
+        <GlobeContextProvider>
         <TourContextProvider>
         <Router>
           {
@@ -47,11 +48,7 @@ function App() {
           }
           <div className="App-content">
             <Switch>
-              <Route path="/" exact render={() =>
-                <Suspense fallback={<Loaders.HomeLoader />}>
-                  <Home />
-                </Suspense>
-              } />
+             
               <Route path="/feed" render={() =>
                 <Suspense fallback={<Loaders.FeedLoader />}>
                   <Feed />
@@ -77,13 +74,17 @@ function App() {
                   <PrivacyPolicy />
                 </Suspense>
               } />
+               <Route path="/" render={() =>
+                <Suspense fallback={<Loaders.HomeLoader />}>
+                  <Home />
+                </Suspense>
+              } />
             </Switch>
             {
               window.isMobile && (
                 <BottomNavbar />
               )
             }
-            <GlobeContextProvider>
               <TourContext.Consumer>
               {({ isTouring, startTour, stopTour, setShouldTour }) => (
                   <Suspense fallback=''>
@@ -96,10 +97,10 @@ function App() {
                   </Suspense>
               )}
             </TourContext.Consumer>
-            </GlobeContextProvider>
           </div>
         </Router>
         </TourContextProvider>
+            </GlobeContextProvider>
       </AuthContext.Provider>
 
 

@@ -161,7 +161,7 @@ body {
 
 	.App-content {
 		padding-top: 58px;
-		height: calc(100% - 60px);
+		/* height: calc(100% - 60px); */
 
 
 	}
