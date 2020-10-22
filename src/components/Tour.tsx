@@ -54,9 +54,6 @@ const Tour = (props: Props) => {
                 getBadge().style.display = 'none';
 
                 // globeContext.unsuspendGlobe();
-
-                if (history.location !== '/')
-                    history.push('/')
             }
         }, {
             selector: '[data-tour="step-1"]',
