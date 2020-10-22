@@ -33,7 +33,10 @@ const Tour = (props: Props) => {
             selector: '.App',
             content: ({ goTo, inDOM }) => (
                 <StyledLargeModal data-step="1">
-                    <i className='logo-big ri-empathize-line'></i>
+                    <StyledIconContainer>
+                        <i className="ri-empathize-line" />
+                    </StyledIconContainer>
+                    {/* <i className='logo-big ri-empathize-line'></i> */}
                     <ModalContent>
                         <p>This is dedicated to all the <b>Frontliners</b>, <b>Health Workers</b>, <b>Law Enforcement</b>, <b>Donors</b>, <b>Volunteers</b>, and others who selflessly and tirelessly serve to keep us safe during these tough times.</p>
                         <p>
@@ -50,7 +53,7 @@ const Tour = (props: Props) => {
                 getControls().style.display = 'none';
                 getBadge().style.display = 'none';
 
-                globeContext.unsuspendGlobe();
+                // globeContext.unsuspendGlobe();
 
                 if (history.location !== '/')
                     history.push('/')
@@ -59,6 +62,9 @@ const Tour = (props: Props) => {
             selector: '[data-tour="step-1"]',
             content: ({ goTo, inDOM }) => (
                 <StyledLargeModal>
+                    <StyledIconContainer>
+                        <i className="ri-file-text-line" />
+                    </StyledIconContainer>
                     <ModalHeader>Send a Note</ModalHeader>
                     <ModalContent>
                         <p>
@@ -75,7 +81,7 @@ const Tour = (props: Props) => {
                 getControls().style.display = 'flex';
                 getBadge().style.display = 'block';
 
-                globeContext.suspendGlobe()
+                // globeContext.suspendGlobe()
 
                 if (history.location !== '/')
                     history.push('/')
@@ -84,6 +90,9 @@ const Tour = (props: Props) => {
             selector: '[data-tour="step-2"]',
             content: ({ goTo, inDOM }) => (
                 <StyledLargeModal>
+                    <StyledIconContainer>
+                        <i className="ri-user-heart-line" />
+                    </StyledIconContainer>
                     <ModalHeader>Cheer</ModalHeader>
                     <ModalContent>
                         <p>
@@ -103,6 +112,9 @@ const Tour = (props: Props) => {
             selector: '[data-tour="step-3"]',
             content: ({ goTo, inDOM }) => (
                 <StyledLargeModal>
+                    <StyledIconContainer>
+                        <i className="ri-account-circle-line" />
+                    </StyledIconContainer>
                     <ModalHeader>Receive Letters</ModalHeader>
                     <ModalContent>
                         <p>
@@ -112,12 +124,15 @@ const Tour = (props: Props) => {
                 </StyledLargeModal>
             ),
             action: (node) => {
-                globeContext.unsuspendGlobe()
+                // globeContext.unsuspendGlobe()
             }
         }, {
             selector: '[data-tour="step-4"]',
             content: ({ goTo, inDOM }) => (
                 <StyledLargeModal>
+                    <StyledIconContainer>
+                        <i className="ri-scan-2-line" />
+                    </StyledIconContainer>
                     <ModalHeader>Live Feed</ModalHeader>
                     <ModalContent>
                         <p>
@@ -127,7 +142,7 @@ const Tour = (props: Props) => {
                 </StyledLargeModal>
             ),
             action: (node) => {
-                globeContext.unsuspendGlobe()
+                // globeContext.unsuspendGlobe()
             }
         },
     ]
@@ -237,10 +252,10 @@ const ModalBase = styled.div`
             border: 2px solid #888;
 
             &.primary {
-                background: #56aade;
+                background: #017AFF;
                 color: #FFF;
-                border-color: #56aade;
-                box-shadow: 0px 0px 10px rgba(86, 170, 222, 0.5);
+                border-color: #017AFF;
+                box-shadow: 0px 0px 10px #56aade;
             }
 
             &:hover {
@@ -289,4 +304,21 @@ const StyledLargeModal = styled(ModalBase)`
     width: 100%;
 
     height: 100%;
+`
+
+const StyledIconContainer = styled.div`
+    background: rgba(255,255,255, 0.5);
+    width: 80px; height: 80px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-bottom: 5px;
+
+
+    i {
+        color: #017AFF;
+        font-size: 48px;
+    }
 `
