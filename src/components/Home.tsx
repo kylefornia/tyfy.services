@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom';
 import ThanksCounter from './ThanksCounter'
 // import Globe from './Globe'
@@ -21,10 +21,23 @@ interface Props {
 }
 
 const QuickLetter = (props) => {
+
+  const globeContext = useGlobe()
+
+  useEffect(() => {
+
+    return () => {
+      globeContext.unsuspendGlobe()
+    }
+  }, [])
+
   return (
     <StyledQuickLetter onClick={() => { props.history.goBack() }}>
-      <div className='quick-letter-instructions'><i className="ri-arrow-left-line" />Back</div>
-      <ViewLetter history={props.history} />
+      <div className='quick-letter-wrapper'>
+        <div className='quick-letter-instructions'><i className="ri-close-line" /></div>
+        <ViewLetter history={props.history} />
+
+      </div>
     </StyledQuickLetter>
   )
 }
@@ -44,26 +57,37 @@ const StyledQuickLetter = styled.div`
   flex-flow: column nowrap;
   justify-content: center;
 
+  .quick-letter-wrapper {
+    position: relative;
+    /* height: 100%; */
+    width: 100%;
+    max-width: 468px;
+    margin: 0 auto;
+    /* display: flex; */
+    /* flex: 1; */
+  }
+
   .quick-letter-instructions {
     text-transform: uppercase;
     color: #888;
-    font-size: 12px;
+    font-size: 16px;
     align-self: center;
     text-align: center;
     font-weight: bold;
-    animation: appear 1s forwards;
-    margin-top: -58px;
+    animation: appear 2s forwards;
     padding: 8px 16px;
-    border-radius: 30px;
-    background: #e7f5fd;
     cursor: pointer;
     line-height: 1em;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    z-index: 2;
 
     i {
-      margin-right: 10px;
+      
     }
   }
 
@@ -72,6 +96,8 @@ const StyledQuickLetter = styled.div`
     height: auto;
     width: 468px;
     max-width: calc(100% - 20px);
+    overflow: visible;
+    margin: 0 auto;
   }
 
 `
@@ -180,6 +206,7 @@ const StyledBottomContainer = styled.div`
   z-index: 2;
   text-align: center;
   padding: 0px 0px 70px 0px;
+  pointer-events: none;
   
   @media only screen and (min-width: 500px) {
     padding-bottom: 0px;
