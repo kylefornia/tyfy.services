@@ -18,6 +18,7 @@ const StyledCheerButtonWrapper = styled.div`
   position: relative;
   width: 100%;
   padding-bottom: 20px;
+  pointer-events: none;
 
   div {
     margin: 0 auto;
@@ -103,6 +104,8 @@ const StyledCheerButton = styled('button').attrs({
   will-change: transform;
   z-index: 3;
   position: relative;
+  pointer-events: all;
+
   /* overflow: hidden; */
   span {
     transition: transform 100ms cubic-bezier(0.64, 0.57, 0.67, 1.53);

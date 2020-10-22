@@ -13,6 +13,7 @@ const StyledTopContainer = styled.div`
   text-align: center;
   font-family: 'Open Sans', Arial, Helvetica, sans-serif;
   font-size: 14px;
+  pointer-events: none;
 
   p {
     padding: 10px 40px 0px 40px;
@@ -34,6 +35,8 @@ const StyledTopContainer = styled.div`
     font-size: 1.6em;
     font-weight: 800;
     line-height: 1.25em;
+    pointer-events: none;
+
   }
 
 `
