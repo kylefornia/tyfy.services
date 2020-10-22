@@ -69,7 +69,7 @@ const NewLetter = (props: Props) => {
 
           if (!position) return alert('Cannot get your location')
 
-          let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIP();
+          let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIPv2();
 
           const location: UserLocation = {
             lat: position.coords.latitude,

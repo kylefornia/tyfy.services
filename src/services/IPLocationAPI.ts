@@ -20,6 +20,21 @@ class IPLocationAPI {
     })
   }
 
+  static getLocationFromIPv2(): Promise<UserLocation> {
+    return axios.get('//ip-api.com/json/').then((result) => {
+
+      const data: UserLocation = {
+        lat: result.data.lat,
+        lon: result.data.long,
+        country_name: result.data.country,
+        country_code: result.data.countryCode,
+        region: result.data.regionName,
+        city: result.data.city
+      }
+      return data
+    })
+  }
+
 
 }
 
