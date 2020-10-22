@@ -101,9 +101,9 @@ const StyledTopNavItem = styled.div`
   }
 `
 
-const TopNavItem = ({ iconClassName, text, to, exact }: any) => {
+const TopNavItem = ({ iconClassName, text, to, exact, ...props }: any) => {
   return (
-    <StyledTopNavItem>
+    <StyledTopNavItem {...props}>
       <NavLink exact={exact} activeClassName="active" to={to}>
         <i className={iconClassName}></i>
         <span>{text}</span>
@@ -187,8 +187,8 @@ const TopNav = (props: Props) => {
       </div>
       <div className="right-nav">
         <TopNavItem to="/" exact iconClassName="ri-earth-line" text="World" />
-        <TopNavItem to="/feed" iconClassName="ri-rss-line" text="Feed" />
-        <TopNavItem to="/account" iconClassName="ri-user-line" text="Account" />
+        <TopNavItem data-tour="step-4" to="/feed" iconClassName="ri-rss-line" text="Feed" />
+        <TopNavItem data-tour="step-3" to="/account" iconClassName="ri-user-line" text="Account" />
         <TopNavItem to="/more" iconClassName="ri-menu-line" text="More" />
       </div>
     </StyledTopNavContainer>
@@ -206,8 +206,8 @@ const TopNavTransparent = () => {
         </div>
         <div className="right-nav">
           <TopNavItem to="/" exact iconClassName="ri-earth-line" text="World" />
-          <TopNavItem to="/feed" iconClassName="ri-rss-line" text="Feed" />
-          <TopNavItem to="/account" iconClassName="ri-user-line" text="Account" />
+          <TopNavItem data-tour="step-4" to="/feed" iconClassName="ri-rss-line" text="Feed" />
+          <TopNavItem data-tour="step-3" to="/account" iconClassName="ri-user-line" text="Account" />
           <TopNavItem to="/more" iconClassName="ri-menu-line" text="More" />
         </div>
       </>

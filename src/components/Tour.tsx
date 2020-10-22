@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import ReactTour from 'reactour'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
+import { useGlobe } from '../contexts/GlobeContext'
 
 interface Props {
     isTouring: boolean;
@@ -13,7 +14,7 @@ interface Props {
 const Tour = (props: Props) => {
 
     const history = useHistory()
-    // const globeContext = useGlobe()
+    const globeContext = useGlobe()
 
     function getControls(): HTMLElement {
         return document.querySelectorAll<HTMLElement>('[data-tour-elem="controls"]')[0];
@@ -27,24 +28,16 @@ const Tour = (props: Props) => {
         return document.querySelectorAll<HTMLElement>('.tour-base')[0];
     }
 
-
-
-    // const controls = document.querySelectorAll('[data-tour-elem="controls"]');
-    // let controls = document.querySelectorAll<HTMLElement>('[data-tour-elem="controls"]')[0];
-
-
     const tourSteps = [
         {
             selector: '.App',
-            position: 'center',
             content: ({ goTo, inDOM }) => (
                 <StyledLargeModal data-step="1">
-                    {/* <ModalHeader>Welcome</ModalHeader> */}
                     <i className='logo-big ri-empathize-line'></i>
                     <ModalContent>
-                        <p>This is dedicated to all the Frontliners, Health Workers, Law Enforcement, Donors, Volunteers, and everyone who are helping the world during these tough times.</p>
+                        <p>This is dedicated to all the <b>Frontliners</b>, <b>Health Workers</b>, <b>Law Enforcement</b>, <b>Donors</b>, <b>Volunteers</b>, and others who selflessly and tirelessly serve to keep us safe during these tough times.</p>
                         <p>
-                            The project is open source and free to use without any charge. Let's show our appreciation for these brave heroes who are risking their lives everyday by sending them thank you notes to brighten up their day.
+                            Let's show our appreciation for these brave heroes who are risking their lives everyday by sending them thank you notes to brighten up their day.
                         </p>
                     </ModalContent>
                     <div className="tour-button-container">
@@ -57,6 +50,7 @@ const Tour = (props: Props) => {
                 getControls().style.display = 'none';
                 getBadge().style.display = 'none';
 
+                globeContext.unsuspendGlobe();
 
                 if (history.location !== '/')
                     history.push('/')
@@ -65,20 +59,23 @@ const Tour = (props: Props) => {
             selector: '[data-tour="step-1"]',
             content: ({ goTo, inDOM }) => (
                 <StyledLargeModal>
-                    <ModalHeader>Send Message</ModalHeader>
+                    <ModalHeader>Send a Note</ModalHeader>
                     <ModalContent>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid doloribus nesciunt placeat reprehenderit cum, culpa tenetur nihil nam vel rem?
+                            Write a short message to a randomly assigned recipient.
+                        </p>
+                        <p>
+                            Keep it short, simple, and <b>sincere</b>.
                         </p>
                     </ModalContent>
                 </StyledLargeModal>
             ),
             action: (node) => {
-                let controls = document.querySelectorAll<HTMLElement>('[data-tour-elem="controls"]')[0];
 
                 getControls().style.display = 'flex';
                 getBadge().style.display = 'block';
 
+                globeContext.suspendGlobe()
 
                 if (history.location !== '/')
                     history.push('/')
@@ -90,7 +87,10 @@ const Tour = (props: Props) => {
                     <ModalHeader>Cheer</ModalHeader>
                     <ModalContent>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid doloribus nesciunt placeat reprehenderit cum, culpa tenetur nihil nam vel rem?
+                            Cheer together with everyone and watch the live counter go up.
+                        </p>
+                        <p>
+                            <b>Press the 👏 button</b> and give it a try
                         </p>
                     </ModalContent>
                 </StyledLargeModal>
@@ -106,14 +106,28 @@ const Tour = (props: Props) => {
                     <ModalHeader>Receive Letters</ModalHeader>
                     <ModalContent>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid doloribus nesciunt placeat reprehenderit cum, culpa tenetur nihil nam vel rem?
+                            <Link to="/account"><b>Sign in</b></Link> with your social media accounts to start receiving letters
                         </p>
                     </ModalContent>
                 </StyledLargeModal>
             ),
             action: (node) => {
-                if (history.location !== '/account')
-                    history.push('/account')
+                globeContext.unsuspendGlobe()
+            }
+        }, {
+            selector: '[data-tour="step-4"]',
+            content: ({ goTo, inDOM }) => (
+                <StyledLargeModal>
+                    <ModalHeader>Live Feed</ModalHeader>
+                    <ModalContent>
+                        <p>
+                            View all letters that have been sent around the world in real time.
+                        </p>
+                    </ModalContent>
+                </StyledLargeModal>
+            ),
+            action: (node) => {
+                globeContext.unsuspendGlobe()
             }
         },
     ]
@@ -121,6 +135,7 @@ const Tour = (props: Props) => {
     async function closeTour() {
         await props.stopTour();
         await props.setShouldTour(false)
+        globeContext.unsuspendGlobe()
     }
 
     return (
@@ -159,6 +174,12 @@ const StyledReactTour = styled(ReactTour)`
         box-sizing: content-box;
     }
 
+    div[data-tour-elem="controls"] {
+        justify-content: space-around;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 10px;
+        border-radius: 30px;
+    }
 
     .logo-big {
         font-size: 48px;
@@ -253,6 +274,11 @@ const ModalContent = styled.div`
     flex: 1;
     padding: 20px 0;
     color: #666;
+
+    b {
+        font-weight: 600;
+        color: #444;
+    }
 
     p {
         margin-bottom: 10px;
