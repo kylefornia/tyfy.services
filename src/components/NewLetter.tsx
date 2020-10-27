@@ -69,7 +69,7 @@ const NewLetter = (props: Props) => {
 
           if (!position) return alert('Cannot get your location')
 
-          let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIPv2();
+          let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIPv3();
 
           const location: UserLocation = {
             lat: position.coords.latitude,
@@ -131,7 +131,7 @@ const NewLetter = (props: Props) => {
 
   async function getReceipient() {
 
-    const limit = 8; // could change
+    const limit = 10; // could change
 
     await firebase.firestore()
       .collection('userLetters')
@@ -234,7 +234,7 @@ const NewLetter = (props: Props) => {
                 </StyledReceipient>
                 <StyledTextArea required onChange={handleMessageChange} placeholder="Enter Message...">
                 </StyledTextArea>
-                <StyledSendButton type="submit">{isSending ? 'Sending...' : 'Send Thank You'}</StyledSendButton>
+                <StyledSendButton type="submit">{isSending ? 'Sending...' : 'Send Letter'}</StyledSendButton>
                 <StyledInstructions>Your location is used to tag where message is coming from. Your IP is not stored and will not be shared.</StyledInstructions>
               </>
           }
@@ -260,7 +260,7 @@ const StyledNewLetterWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background: rgba(86, 170, 222,0.5);
-  /* backdrop-filter: blur(5px); */
+  backdrop-filter: blur(5px);
 
   .label {
       margin-right: 10px;

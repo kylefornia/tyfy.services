@@ -282,7 +282,7 @@ const Globe = ({ letters = [] }: Props) => {
     setTimeout(() => {
       // suspendGlobe()
       history.push(`/quick/${arc.letterMetadata.id}`)
-    }, 500);
+    }, 320);
 
 
   }
