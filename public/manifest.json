@@ -3,7 +3,7 @@
   "name": "Thank You For Your Services",
   "icons": [
     {
-      "src": "16-16",
+      "src": "16-16.png",
       "sizes": "16x16",
       "type": "image/png"
     },
@@ -16,6 +16,11 @@
       "src": "128-128.png",
       "type": "image/png",
       "sizes": "128x128"
+    },
+    {
+      "src": "144-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
     }
   ],
   "start_url": ".",

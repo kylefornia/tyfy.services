@@ -8,16 +8,17 @@ import { Howl } from 'howler'
 const CHEER_MP3_URL = 'https://firebasestorage.googleapis.com/v0/b/tyfyservices.appspot.com/o/Big-crowd-cheering-comp2.mp3?alt=media&token=36ebde2e-42d5-4e67-aa4b-ebca610d9f58'
 
 const defaultConfettiConfig = {
-  stagger: 0,
-  elementCount: 45,
+  stagger: 2,
+  elementCount: 65,
   spread: 60,
-  startVelocity: 70,
+  startVelocity: 80,
 }
 const StyledCheerButtonWrapper = styled.div`
   display: block;
   position: relative;
   width: 100%;
   padding-bottom: 20px;
+  pointer-events: none;
 
   div {
     margin: 0 auto;
@@ -83,7 +84,9 @@ const StyledCheerCounter = styled.aside`
 
 `;
 
-const StyledCheerButton = styled.button`
+const StyledCheerButton = styled('button').attrs({
+  'data-tour': 'step-2'
+})`
   height: 80px;
   width: 80px;
   border: 0px solid #f0f0f0;
@@ -101,6 +104,8 @@ const StyledCheerButton = styled.button`
   will-change: transform;
   z-index: 3;
   position: relative;
+  pointer-events: all;
+
   /* overflow: hidden; */
   span {
     transition: transform 100ms cubic-bezier(0.64, 0.57, 0.67, 1.53);
@@ -194,7 +199,7 @@ const CheerButton = (props: Props) => {
     // window.navigator.vibrate(1);
     // setClicks(clicks += 1)
 
-    cheer1Audio.load()
+    // cheer1Audio.load()
 
     setAudioState({
       ...audioState,
@@ -217,9 +222,9 @@ const CheerButton = (props: Props) => {
 
     throttleCount(() => {
       cheer1Audio.play()
-      setAudioState({ ...audioState, isCelebrating: true })
+      setAudioState({ ...audioState, isCelebrating: false })
 
-    }, 1200)
+    }, 800)
 
 
   }
@@ -248,7 +253,7 @@ const CheerButton = (props: Props) => {
 
       const sound = new Howl({
         src: [CHEER_MP3_URL],
-        preload: false,
+        preload: true,
         onend: (id) => {
           setCheerArr([])
           setAudioState({ ...audioState, isCelebrating: false, isPlaying: false, isLoaded: true })

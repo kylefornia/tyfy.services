@@ -14,11 +14,15 @@ import AuthContext, { useAuth, useSession } from './contexts/AuthContext'
 import Loaders from './components/Loaders';
 import ViewLetter from './components/ViewLetter';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import TourContextProvider, { TourContext } from './contexts/TourContext';
+import GlobeContextProvider from './contexts/GlobeContext';
 
 const Home = React.lazy(() => import('./components/Home'));
 const Feed = React.lazy(() => import('./components/Feed'));
 const Account = React.lazy(() => import('./components/Account'));
 const More = React.lazy(() => import('./components/More'));
+const Tour = React.lazy(() => import('./components/Tour'));
+
 
 FirebaseAPI.init()
 
@@ -34,6 +38,8 @@ function App() {
   return (
     <div className="App">
       <AuthContext.Provider value={authProviderValue} >
+        <GlobeContextProvider>
+        <TourContextProvider>
         <Router>
           {
             !window.isMobile && (
@@ -42,11 +48,7 @@ function App() {
           }
           <div className="App-content">
             <Switch>
-              <Route path="/" exact render={() =>
-                <Suspense fallback={<Loaders.HomeLoader />}>
-                  <Home />
-                </Suspense>
-              } />
+             
               <Route path="/feed" render={() =>
                 <Suspense fallback={<Loaders.FeedLoader />}>
                   <Feed />
@@ -72,14 +74,33 @@ function App() {
                   <PrivacyPolicy />
                 </Suspense>
               } />
+               <Route path="/" render={() =>
+                <Suspense fallback={<Loaders.HomeLoader />}>
+                  <Home />
+                </Suspense>
+              } />
             </Switch>
             {
               window.isMobile && (
                 <BottomNavbar />
               )
             }
+              <TourContext.Consumer>
+              {({ isTouring, startTour, stopTour, setShouldTour }) => (
+                  <Suspense fallback=''>
+                    <Tour 
+                      isTouring={isTouring}
+                      startTour={startTour}
+                      stopTour={stopTour}
+                      setShouldTour={setShouldTour}
+                    />
+                  </Suspense>
+              )}
+            </TourContext.Consumer>
           </div>
         </Router>
+        </TourContextProvider>
+            </GlobeContextProvider>
       </AuthContext.Provider>
 
 

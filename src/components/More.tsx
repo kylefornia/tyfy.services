@@ -15,12 +15,12 @@ const More = (props: Props) => {
         <h4>Kyle Vanderfox</h4>
         <span className="creds">Developer</span>
         <p className="message">This is dedicated to all the Frontliners, Health Workers, Law Enforcement, Donors, Volunteers, and everyone who are helping the world during these tough times.
-        The project is open source and free to use without any charge. Let's show our appreciation for these brave heroes who are risking their lives everyday by sending them thank you notes to brighten up their day.
+        Let's show our appreciation for these brave heroes who are risking their lives everyday by sending them thank you notes to brighten up their day.
         </p>
         <div className="links">
           <span className="links-title">Links</span>
           <ul>
-            <li><i className="ri-github-fill" /><a href="https://github.com/kylefornia/tyfy.services">GitHub</a></li>
+            {/* <li><i className="ri-github-fill" /><a href="https://github.com/kylefornia/tyfy.services">GitHub</a></li> */}
             <li><i className="ri-linkedin-fill" /><a href="https://www.linkedin.com/in/kyle-abughanem/">LinkedIn</a></li>
             <li><i className="ri-mail-fill" /><a href="mailto:kyle.abughanem@gmail.com">Email</a></li>
 
@@ -44,7 +44,7 @@ const StyledDeveloperContainer = styled.div`
   border-radius: 3px;
   box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
   background: #FFF;
-  padding: 40px 20px;
+  padding: 40px 40px;
 
 
   h4 {

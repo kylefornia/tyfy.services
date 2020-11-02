@@ -6,6 +6,7 @@ interface Props {
 
 export interface GlobeState {
   isSuspended: boolean;
+  isGlobeLoaded: boolean;
 }
 
 
@@ -13,6 +14,7 @@ export const GlobeContext = React.createContext({
   isSuspended: false,
   suspendGlobe: () => { },
   unsuspendGlobe: () => { },
+  isGlobeLoaded: false,
 })
 
 export const useGlobe = () => {
@@ -21,14 +23,18 @@ export const useGlobe = () => {
 
 const GlobeContextProvider = ({ children }) => {
 
-  const [globeState, setGlobeState] = useState(({ isSuspended: false }))
+  const [globeState, setGlobeState] = useState((
+    { isSuspended: false, isGlobeLoaded: false }
+  ))
 
   function suspendGlobe() {
-    setGlobeState({ isSuspended: true })
+    if (!globeState.isSuspended)
+      setGlobeState({ ...globeState, isSuspended: true })
   }
 
   function unsuspendGlobe() {
-    setGlobeState({ isSuspended: false })
+    if (globeState.isSuspended)
+      setGlobeState({ ...globeState, isSuspended: false })
   }
 
   return (
@@ -36,7 +42,7 @@ const GlobeContextProvider = ({ children }) => {
       <GlobeContext.Provider value={{
         ...globeState,
         suspendGlobe: suspendGlobe,
-        unsuspendGlobe: unsuspendGlobe
+        unsuspendGlobe: unsuspendGlobe,
       }}>
         {children}
       </GlobeContext.Provider>

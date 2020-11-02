@@ -162,7 +162,7 @@ const StyledAccountProfileLoader = styled(StyledProfileContainer)`
 const StyledViewLetterContainer = styled(StyledLoadingContainer)`
 
   i {
-    animation: grow 2s ease forwards;
+    animation: grow 10s ease forwards;
   }
   
     @keyframes grow {
@@ -175,7 +175,7 @@ const StyledViewLetterContainer = styled(StyledLoadingContainer)`
       }
 
       100% {
-        transform: scale(2.3);
+        transform: scale(2.2);
       }
     }
 

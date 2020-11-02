@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import ReactGlobe from 'react-globe.gl';
 import styled from 'styled-components'
-import { Letter } from './NewLetter';
+import { useHistory } from 'react-router-dom'
+import NewLetter, { Letter } from './NewLetter';
 import * as firebase from 'firebase/app'
 import "firebase/storage"
 import * as THREE from 'three';
 import GlobeContextProvider, { GlobeContext } from '../contexts/GlobeContext';
+import { getLatLngCenter } from '../utils';
 
-const NewLetter = React.lazy(() => import('./NewLetter'))
+// const NewLetter = React.lazy(() => import('./NewLetter'))
 
 
 // const fbImageUrl = require('../assets/earth-night.jpg');
@@ -33,6 +35,7 @@ interface ArcData {
   color?: string[] | string;
   stroke?: number;
   label?: string;
+  letterMetadata: Letter;
 }
 
 function debounce(fn: any, ms: number) {
@@ -47,7 +50,9 @@ function debounce(fn: any, ms: number) {
   };
 }
 
-const StyledGlobeContainer = styled.div`
+const StyledGlobeContainer = styled('div').attrs({
+  'data-tour': 'step-0'
+})`
   width: 100%;
   height: 100%;
   margin: 0;
@@ -56,10 +61,15 @@ const StyledGlobeContainer = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+  
   /* padding-top: 5vh; */
 
   @media only screen and (min-width: 500px) {
     top: 60px;
+  }
+
+  & div :focus{
+    outline: 0;
   }
 `
 
@@ -81,7 +91,8 @@ const Globe = ({ letters = [] }: Props) => {
   // }
 
 
-  const { useState, useEffect, useRef, useContext } = React;
+  const history = useHistory()
+
 
   const { isSuspended, suspendGlobe } = useContext(GlobeContext)
 
@@ -97,43 +108,77 @@ const Globe = ({ letters = [] }: Props) => {
   const [pointsData, setPointsData] = useState<PointData[]>([]);
   function formatPoints(lettersData: Letter[]) {
     const formattedArcs = letters.length > 0 ?
-      lettersData.map((letter: Letter): ArcData => {
+      lettersData
+        .filter((letter) => letter.receipient)
+        .map((letter: Letter): ArcData => {
 
-        const tooltip = `<div 
-            style="background: #FFF; 
-                  padding: 16px;
+          const tooltip = `<div 
+            style="
                   color: #444;
                   font-family: 'Merriweather', serif;
-                  box-shadow: 0px 3px 5px rgba(0,0,0,0.1);
-                  max-width: 400px;
+                  box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
+                    0 2px 4px rgba(0,0,0,0.07), 
+                    0 4px 8px rgba(0,0,0,0.07), 
+                    0 8px 16px rgba(0,0,0,0.07),
+                    0 16px 32px rgba(0,0,0,0.07), 
+                    0 32px 64px rgba(0,0,0,0.07);
+                  max-width: 350px;
                   min-width: 200px !important;
                   line-height: 1.7em;
                   z-index: 99;
-                  border-radius: 3px">
-                  <span style="
-                    font-weight: 900;
-                    font-family: 'Open Sans', sans-serif;
-                    color: #45aaf2;
-                    margin-top: 0;
-                    margin-bottom: 15px;
-                  ">${letter.name}</span>
-            <p>${letter.message}</p>
+                  border-radius: 5px;
+                  ">
+                  <div style="
+                    background: rgb(231, 245, 253, 1);
+                    padding: 12px 16px;
+                    border-radius: 5px 5px 0% 0%;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    justify-content:center;
+                  ">
+                  <div style="font-weight: bold;
+                    whitespace: nowrap;
+                    overflow: ellipsis;
+                    width: 100%;
+                    text-align: center;
+                  ">
+                    ${letter.name}
+                  <div style="
+                    margin: 0 10px; color: #888;
+                    display: inline-block;
+                  ">
+                  →
+                  </div>
+                  ${letter.receipient && letter.receipient?.name.split(' ')[0]}
+
+                  </div>
+                  </div>
+                  <div style="
+                    background: rgba(255,255,255,1);
+                    padding: 16px;
+                    border-radius: 0 0 5px 5px;
+                    display: block;
+                    width: 100%;
+                  ">
+                    <p>${letter.message}</p>
+                  </div>
           </div>
         `
 
-        return {
-          startLat: letter.location.lat,
-          startLng: letter.location.lon,
-          endLat: !!letter.receipient ? +letter.receipient.location.lat.toFixed(6) : ((Math.random() - 0.5) * 180),
-          endLng: !!letter.receipient ? +letter.receipient.location.lon.toFixed(6) : ((Math.random() - 0.5) * 360),
-          stroke: 3,
-          // altitude: 0,
-          // color: [['white', 'blue'][Math.round(Math.random() * 2)], ['white', 'blue'][Math.round(Math.random() * 2)]]
-          color: ["blue", "green"],
-          // color: '#fa8231'
-          label: tooltip,
-        }
-      }) : []
+          return {
+            startLat: letter.location.lat,
+            startLng: letter.location.lon,
+            endLat: !!letter.receipient ? +letter.receipient.location.lat.toFixed(6) : ((Math.random() - 0.5) * 180),
+            endLng: !!letter.receipient ? +letter.receipient.location.lon.toFixed(6) : ((Math.random() - 0.5) * 360),
+            stroke: 3,
+            // altitude: 0,
+            // color: [['white', 'blue'][Math.round(Math.random() * 2)], ['white', 'blue'][Math.round(Math.random() * 2)]]
+            color: ["blue", "green"],
+            // color: '#fa8231'
+            label: tooltip,
+            letterMetadata: letter
+          }
+        }) : []
 
     const formattedPoints = letters.length > 0 ?
       lettersData.map((letter: Letter): PointData => {
@@ -154,15 +199,14 @@ const Globe = ({ letters = [] }: Props) => {
   }
 
 
+
+
   //init globe
   useEffect(() => {
-    // console.log(globeEl);
-    // if (!globeEl.current) return () => { }
-
-    // console.log('this triggered');
-
-    //auto-rotate
     globeEl.current.pointOfView({ altitude: window.innerWidth > 480 ? 4 : 5 }, 0)
+
+    //@ts-ignore
+    window.pov = globeEl.current.pointOfView
 
 
     const globeMaterial = globeEl.current.globeMaterial();
@@ -185,7 +229,8 @@ const Globe = ({ letters = [] }: Props) => {
 
     window.addEventListener('resize', debouncedDimensions)
 
-
+    globeEl.current.controls().autoRotate = true;
+    globeEl.current.controls().autoRotateSpeed = 0.15;
 
 
     return () => {
@@ -195,8 +240,7 @@ const Globe = ({ letters = [] }: Props) => {
 
   useEffect(() => {
     formatPoints(letters as Letter[])
-    globeEl.current.controls().autoRotate = true;
-    globeEl.current.controls().autoRotateSpeed = 0.025;
+
   }, [letters])
 
   function handleArcHover(arc: any) {
@@ -215,22 +259,39 @@ const Globe = ({ letters = [] }: Props) => {
     if (!!globeEl.current) {
       isSuspended ?
         globeEl.current.pauseAnimation() :
-        globeEl.current.resumeAnimation()
+        globeEl.current.resumeAnimation() &&
+        (globeEl.current.controls().autRotate = true)
     }
   }, [isSuspended])
 
   function handleArcClick(arc: any) {
-    // TODO: Click function
+    const center = getLatLngCenter([[arc.startLat, arc.startLng], [arc.endLat, arc.endLng]])
+
+    // globeEl.current.pointOfView({
+    //   lat: center[0],
+    //   lng: center[1],
+    //   // altitude: 2.5
+    // }, 500)
+
+    globeEl.current.pointOfView({
+      lat: arc.endLat,
+      lng: arc.endLng,
+      // altitude: 2.5
+    }, 300)
+
+    setTimeout(() => {
+      // suspendGlobe()
+      history.push(`/quick/${arc.letterMetadata.id}`)
+    }, 320);
 
 
   }
-
 
   return (
     <StyledGlobeContainer>
       <ReactGlobe
         ref={globeEl}
-        animateIn={true}
+        animateIn={false}
         globeImageUrl={fbImageUrl}
         backgroundColor={'#56aade'}
         showGraticules={false}
@@ -247,7 +308,7 @@ const Globe = ({ letters = [] }: Props) => {
         pointsData={pointsData}
         pointAltitude={'size'}
         pointRadius={'radius'}
-        pointColor={'color'}
+        pointColor={() => '#ffffff'}
         pointLabel={'name'}
         pointResolution={6}
         onArcClick={(arc) => handleArcClick(arc)}

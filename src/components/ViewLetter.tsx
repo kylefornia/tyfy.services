@@ -68,7 +68,7 @@ const ViewLetter = (props: Props) => {
                   </button>
               </Toolbar> */}
               <LetterContent>
-                <div className="paper"></div>
+                {/* <div className="paper"></div> */}
                 <div className="letter-header">
 
                   <div className="from-container">
@@ -131,12 +131,15 @@ const ViewLetter = (props: Props) => {
 
 export default withRouter(ViewLetter)
 
-const LetterContainer = styled.div`
+const LetterContainer = styled('div').attrs({
+  className: 'view-letter-container'
+})`
   display: flex;
   /* align-items: stretch; */
   /* justify-content: center; */
-  flex: 1;
+  /* flex: 1; */
   height: calc(100% - 60px);
+  overflow: hidden;
   flex-flow: column nowrap;
 
   }
@@ -146,7 +149,7 @@ const LetterContainer = styled.div`
   .letter-header {
     background: #e7f5fd;
     padding: 40px 0 0px 0;
-    /* border-radius: 5px 5px 0 0; */
+    border-radius: 5px 5px 0 0;
     transform-origin: 50% 100%;
     animation: open-header 800ms ease;
 
@@ -310,7 +313,7 @@ const LetterContent = styled.div`
     transform-origin: 50% 0%;
     /* transform: rotateX(180deg); */
     backface-visibility: visible;
-    /* border-radius: 0% 0% 5px 5px; */
+    border-radius: 0% 0% 5px 5px;
     
 
 
@@ -509,14 +512,14 @@ const LetterContentContainer = styled.div`
 
 }
 
-animation: open-letter 500ms ease-out forwards;
+animation: open-letter 1000ms ease-out forwards;
   @keyframes open-letter {
     0% {
-      transform: scale(0);
+      transform: scale(0.2);
     }
 
-    60% {
-      transform: scale(1.1);
+    20% {
+      transform: scale(1.2);
 
     }
 

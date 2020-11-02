@@ -21,6 +21,10 @@ class FirebaseAPI {
   public static init() {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig)
+      firebase.firestore().enablePersistence()
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 

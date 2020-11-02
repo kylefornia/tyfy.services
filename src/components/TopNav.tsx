@@ -78,6 +78,7 @@ const StyledTopNavItem = styled.div`
     height: 100%;
     width: 100%;
     border-bottom: 2px solid transparent;
+
   }
   
 
@@ -101,9 +102,9 @@ const StyledTopNavItem = styled.div`
   }
 `
 
-const TopNavItem = ({ iconClassName, text, to, exact }: any) => {
+const TopNavItem = ({ iconClassName, text, to, exact, ...props }: any) => {
   return (
-    <StyledTopNavItem>
+    <StyledTopNavItem {...props}>
       <NavLink exact={exact} activeClassName="active" to={to}>
         <i className={iconClassName}></i>
         <span>{text}</span>
@@ -125,6 +126,7 @@ const StyledTransparentNav = styled(StyledTopNavContainer)`
 
   a {
     color: rgba(255,255,255,0.6);
+    text-decoration: none;
   }
 
   .active * {
@@ -132,6 +134,11 @@ const StyledTransparentNav = styled(StyledTopNavContainer)`
   }
 
   .left-nav {
+
+    .active {
+      border: 0;
+    }
+
     .logo {
       .logo-icon {
         color: #FFF;
@@ -182,13 +189,13 @@ const TopNav = (props: Props) => {
     <StyledTopNavContainer>
       <div className="left-nav">
         <div className="logo">
-          <i className="ri-empathize-line logo-icon"></i>
+          <NavLink to="/"><i className="ri-empathize-line logo-icon"></i></NavLink>
         </div>
       </div>
       <div className="right-nav">
         <TopNavItem to="/" exact iconClassName="ri-earth-line" text="World" />
-        <TopNavItem to="/feed" iconClassName="ri-rss-line" text="Feed" />
-        <TopNavItem to="/account" iconClassName="ri-user-line" text="Account" />
+        <TopNavItem data-tour="step-4" to="/feed" iconClassName="ri-rss-line" text="Feed" />
+        <TopNavItem data-tour="step-3" to="/account" iconClassName="ri-user-line" text="Account" />
         <TopNavItem to="/more" iconClassName="ri-menu-line" text="More" />
       </div>
     </StyledTopNavContainer>
@@ -201,13 +208,13 @@ const TopNavTransparent = () => {
       <>
         <div className="left-nav">
           <div className="logo">
-            <i className="ri-empathize-line logo-icon"></i>
+            <NavLink to="/"><i className="ri-empathize-line logo-icon"></i></NavLink>
           </div>
         </div>
         <div className="right-nav">
           <TopNavItem to="/" exact iconClassName="ri-earth-line" text="World" />
-          <TopNavItem to="/feed" iconClassName="ri-rss-line" text="Feed" />
-          <TopNavItem to="/account" iconClassName="ri-user-line" text="Account" />
+          <TopNavItem data-tour="step-4" to="/feed" iconClassName="ri-rss-line" text="Feed" />
+          <TopNavItem data-tour="step-3" to="/account" iconClassName="ri-user-line" text="Account" />
           <TopNavItem to="/more" iconClassName="ri-menu-line" text="More" />
         </div>
       </>
