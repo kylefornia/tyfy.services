@@ -365,14 +365,14 @@ const StyledUserLetter = styled.div`
   }
 
   .message {
-    font-size: 14px;
+    font-size: 16px;
     color: #777;
     /* width: 100%; */
     white-space: nowrap;
     overflow-y: hidden;
     overflow-x: hidden;
     text-overflow: ellipsis;
-    line-height: 18px;
+    line-height: 24px;
   }
 
   &:last-of-type {
