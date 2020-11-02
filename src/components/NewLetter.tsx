@@ -260,7 +260,7 @@ const StyledNewLetterWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background: rgba(86, 170, 222,0.5);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(2px);
 
   .label {
       margin-right: 10px;
@@ -294,7 +294,7 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
   height: calc(100% - 60px);
   max-height: 600px;
   transition: all 300ms ease-out;
-  animation: ${({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'new-letter-animate-in 200ms forwards'} ;
+  animation: ${({ isSent }) => isSent ? 'shrink 300ms ease-out forwards' : 'new-letter-animate-in 350ms forwards'} ;
   will-change: transform, opacity;
   font-family: 'Merriweather', serif;
   font-size: 1em;
@@ -317,6 +317,9 @@ const StyledNewLetter = styled("div") <{ isSent: boolean }>`
     0% {
       transform: translateY(-100px) scale(0);
       opacity: 0;
+    }
+    69% {
+      transform: translateY(10px) scale(1.1);
     }
     100% {
       transform: translateY(0) scale(1);
@@ -397,10 +400,11 @@ const StyledCloseButton = styled.button`
   float: right;
 
   &:hover {
-    opacity: 0.8;
-    /* background: #fc5c65; */
+    /* opacity: 0.8; */
+    background: #fc5c65;
     /* border: 2px solid #fc5c65; */
-    color: #444;
+    color: #fff;
+    cursor: pointer;
   }
 
   i {
@@ -454,6 +458,7 @@ const StyledSendButton = styled.button`
 
   &:hover {
     opacity: 0.8;
+    cursor: pointer;
   }
 `
 
