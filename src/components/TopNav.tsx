@@ -78,6 +78,7 @@ const StyledTopNavItem = styled.div`
     height: 100%;
     width: 100%;
     border-bottom: 2px solid transparent;
+
   }
   
 
@@ -125,6 +126,7 @@ const StyledTransparentNav = styled(StyledTopNavContainer)`
 
   a {
     color: rgba(255,255,255,0.6);
+    text-decoration: none;
   }
 
   .active * {
@@ -132,6 +134,11 @@ const StyledTransparentNav = styled(StyledTopNavContainer)`
   }
 
   .left-nav {
+
+    .active {
+      border: 0;
+    }
+
     .logo {
       .logo-icon {
         color: #FFF;
@@ -182,7 +189,7 @@ const TopNav = (props: Props) => {
     <StyledTopNavContainer>
       <div className="left-nav">
         <div className="logo">
-          <i className="ri-empathize-line logo-icon"></i>
+          <NavLink to="/"><i className="ri-empathize-line logo-icon"></i></NavLink>
         </div>
       </div>
       <div className="right-nav">
@@ -201,7 +208,7 @@ const TopNavTransparent = () => {
       <>
         <div className="left-nav">
           <div className="logo">
-            <i className="ri-empathize-line logo-icon"></i>
+            <NavLink to="/"><i className="ri-empathize-line logo-icon"></i></NavLink>
           </div>
         </div>
         <div className="right-nav">
