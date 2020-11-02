@@ -44,7 +44,7 @@ const StyledDeveloperContainer = styled.div`
   border-radius: 3px;
   box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
   background: #FFF;
-  padding: 40px 20px;
+  padding: 40px 40px;
 
 
   h4 {
