@@ -5,6 +5,18 @@ interface Props {
   onClick?: () => void;
 }
 
+
+
+const NewLetterButton = (props: Props) => {
+  return (
+    <StyledNewLetterButton {...props} data-tour="step-1">
+      Say Thank You
+    </StyledNewLetterButton>
+  )
+}
+
+export default NewLetterButton
+
 const StyledNewLetterButton = styled.button`
   border: 2px solid white;
   outline: 0;
@@ -26,13 +38,3 @@ const StyledNewLetterButton = styled.button`
     transform: scale(1.2, 1.2);
   }
 `
-
-const NewLetterButton = (props: Props) => {
-  return (
-    <StyledNewLetterButton {...props} data-tour="step-1">
-      Say Thank You
-    </StyledNewLetterButton>
-  )
-}
-
-export default NewLetterButton

@@ -6,6 +6,32 @@ interface Props {
 
 }
 
+
+const BottomNavbarItem = ({ iconClassName, text, to, exact, ...props }: any) => {
+  return (
+    <StyledBottomNavItem {...props}>
+      <NavLink exact={exact} activeClassName="active" to={to} >
+        <i className={iconClassName}></i>
+        <span>{text}</span>
+      </NavLink>
+    </StyledBottomNavItem>
+  )
+}
+
+const BottomNavbar = (props: Props) => {
+  return (
+    <StyledBottomNavContainer>
+      <BottomNavbarItem to="/" exact iconClassName="ri-earth-line" text="World" />
+      <BottomNavbarItem data-tour="step-4" to="/feed" iconClassName="ri-rss-line" text="Feed" />
+      <BottomNavbarItem data-tour="step-3" to="/account" iconClassName="ri-user-line" text="Account" />
+      <BottomNavbarItem to="/more" iconClassName="ri-menu-line" text="More" />
+    </StyledBottomNavContainer>
+  )
+}
+
+export default BottomNavbar
+
+
 const StyledBottomNavContainer = styled.div`
   width: 100%;
   background: rgba(255,255,255, 1);
@@ -51,27 +77,3 @@ const StyledBottomNavItem = styled.div`
     font-weight: bold;
   }
 `
-
-const BottomNavbarItem = ({ iconClassName, text, to, exact, ...props }: any) => {
-  return (
-    <StyledBottomNavItem {...props}>
-      <NavLink exact={exact} activeClassName="active" to={to} >
-        <i className={iconClassName}></i>
-        <span>{text}</span>
-      </NavLink>
-    </StyledBottomNavItem>
-  )
-}
-
-const BottomNavbar = (props: Props) => {
-  return (
-    <StyledBottomNavContainer>
-      <BottomNavbarItem to="/" exact iconClassName="ri-earth-line" text="World" />
-      <BottomNavbarItem data-tour="step-4" to="/feed" iconClassName="ri-rss-line" text="Feed" />
-      <BottomNavbarItem data-tour="step-3" to="/account" iconClassName="ri-user-line" text="Account" />
-      <BottomNavbarItem to="/more" iconClassName="ri-menu-line" text="More" />
-    </StyledBottomNavContainer>
-  )
-}
-
-export default BottomNavbar

@@ -4,6 +4,80 @@ import * as firebase from 'firebase/app'
 import { UserProfile } from '../contexts/AuthContext';
 import { AccountType } from './AccountTypes';
 
+
+
+
+interface Props {
+  user: firebase.User;
+  userProfile: UserProfile;
+  accountTypes: {
+    id: number; type: string; iconClassName: string;
+  }[];
+  profileAccountType: AccountType;
+  nextStep: () => void;
+}
+
+const AccountTypeSelector = ({ user, accountTypes, nextStep, userProfile, profileAccountType }: Props) => {
+
+  const [accountTypeState, setAccounTypeState] = React.useState<{
+    selected: { type: string; id: number } | undefined;
+  }>({
+    selected: profileAccountType,
+  })
+
+
+
+  function handleTypeSelect({ type, id }) {
+    setAccounTypeState({ selected: { type, id } })
+  }
+
+  function saveAccountType() {
+
+    const updateType = firebase.firestore().collection('users').doc(user.uid)
+
+    const initLetters = firebase.firestore().collection('userLetters').doc(user.uid)
+
+    let batch = firebase.firestore().batch();
+
+    batch.set(initLetters, { letterCount: 0 });
+    batch.update(updateType, { accountType: accountTypeState.selected.type })
+
+    batch.commit().then(() => {
+      nextStep()
+    })
+
+  }
+
+  return (
+    <>
+      <AccountTypeWrapper>
+        <StyledAccountTypeHeader>
+          <h4>I am a...</h4>
+        </StyledAccountTypeHeader>
+        <AccountTypeSelectorContainer>
+          {
+            accountTypes.map(({ type, id, iconClassName }) => (
+              <AccountTypeItem className={
+                accountTypeState.selected ? id === accountTypeState.selected.id
+                  ? 'active' : 'disabled' : ''}
+                key={id} onClick={() => handleTypeSelect({ type, id })}>
+                <i className={iconClassName} />
+                <h5>{type}</h5>
+              </AccountTypeItem>
+            ))
+          }
+        </AccountTypeSelectorContainer>
+        <StyledButtonContainer>
+          <StyledSaveButton onClick={saveAccountType}>Next</StyledSaveButton>
+        </StyledButtonContainer>
+      </AccountTypeWrapper>
+
+    </>
+  )
+}
+
+export default AccountTypeSelector
+
 const AccountTypeSelectorContainer = styled.div`
   display: flex;
   flex-flow: column nowrap;
@@ -156,75 +230,3 @@ const AccountTypeWrapper = styled.div`
   width: 100%;
   max-width: 468px;
 `;
-
-
-interface Props {
-  user: firebase.User;
-  userProfile: UserProfile;
-  accountTypes: {
-    id: number; type: string; iconClassName: string;
-  }[];
-  profileAccountType: AccountType;
-  nextStep: () => void;
-}
-
-const AccountTypeSelector = ({ user, accountTypes, nextStep, userProfile, profileAccountType }: Props) => {
-
-  const [accountTypeState, setAccounTypeState] = React.useState<{
-    selected: { type: string; id: number } | undefined;
-  }>({
-    selected: profileAccountType,
-  })
-
-
-
-  function handleTypeSelect({ type, id }) {
-    setAccounTypeState({ selected: { type, id } })
-  }
-
-  function saveAccountType() {
-
-    const updateType = firebase.firestore().collection('users').doc(user.uid)
-
-    const initLetters = firebase.firestore().collection('userLetters').doc(user.uid)
-
-    let batch = firebase.firestore().batch();
-
-    batch.set(initLetters, { letterCount: 0 });
-    batch.update(updateType, { accountType: accountTypeState.selected.type })
-
-    batch.commit().then(() => {
-      nextStep()
-    })
-
-  }
-
-  return (
-    <>
-      <AccountTypeWrapper>
-        <StyledAccountTypeHeader>
-          <h4>I am a...</h4>
-        </StyledAccountTypeHeader>
-        <AccountTypeSelectorContainer>
-          {
-            accountTypes.map(({ type, id, iconClassName }) => (
-              <AccountTypeItem className={
-                accountTypeState.selected ? id === accountTypeState.selected.id
-                  ? 'active' : 'disabled' : ''}
-                key={id} onClick={() => handleTypeSelect({ type, id })}>
-                <i className={iconClassName} />
-                <h5>{type}</h5>
-              </AccountTypeItem>
-            ))
-          }
-        </AccountTypeSelectorContainer>
-        <StyledButtonContainer>
-          <StyledSaveButton onClick={saveAccountType}>Next</StyledSaveButton>
-        </StyledButtonContainer>
-      </AccountTypeWrapper>
-
-    </>
-  )
-}
-
-export default AccountTypeSelector

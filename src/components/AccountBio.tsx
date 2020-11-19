@@ -22,15 +22,6 @@ const AccountBio = (props: Props) => {
     props.saveBio(name, about)
   }
 
-
-  // async function saveBio() {
-  //   firebase.app().firestore().collection('users').doc(props.user.uid).update({
-  //     name: name,
-  //     about: about
-  //   })
-  // }
-
-
   return (
     <StyledAccountBioWrapper>
       <StyledAccountBioHeader>

@@ -50,28 +50,7 @@ function debounce(fn: any, ms: number) {
   };
 }
 
-const StyledGlobeContainer = styled('div').attrs({
-  'data-tour': 'step-0'
-})`
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  
-  /* padding-top: 5vh; */
 
-  @media only screen and (min-width: 500px) {
-    top: 60px;
-  }
-
-  & div :focus{
-    outline: 0;
-  }
-`
 
 const Globe = ({ letters = [] }: Props) => {
 
@@ -320,3 +299,26 @@ const Globe = ({ letters = [] }: Props) => {
 }
 
 export default Globe
+
+const StyledGlobeContainer = styled('div').attrs({
+  'data-tour': 'step-0'
+})`
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  /* padding-top: 5vh; */
+
+  @media only screen and (min-width: 500px) {
+    top: 60px;
+  }
+
+  & div :focus{
+    outline: 0;
+  }
+`

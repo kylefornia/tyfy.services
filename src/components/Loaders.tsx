@@ -9,6 +9,83 @@ interface Props {
 
 }
 
+
+
+const Loaders = (props: Props) => {
+  return (
+    <div>
+
+    </div>
+  )
+}
+
+export const HomeLoader = () => (
+  <StyledHomeContainer>
+    <HomeHeader onClick={() => undefined} />
+  </StyledHomeContainer>
+)
+
+export const FeedLoader = () => (
+  <StyledFeedContainer>
+    <SectionHeader title="Live Feed" />
+    <NewLetterButton onClick={() => undefined}></NewLetterButton>
+    <ul>
+      <li><StyledFeedItem /></li>
+      <li><StyledFeedItem /></li>
+      <li><StyledFeedItem /></li>
+      <li><StyledFeedItem /></li>
+      <li><StyledFeedItem /></li>
+    </ul>
+  </StyledFeedContainer>
+)
+
+export const AccountLoader = () => (
+  <StyledAccountContainer>
+    <i className="ri-loader-fill spin"></i>
+  </StyledAccountContainer>
+)
+export const ViewLetterLoader = () => (
+  <StyledViewLetterContainer>
+    <i className="ri-mail-open-fill grow"></i>
+  </StyledViewLetterContainer>
+)
+
+export const AccountProfileLoader = () => (
+  <StyledAccountProfileLoader color="#d5d5d5">
+    <div className="profile">
+      <div className="profile-image-container">
+        <div className="img" />
+        <i className='ri-loader-2-line spin' />
+      </div>
+      <div className="profile-details">
+        <strong className="name">█████ ███████</strong>
+        <span className="account-type">██████</span>
+      </div>
+    </div>
+  </StyledAccountProfileLoader>
+)
+
+export const LettersLoader = () => (
+  <StyledLettersContainer>
+    <div className="letters-header">
+      <h5>Inbox</h5>
+    </div>
+    <div className="letters-content">
+      <i className='ri-loader-2-line spin' />
+    </div>
+  </StyledLettersContainer>
+)
+
+export const MoreLoader = () => (
+  <StyledAccountContainer>
+    <i className="ri-loader-fill spin"></i>
+  </StyledAccountContainer>
+)
+
+export default { Loaders, HomeLoader, FeedLoader, AccountLoader, LettersLoader, AccountProfileLoader, ViewLetterLoader }
+
+
+
 const StyledHomeContainer = styled.div`
   display: flex;
   flex: 1;
@@ -180,77 +257,3 @@ const StyledViewLetterContainer = styled(StyledLoadingContainer)`
     }
 
 `
-
-
-const Loaders = (props: Props) => {
-  return (
-    <div>
-
-    </div>
-  )
-}
-
-export const HomeLoader = () => (
-  <StyledHomeContainer>
-    <HomeHeader onClick={() => undefined} />
-  </StyledHomeContainer>
-)
-
-export const FeedLoader = () => (
-  <StyledFeedContainer>
-    <SectionHeader title="Live Feed" />
-    <NewLetterButton onClick={() => undefined}></NewLetterButton>
-    <ul>
-      <li><StyledFeedItem /></li>
-      <li><StyledFeedItem /></li>
-      <li><StyledFeedItem /></li>
-      <li><StyledFeedItem /></li>
-      <li><StyledFeedItem /></li>
-    </ul>
-  </StyledFeedContainer>
-)
-
-export const AccountLoader = () => (
-  <StyledAccountContainer>
-    <i className="ri-loader-fill spin"></i>
-  </StyledAccountContainer>
-)
-export const ViewLetterLoader = () => (
-  <StyledViewLetterContainer>
-    <i className="ri-mail-open-fill grow"></i>
-  </StyledViewLetterContainer>
-)
-
-export const AccountProfileLoader = () => (
-  <StyledAccountProfileLoader color="#d5d5d5">
-    <div className="profile">
-      <div className="profile-image-container">
-        <div className="img" />
-        <i className='ri-loader-2-line spin' />
-      </div>
-      <div className="profile-details">
-        <strong className="name">█████ ███████</strong>
-        <span className="account-type">██████</span>
-      </div>
-    </div>
-  </StyledAccountProfileLoader>
-)
-
-export const LettersLoader = () => (
-  <StyledLettersContainer>
-    <div className="letters-header">
-      <h5>Inbox</h5>
-    </div>
-    <div className="letters-content">
-      <i className='ri-loader-2-line spin' />
-    </div>
-  </StyledLettersContainer>
-)
-
-export const MoreLoader = () => (
-  <StyledAccountContainer>
-    <i className="ri-loader-fill spin"></i>
-  </StyledAccountContainer>
-)
-
-export default { Loaders, HomeLoader, FeedLoader, AccountLoader, LettersLoader, AccountProfileLoader, ViewLetterLoader }

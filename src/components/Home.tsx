@@ -42,65 +42,6 @@ const QuickLetter = (props) => {
   )
 }
 
-const StyledQuickLetter = styled.div`
-  position: absolute;
-  background: rgba(86, 170, 222, 0.7);
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  width: 100vw;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  flex-flow: column nowrap;
-  justify-content: center;
-
-  .quick-letter-wrapper {
-    position: relative;
-    /* height: 100%; */
-    width: 100%;
-    max-width: 468px;
-    margin: 0 auto;
-    /* display: flex; */
-    /* flex: 1; */
-  }
-
-  .quick-letter-instructions {
-    text-transform: uppercase;
-    color: #888;
-    font-size: 16px;
-    align-self: center;
-    text-align: center;
-    font-weight: bold;
-    animation: appear 2s forwards;
-    padding: 8px 16px;
-    cursor: pointer;
-    line-height: 1em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 5px;
-    right: 20px;
-    z-index: 2;
-
-    i {
-      
-    }
-  }
-
-  .view-letter-container {
-    flex: 0;
-    height: auto;
-    width: 468px;
-    max-width: calc(100% - 20px);
-    overflow: visible;
-    margin: 0 auto;
-  }
-
-`
 
 
 
@@ -277,6 +218,66 @@ const StyledTopContainer = styled.div`
     font-size: 1.6em;
     font-weight: 800;
     line-height: 1.25em;
+  }
+
+`
+
+const StyledQuickLetter = styled.div`
+  position: absolute;
+  background: rgba(86, 170, 222, 0.7);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  flex-flow: column nowrap;
+  justify-content: center;
+
+  .quick-letter-wrapper {
+    position: relative;
+    /* height: 100%; */
+    width: 100%;
+    max-width: 468px;
+    margin: 0 auto;
+    /* display: flex; */
+    /* flex: 1; */
+  }
+
+  .quick-letter-instructions {
+    text-transform: uppercase;
+    color: #888;
+    font-size: 16px;
+    align-self: center;
+    text-align: center;
+    font-weight: bold;
+    animation: appear 2s forwards;
+    padding: 8px 16px;
+    cursor: pointer;
+    line-height: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    z-index: 2;
+
+    i {
+      
+    }
+  }
+
+  .view-letter-container {
+    flex: 0;
+    height: auto;
+    width: 468px;
+    max-width: calc(100% - 20px);
+    overflow: visible;
+    margin: 0 auto;
   }
 
 `

@@ -13,129 +13,7 @@ const defaultConfettiConfig = {
   spread: 60,
   startVelocity: 80,
 }
-const StyledCheerButtonWrapper = styled.div`
-  display: block;
-  position: relative;
-  width: 100%;
-  padding-bottom: 20px;
-  pointer-events: none;
 
-  div {
-    margin: 0 auto;
-    position: absolute !important;
-    left: 0;
-    right: 0;
-    z-index: 5;
-    will-change: transform;
-  }
-`;
-
-const StyledCheerCounter = styled.aside`
-  /* background: #56aade; */
-  text-shadow: 0px 0px 2px #56aade,
-               0px 0px 5px #56aade;
-
-  font-size: 14px;
-  color: #FFF;
-  font-weight: bold;
-  /* box-shadow: 0px 3px 5px rgba(0,0,0,0.1); */
-  border-radius: 3px;
-  pointer-events: none;
-  /* padding: 4px 10px; */
-  padding: 0;
-  /* text-transform: uppercase; */
-  letter-spacing: 1px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  position: absolute;
-  /* margin-bottom: 10px; */
-  left: 0;
-  right: 0;
-  top: -30px;
-  z-index: 8;
-  animation: animate-in 600ms ease-out forwards;
-  opacity: 0;
-  will-change: opacity transform;
-
-  @keyframes animate-in {
-    0% {
-      transform: translateY(30px);
-      opacity: 0;
-    }
-
-    25% {
-      transform: translateY(0px);
-      opacity: 1;
-    }
-
-    75% {
-      transform: translateY(0px);
-      opacity: 1;
-    }
-
-    100% {
-      transform: translateY(0px);
-      opacity: 0;
-    }
-  }
-
-`;
-
-const StyledCheerButton = styled('button').attrs({
-  'data-tour': 'step-2'
-})`
-  height: 80px;
-  width: 80px;
-  border: 0px solid #f0f0f0;
-  background: #FFF;
-  border-radius: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  font-size: 42px;
-  outline: 0;
-  padding: 0;
-  transition: transform 100ms cubic-bezier(0.64, 0.57, 0.67, 1.53);
-  box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
-  will-change: transform;
-  z-index: 3;
-  position: relative;
-  pointer-events: all;
-
-  /* overflow: hidden; */
-  span {
-    transition: transform 100ms cubic-bezier(0.64, 0.57, 0.67, 1.53);
-    will-change: transform;
-    display: block;
-  }
-
-  &:hover {
-    transform: scale(1.02);
-  }
-
-  &:hover > ${StyledCheerCounter} {
-    opacity: 1 !important;
-  }
-
-
-
-  &:active {
-    transform: scale(1.10);
-
-    span {
-      transform: scale(1.25);
-    }
-
-  }
-
-
-
-
-`;
 
 
 
@@ -293,25 +171,16 @@ const CheerButton = (props: Props) => {
 
     getCheerCount()
 
-    // return () => {
-    // }
 
   }, [])
 
 
   return (
     <StyledCheerButtonWrapper onTouchStart={() => false}>
-      {/* {
-        audioState.isCelebrating ?
-          (<StyledCheerCounter>
-            {clicks.str}
-          </StyledCheerCounter>)
-          : null} */}
-      {
-        cheerArr.map((click: CheerClick, i) => (
-          <StyledCheerCounter key={`${click.num}-${i}`}>
-            {click.str}
-          </StyledCheerCounter>
+      cheerArr.map((click: CheerClick, i) => (
+      <StyledCheerCounter key={`${click.num}-${i}`}>
+        {click.str}
+      </StyledCheerCounter>
         ))
       }
       {/* <audio preload="auto" controls={false} id="audio-el" /> */}
@@ -328,3 +197,127 @@ const CheerButton = (props: Props) => {
 }
 
 export default CheerButton
+
+const StyledCheerButtonWrapper = styled.div`
+  display: block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 20px;
+  pointer-events: none;
+
+  div {
+    margin: 0 auto;
+    position: absolute !important;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    will-change: transform;
+  }
+`;
+
+const StyledCheerCounter = styled.aside`
+  /* background: #56aade; */
+  text-shadow: 0px 0px 2px #56aade,
+               0px 0px 5px #56aade;
+
+  font-size: 14px;
+  color: #FFF;
+  font-weight: bold;
+  /* box-shadow: 0px 3px 5px rgba(0,0,0,0.1); */
+  border-radius: 3px;
+  pointer-events: none;
+  /* padding: 4px 10px; */
+  padding: 0;
+  /* text-transform: uppercase; */
+  letter-spacing: 1px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  position: absolute;
+  /* margin-bottom: 10px; */
+  left: 0;
+  right: 0;
+  top: -30px;
+  z-index: 8;
+  animation: animate-in 600ms ease-out forwards;
+  opacity: 0;
+  will-change: opacity transform;
+
+  @keyframes animate-in {
+    0% {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+
+    25% {
+      transform: translateY(0px);
+      opacity: 1;
+    }
+
+    75% {
+      transform: translateY(0px);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateY(0px);
+      opacity: 0;
+    }
+  }
+
+`;
+
+const StyledCheerButton = styled('button').attrs({
+  'data-tour': 'step-2'
+})`
+  height: 80px;
+  width: 80px;
+  border: 0px solid #f0f0f0;
+  background: #FFF;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 42px;
+  outline: 0;
+  padding: 0;
+  transition: transform 100ms cubic-bezier(0.64, 0.57, 0.67, 1.53);
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+  will-change: transform;
+  z-index: 3;
+  position: relative;
+  pointer-events: all;
+
+  /* overflow: hidden; */
+  span {
+    transition: transform 100ms cubic-bezier(0.64, 0.57, 0.67, 1.53);
+    will-change: transform;
+    display: block;
+  }
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  &:hover > ${StyledCheerCounter} {
+    opacity: 1 !important;
+  }
+
+
+
+  &:active {
+    transform: scale(1.10);
+
+    span {
+      transform: scale(1.25);
+    }
+
+  }
+
+
+
+
+`;

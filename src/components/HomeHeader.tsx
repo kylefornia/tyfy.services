@@ -6,6 +6,22 @@ interface Props {
   onClick: () => void
 }
 
+
+
+const HomeHeader = (props: Props) => {
+  return (
+    <StyledTopContainer>
+      <p>To all <b>Frontliners</b>, <b>Health Workers</b>, <b>Law Enforcement</b>, <b>Donors</b>, and others &hellip;</p>
+      <h2>Thank You For Your Service</h2>
+      <NewLetterButton
+        onClick={props.onClick}
+      />
+    </StyledTopContainer>
+  )
+}
+
+export default HomeHeader
+
 const StyledTopContainer = styled.div`
   z-index: 2;
   width: 100%;
@@ -40,17 +56,3 @@ const StyledTopContainer = styled.div`
   }
 
 `
-
-const HomeHeader = (props: Props) => {
-  return (
-    <StyledTopContainer>
-      <p>To all <b>Frontliners</b>, <b>Health Workers</b>, <b>Law Enforcement</b>, <b>Donors</b>, and others &hellip;</p>
-      <h2>Thank You For Your Service</h2>
-      <NewLetterButton
-        onClick={props.onClick}
-      />
-    </StyledTopContainer>
-  )
-}
-
-export default HomeHeader
