@@ -6,101 +6,6 @@ interface Props {
   transparent?: boolean;
 }
 
-const StyledTopNavContainer = styled.div`
-  width: 100%;
-  background: rgba(86,170,222, 0.65);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-evenly;
-  backdrop-filter: blur(10px);
-  /* box-shadow: 0 3px 5px rgba(0,0,0,0.1); */
-  z-index: 3;
-
-  .left-nav {
-      flex: 1;
-      align-self: flex-start;
-      display: flex;
-      height: 58px;
-
-      .logo {
-        margin-left: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-
-        .logo-icon {
-          color: #FFF;
-          font-size: 36px;
-          display: inline-block;
-        }
-      }
-
-  }
-
-  .right-nav {
-    display: flex;
-    align-self: flex-end;
-    flex-flow: row nowrap;
-    justify-content: space-evenly;
-  }
-`
-
-const StyledTopNavItem = styled.div`
-  color: #fff;
-  opacity: 0.8;
-  text-align: center;
-  font-family: 'Open Sans', sans-serif;
-  flex: 1;
-  align-items: center;
-  width: 100px;
-  font-weight: 400;
-
-
-
-  &:hover a {
-    background: rgba(255,255,255, 0.2);
-    opacity: 1;
-    border-bottom: 2px solid #FFF;
-
-  }
-
-  a {
-    padding: 10px;
-    text-decoration: none;
-    color: #fff;
-    flex: 1;
-    display: inline-block;
-    height: 100%;
-    width: 100%;
-    border-bottom: 2px solid transparent;
-
-  }
-  
-
-  .active {
-    color: #FFF;
-    background: rgba(255,255,255, 0.1);
-    opacity: 1;
-    border-bottom: 2px solid #FFF;
-  }
-
-
-  i {
-    font-size: 1.4em;
-    line-height: 1.4em;
-  }
-
-  span {
-    display: block;
-    font-size: 0.7em;
-    font-weight: bold;
-  }
-`
 
 const TopNavItem = ({ iconClassName, text, to, exact, ...props }: any) => {
   return (
@@ -223,3 +128,101 @@ const TopNavTransparent = () => {
 }
 
 export default TopNav
+
+
+
+const StyledTopNavContainer = styled.div`
+  width: 100%;
+  background: rgba(86,170,222, 0.65);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
+  backdrop-filter: blur(10px);
+  /* box-shadow: 0 3px 5px rgba(0,0,0,0.1); */
+  z-index: 3;
+
+  .left-nav {
+      flex: 1;
+      align-self: flex-start;
+      display: flex;
+      height: 58px;
+
+      .logo {
+        margin-left: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        .logo-icon {
+          color: #FFF;
+          font-size: 36px;
+          display: inline-block;
+        }
+      }
+
+  }
+
+  .right-nav {
+    display: flex;
+    align-self: flex-end;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+  }
+`
+
+const StyledTopNavItem = styled.div`
+  color: #fff;
+  opacity: 0.8;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  flex: 1;
+  align-items: center;
+  width: 100px;
+  font-weight: 400;
+
+
+
+  &:hover a {
+    background: rgba(255,255,255, 0.2);
+    opacity: 1;
+    border-bottom: 2px solid #FFF;
+
+  }
+
+  a {
+    padding: 10px;
+    text-decoration: none;
+    color: #fff;
+    flex: 1;
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-bottom: 2px solid transparent;
+
+  }
+  
+
+  .active {
+    color: #FFF;
+    background: rgba(255,255,255, 0.1);
+    opacity: 1;
+    border-bottom: 2px solid #FFF;
+  }
+
+
+  i {
+    font-size: 1.4em;
+    line-height: 1.4em;
+  }
+
+  span {
+    display: block;
+    font-size: 0.7em;
+    font-weight: bold;
+  }
+`

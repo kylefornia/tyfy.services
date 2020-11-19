@@ -5,6 +5,18 @@ interface Props {
   title: string;
 }
 
+
+
+const SectionHeader = ({ title = '' }: Props) => {
+  return (
+    <StyledSectionHeader>
+      <h1>{title}</h1>
+    </StyledSectionHeader>
+  )
+}
+
+export default SectionHeader
+
 const StyledSectionHeader = styled.div`
   color: #FFF;
   text-align:center;
@@ -26,13 +38,3 @@ const StyledSectionHeader = styled.div`
     font-size: 24px;
   }
 `
-
-const SectionHeader = ({ title = '' }: Props) => {
-  return (
-    <StyledSectionHeader>
-      <h1>{title}</h1>
-    </StyledSectionHeader>
-  )
-}
-
-export default SectionHeader

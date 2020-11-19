@@ -6,6 +6,24 @@ interface Props {
   count: number | firebase.firestore.DocumentData;
 }
 
+const ThanksCounter = (props: Props) => {
+  return (
+    <StyledThanksCounterContainer>
+      <StyledThanksCounterText>
+        <NumberFormat
+          value={props.count as number || 0}
+          displayType="text"
+          thousandSeparator
+        />
+      </StyledThanksCounterText>
+      <p>Thank you letters sent to health workers worldwide.</p>
+    </StyledThanksCounterContainer>
+  )
+}
+
+export default ThanksCounter
+
+
 const StyledThanksCounterContainer = styled.div`
   position: absolute;
   top: 0;
@@ -32,20 +50,3 @@ const StyledThanksCounterText = styled.h3`
   margin: 0;
   margin-bottom: 10px;
 `
-
-const ThanksCounter = (props: Props) => {
-  return (
-    <StyledThanksCounterContainer>
-      <StyledThanksCounterText>
-        <NumberFormat
-          value={props.count as number || 0}
-          displayType="text"
-          thousandSeparator
-        />
-      </StyledThanksCounterText>
-      <p>Thank you letters sent to health workers worldwide.</p>
-    </StyledThanksCounterContainer>
-  )
-}
-
-export default ThanksCounter

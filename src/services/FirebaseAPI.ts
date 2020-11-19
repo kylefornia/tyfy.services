@@ -21,7 +21,9 @@ class FirebaseAPI {
   public static init() {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig)
-      firebase.firestore().enablePersistence()
+      firebase.firestore().enablePersistence({
+        synchronizeTabs: true,
+      })
         .catch((err) => {
           console.log(err)
         })

@@ -14,6 +14,186 @@ interface Props {
 }
 
 
+
+
+const FeedItem = (Letter: Letter) => {
+
+  const receipientType = (!!Letter.receipient?.accountType ? AccountTypes.filter(({ type }) =>
+    Letter.receipient?.accountType == type)[0] : undefined)
+
+
+  return (
+    <StyledFeedItem>
+      <Link to={`/letter/${Letter.id}`}>
+        <div className="feed-header">
+          <StyledFeedUser>
+            <div className="user-container sender">
+              <span className="label">FROM: </span>
+              <div className="two-line-container">
+                <div className="container-line">
+
+                  <div className="user-icon">
+                    <ReactCountryFlag svg countryCode={Letter.location.country_code} />
+                  </div>
+
+                  <span className="name">{Letter.name}</span>
+                </div>
+                <div className="container-line">
+                  <span className="date">{moment(Letter.date.toDate()).fromNow()}</span>
+                </div>
+              </div>
+            </div>
+          </StyledFeedUser>
+          <div className="middle">
+            <i className="ri-arrow-right-line"></i>
+          </div>
+          <StyledFeedUser>
+            <div className="user-container receiver">
+              <span className="label">TO: </span>
+              <div className="two-line-container">
+                <div className="container-line">
+
+                  <div className="user-icon">
+                    {
+                      !!Letter.receipient ?
+                        <ReactCountryFlag svg countryCode={Letter.receipient?.location.country_code} />
+                        :
+                        <i className="ri-eye-off-line"></i>
+                    }
+                  </div>
+                  <span className="name">{Letter.receipient?.name || 'Private Receipient'}</span>
+                </div>
+
+                <div className="container-line account-type" style={{
+                  color: !!receipientType ? receipientType.color : '#888',
+                }}>
+                  <i className={!!receipientType ? receipientType.iconClassName : ''} />
+                  {Letter.receipient?.accountType} &nbsp;
+                </div>
+
+
+              </div>
+            </div>
+          </StyledFeedUser>
+        </div>
+
+
+        <p className="message">{Letter.message}</p>
+
+
+      </Link>
+    </StyledFeedItem >
+  )
+}
+
+const StyledFeedContainer = styled.div`
+  /* padding: 20px; */
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  padding-bottom: 80px;
+
+`
+
+const StyledNewLetterButtonContainer = styled.div`
+  /* position: absolute; */
+  /* bottom: 80px; */
+  /* left: 0; */
+  /* right: 0; */
+  /* z-index: 2; */
+  margin: 0 auto;
+  margin-top: 20px;
+  text-align: center;
+  width: auto;
+  display: block;
+`
+
+const StyledFeedWrapper = styled.div`
+  /* display: flex; */
+  /* flex-flow: column nowrap; */
+  height: 100%;
+  /* min-height: calc(100vh - 80px); */
+  /* margin-bottom: 80px; */
+  /* overflow: hidden; */
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+`
+
+const StyledNewLetter = styled.div`
+ margin: 0 auto;
+ margin-bottom: 40px;
+ text-align: center;
+`
+const Feed = (props: Props) => {
+
+  const [feedData, setFeedData] = React.useState<[]>([])
+
+
+  React.useEffect(() => {
+    FirebaseAPI.getAllLetters()
+      .orderBy("date", "desc")
+      .onSnapshot((snap) => {
+        setFeedData(snap.docs.map((doc) => ({ ...doc.data(), id: doc.id })) as React.SetStateAction<[]>)
+      })
+  }, [])
+
+  const [newLetter, setNewLetter] = React.useState<Letter>({
+    isNewLetter: false,
+    name: '',
+    message: '',
+    location: {
+      lat: 0,
+      lon: 0,
+      country_name: '',
+      country_code: '',
+      city: '',
+      region: '',
+    },
+  })
+
+  return (
+    <>
+      <StyledFeedWrapper>
+        <StyledFeedContainer>
+          <SectionHeader title="Live Feed" />
+          <StyledNewLetter>
+            <NewLetterButton
+              onClick={() => setNewLetter({ ...newLetter, isNewLetter: true })}
+            />
+          </StyledNewLetter>
+          {
+            feedData.length == 0 ?
+              [
+                <FeedItemPlaceholder key='fip-1' />,
+                <FeedItemPlaceholder key='fip-2' />,
+                <FeedItemPlaceholder key='fip-3' />,
+                <FeedItemPlaceholder key='fip-4' />,
+                <FeedItemPlaceholder key='fip-5' />,
+              ]
+              :
+              feedData.map((letter, i) => (
+                <FeedItem key={i} {...letter} />
+              ))
+          }
+        </StyledFeedContainer>
+
+      </StyledFeedWrapper>
+      {
+        newLetter.isNewLetter ?
+          <NewLetter
+            setNewLetter={setNewLetter}
+            newLetter={newLetter}
+          />
+          : null
+      }
+    </>
+  )
+}
+
+export default Feed
+
+
 const FeedItemPlaceholder = styled.div`
   background: #FFF;
   border-radius: 5px;
@@ -275,181 +455,3 @@ const StyledFeedUser = styled.div`
  
   
 `;
-
-
-const FeedItem = (Letter: Letter) => {
-
-  const receipientType = (!!Letter.receipient?.accountType ? AccountTypes.filter(({ type }) =>
-    Letter.receipient?.accountType == type)[0] : undefined)
-
-
-  return (
-    <StyledFeedItem>
-      <Link to={`/letter/${Letter.id}`}>
-        <div className="feed-header">
-          <StyledFeedUser>
-            <div className="user-container sender">
-              <span className="label">FROM: </span>
-              <div className="two-line-container">
-                <div className="container-line">
-
-                  <div className="user-icon">
-                    <ReactCountryFlag svg countryCode={Letter.location.country_code} />
-                  </div>
-
-                  <span className="name">{Letter.name}</span>
-                </div>
-                <div className="container-line">
-                  <span className="date">{moment(Letter.date.toDate()).fromNow()}</span>
-                </div>
-              </div>
-            </div>
-          </StyledFeedUser>
-          <div className="middle">
-            <i className="ri-arrow-right-line"></i>
-          </div>
-          <StyledFeedUser>
-            <div className="user-container receiver">
-              <span className="label">TO: </span>
-              <div className="two-line-container">
-                <div className="container-line">
-
-                  <div className="user-icon">
-                    {
-                      !!Letter.receipient ?
-                        <ReactCountryFlag svg countryCode={Letter.receipient?.location.country_code} />
-                        :
-                        <i className="ri-eye-off-line"></i>
-                    }
-                  </div>
-                  <span className="name">{Letter.receipient?.name || 'Private Receipient'}</span>
-                </div>
-
-                <div className="container-line account-type" style={{
-                  color: !!receipientType ? receipientType.color : '#888',
-                }}>
-                  <i className={!!receipientType ? receipientType.iconClassName : ''} />
-                  {Letter.receipient?.accountType} &nbsp;
-                </div>
-
-
-              </div>
-            </div>
-          </StyledFeedUser>
-        </div>
-
-
-        <p className="message">{Letter.message}</p>
-
-
-      </Link>
-    </StyledFeedItem >
-  )
-}
-
-const StyledFeedContainer = styled.div`
-  /* padding: 20px; */
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  position: relative;
-  padding-bottom: 80px;
-
-`
-
-const StyledNewLetterButtonContainer = styled.div`
-  /* position: absolute; */
-  /* bottom: 80px; */
-  /* left: 0; */
-  /* right: 0; */
-  /* z-index: 2; */
-  margin: 0 auto;
-  margin-top: 20px;
-  text-align: center;
-  width: auto;
-  display: block;
-`
-
-const StyledFeedWrapper = styled.div`
-  /* display: flex; */
-  /* flex-flow: column nowrap; */
-  height: 100%;
-  /* min-height: calc(100vh - 80px); */
-  /* margin-bottom: 80px; */
-  /* overflow: hidden; */
-  -webkit-overflow-scrolling: touch;
-  position: relative;
-`
-
-const StyledNewLetter = styled.div`
- margin: 0 auto;
- margin-bottom: 40px;
- text-align: center;
-`
-const Feed = (props: Props) => {
-
-  const [feedData, setFeedData] = React.useState<[]>([])
-
-
-  React.useEffect(() => {
-    FirebaseAPI.getAllLetters()
-      .orderBy("date", "desc")
-      .onSnapshot((snap) => {
-        setFeedData(snap.docs.map((doc) => ({ ...doc.data(), id: doc.id })) as React.SetStateAction<[]>)
-      })
-  }, [])
-
-  const [newLetter, setNewLetter] = React.useState<Letter>({
-    isNewLetter: false,
-    name: '',
-    message: '',
-    location: {
-      lat: 0,
-      lon: 0,
-      country_name: '',
-      country_code: '',
-      city: '',
-      region: '',
-    },
-  })
-
-  return (
-    <>
-      <StyledFeedWrapper>
-        <StyledFeedContainer>
-          <SectionHeader title="Live Feed" />
-          <StyledNewLetter>
-            <NewLetterButton
-              onClick={() => setNewLetter({ ...newLetter, isNewLetter: true })}
-            />
-          </StyledNewLetter>
-          {
-            feedData.length == 0 ?
-              [
-                <FeedItemPlaceholder key='fip-1' />,
-                <FeedItemPlaceholder key='fip-2' />,
-                <FeedItemPlaceholder key='fip-3' />,
-                <FeedItemPlaceholder key='fip-4' />,
-                <FeedItemPlaceholder key='fip-5' />,
-              ]
-              :
-              feedData.map((letter, i) => (
-                <FeedItem key={i} {...letter} />
-              ))
-          }
-        </StyledFeedContainer>
-
-      </StyledFeedWrapper>
-      {
-        newLetter.isNewLetter ?
-          <NewLetter
-            setNewLetter={setNewLetter}
-            newLetter={newLetter}
-          />
-          : null
-      }
-    </>
-  )
-}
-
-export default Feed

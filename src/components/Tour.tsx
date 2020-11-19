@@ -121,6 +121,7 @@ const Tour = (props: Props) => {
                 </StyledLargeModal>
             ),
             action: (node) => {
+                getControls().style.display = 'flex';
                 // globeContext.unsuspendGlobe()
             }
         }, {
@@ -133,12 +134,16 @@ const Tour = (props: Props) => {
                     <ModalHeader>Live Feed</ModalHeader>
                     <ModalContent>
                         <p>
-                            View all letters that have been sent around the world in real time.
+                            <Link to="/feed"><b>View all</b></Link> letters that have been sent around the world in real time.
                         </p>
                     </ModalContent>
+                    <div className="tour-button-container center">
+                        <button className="primary" onClick={() => closeTour()}>End Tour</button>
+                    </div>
                 </StyledLargeModal>
             ),
             action: (node) => {
+                getControls().style.display = 'none';
                 // globeContext.unsuspendGlobe()
             }
         },
@@ -237,6 +242,9 @@ const ModalBase = styled.div`
         margin-top: 20px;
         display: flex;
         justify-content: space-between;
+
+
+
         button {
             padding: 8px 12px;
             border-radius: 30px;
@@ -266,6 +274,15 @@ const ModalBase = styled.div`
 
             &:nth-of-type(2) {
                 margin-right: 0;
+            }
+        }
+
+        &.center {
+            text-align: center;
+            margin: 0;
+
+            button {
+                width: 100%;
             }
         }
     }

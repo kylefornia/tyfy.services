@@ -6,42 +6,6 @@ interface Props {
 
 }
 
-const StyledPrivacyContainer = styled.div`
-  background: #FFF;
-  padding: 40px 20px;
-  width: calc(100% - 60px);
-  margin: 0 auto;
-  margin-bottom: 80px;
-  border-radius: 3px;
-  box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
-  line-height: 1.5;
-  max-width: 468px;
-
-  h1 {
-    font-size: 1.5em;
-    margin: 10px 0;
-    font-weight: bold;
-  }
-
-  h2 {
-    font-weight: bold;
-    font-size: 1.2em;
-  }
-
-  h3 {
-    font-size: 1.1em;
-    font-weight: bold;
-  }
-
-  p {
-    margin: 10px 0;
-  }
-
-  strong {
-    font-weight: bold;
-  }
-
-`;
 
 const PrivacyPolicy = (props: Props) => {
   return (
@@ -207,3 +171,41 @@ const PrivacyPolicy = (props: Props) => {
 }
 
 export default PrivacyPolicy
+
+
+const StyledPrivacyContainer = styled.div`
+  background: #FFF;
+  padding: 40px 20px;
+  width: calc(100% - 60px);
+  margin: 0 auto;
+  margin-bottom: 80px;
+  border-radius: 3px;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+  line-height: 1.5;
+  max-width: 468px;
+
+  h1 {
+    font-size: 1.5em;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+
+  h2 {
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+
+  p {
+    margin: 10px 0;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+`;
