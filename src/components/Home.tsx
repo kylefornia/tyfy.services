@@ -12,6 +12,8 @@ import { TourContext } from '../contexts/TourContext';
 import ViewLetter from './ViewLetter';
 // import CheerButton from './CheerButton';
 
+const DEFAULT_ALTITUDE = window.innerWidth > 480 ? 4 : 5
+
 
 const CheerButton = React.lazy(() => import('./CheerButton'))
 const Globe = React.lazy(() => import('./Globe'))
@@ -27,6 +29,10 @@ const QuickLetter = (props) => {
   useEffect(() => {
 
     return () => {
+      //@ts-ignore
+      window.pov && window.pov({ altitude: DEFAULT_ALTITUDE }, 600)
+      //@ts-ignore
+      window.globeControls && (window.globeControls.autoRotate = true)
       globeContext.unsuspendGlobe()
     }
   }, [])

@@ -14,6 +14,9 @@ import { getLatLngCenter } from '../utils';
 
 // const fbImageUrl = require('../assets/earth-night.jpg');
 
+const DEFAULT_ALTITUDE = window.innerWidth > 480 ? 4 : 5
+
+
 interface Props {
   letters: Letter[] | firebase.firestore.DocumentData;
 }
@@ -182,10 +185,14 @@ const Globe = ({ letters = [] }: Props) => {
 
   //init globe
   useEffect(() => {
-    globeEl.current.pointOfView({ altitude: window.innerWidth > 480 ? 4 : 5 }, 0)
+
+
+    globeEl.current.pointOfView({ altitude: DEFAULT_ALTITUDE }, 0)
 
     //@ts-ignore
     window.pov = globeEl.current.pointOfView
+    //@ts-ignore
+    window.globeControls = globeEl.current.controls()
 
 
     const globeMaterial = globeEl.current.globeMaterial();
@@ -199,12 +206,12 @@ const Globe = ({ letters = [] }: Props) => {
       setDimensions({
         height: window.innerHeight,
         width: window.innerWidth,
-        altitude: window.innerWidth > 480 ? 4 : 5 //if mobile, reduce globe size
+        altitude: DEFAULT_ALTITUDE //if mobile, reduce globe size
       })
     }
 
     //set perspective
-    globeEl.current.pointOfView({ altitude: window.innerWidth > 480 ? 4 : 5 }, 0)
+    globeEl.current.pointOfView({ altitude: DEFAULT_ALTITUDE }, 0)
 
     window.addEventListener('resize', debouncedDimensions)
 
@@ -236,10 +243,14 @@ const Globe = ({ letters = [] }: Props) => {
 
   useEffect(() => {
     if (!!globeEl.current) {
-      isSuspended ?
-        globeEl.current.pauseAnimation() :
-        globeEl.current.resumeAnimation() &&
-        (globeEl.current.controls().autRotate = true)
+      if (isSuspended) {
+        globeEl.current.pauseAnimation()
+
+      } else {
+        globeEl.current.resumeAnimation()
+        globeEl.current.controls().autRotate = true
+        globeEl.current.pointOfView({ altitude: DEFAULT_ALTITUDE }, 300)
+      }
     }
   }, [isSuspended])
 
@@ -255,13 +266,14 @@ const Globe = ({ letters = [] }: Props) => {
     globeEl.current.pointOfView({
       lat: arc.endLat,
       lng: arc.endLng,
-      // altitude: 2.5
-    }, 300)
+      altitude: 2.5
+    }, 500)
 
     setTimeout(() => {
       // suspendGlobe()
+      globeEl.current.controls().autoRotate = false
       history.push(`/quick/${arc.letterMetadata.id}`)
-    }, 320);
+    }, 600);
 
 
   }
