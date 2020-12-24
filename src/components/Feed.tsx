@@ -33,7 +33,7 @@ const FeedItem = (Letter: Letter) => {
                 <div className="container-line">
 
                   <div className="user-icon">
-                    <ReactCountryFlag svg countryCode={Letter.location.country_code} />
+                    {Letter.location && <ReactCountryFlag svg countryCode={Letter.location.country_code} />}
                   </div>
 
                   <span className="name">{Letter.name}</span>
@@ -55,10 +55,10 @@ const FeedItem = (Letter: Letter) => {
 
                   <div className="user-icon">
                     {
-                      !!Letter.receipient ?
+                      !!Letter.receipient && !!Letter.receipient.location ?
                         <ReactCountryFlag svg countryCode={Letter.receipient?.location.country_code} />
                         :
-                        <i className="ri-eye-off-line"></i>
+                        <i className="ri-earth-fill"></i>
                     }
                   </div>
                   <span className="name">{Letter.receipient?.name || 'Private Receipient'}</span>

@@ -18,67 +18,7 @@ const TopNavItem = ({ iconClassName, text, to, exact, ...props }: any) => {
   )
 }
 
-const StyledTransparentNav = styled(StyledTopNavContainer)`
-  /* background: rgba(0,0,0, 0.1); */
-  /* background: #4d99c7; */
-  background: none;
-  /* background: linear-gradient(to bottom, rgba(20,20,20,0.4) 0%, transparent); */
-  box-shadow: none;
-  /* border-bottom: 1px solid  rgba(255,255,255, 0.02); */
-  /* border-color: rgba(255,255,255, 0.02); */
-  /* box-shadow: 0px 3px 10px rgba(0,0,0,0.05); */
-  color: #f0f0f0;
 
-  a {
-    color: rgba(255,255,255,0.6);
-    text-decoration: none;
-  }
-
-  .active * {
-    color: #FFF;
-  }
-
-  .left-nav {
-
-    .active {
-      border: 0;
-    }
-
-    .logo {
-      .logo-icon {
-        color: #FFF;
-      }
-    }
-  }
-
-  .right-nav div {
-    &:hover {
-      background: rgba(255,255,255, 0.2);
-
-      a { 
-       border-bottom: 2px solid #FFF;
-
-       }
-
-       
-
-      * {
-        color: #FFF;
-      }
-      
-
-
-
-    }
-
-    
-  }
-
-  .active {
-    border-bottom: 2px solid rgba(255,255,255,0.25);
-  }
-
-`;
 
 const TopNav = (props: Props) => {
 
@@ -226,3 +166,64 @@ const StyledTopNavItem = styled.div`
     font-weight: bold;
   }
 `
+const StyledTransparentNav = styled(StyledTopNavContainer)`
+  /* background: rgba(0,0,0, 0.1); */
+  /* background: #4d99c7; */
+  background: none;
+  /* background: linear-gradient(to bottom, rgba(20,20,20,0.4) 0%, transparent); */
+  box-shadow: none;
+  /* border-bottom: 1px solid  rgba(255,255,255, 0.02); */
+  /* border-color: rgba(255,255,255, 0.02); */
+  /* box-shadow: 0px 3px 10px rgba(0,0,0,0.05); */
+  color: #f0f0f0;
+
+  a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+  }
+
+  .active * {
+    color: #FFF;
+  }
+
+  .left-nav {
+
+    .active {
+      border: 0;
+    }
+
+    .logo {
+      .logo-icon {
+        color: #FFF;
+      }
+    }
+  }
+
+  .right-nav div {
+    &:hover {
+      background: rgba(255,255,255, 0.2);
+
+      a { 
+       border-bottom: 2px solid #FFF;
+
+       }
+
+       
+
+      * {
+        color: #FFF;
+      }
+      
+
+
+
+    }
+
+    
+  }
+
+  .active {
+    border-bottom: 2px solid rgba(255,255,255,0.25);
+  }
+
+`;

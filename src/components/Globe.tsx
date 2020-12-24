@@ -88,7 +88,7 @@ const Globe = ({ letters = [] }: Props) => {
   function formatPoints(lettersData: Letter[]) {
     const formattedArcs = letters.length > 0 ?
       lettersData
-        .filter((letter) => letter.receipient)
+        .filter((letter) => letter.receipient && letter.receipient.location)
         .map((letter: Letter): ArcData => {
 
           const tooltip = `<div 

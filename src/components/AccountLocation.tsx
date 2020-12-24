@@ -25,7 +25,7 @@ const AccountLocation = (props: Props) => {
 
           if (!position) return alert('Cannot get your location')
 
-          let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIPv3();
+          let { city = , country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIPv3();
 
           const currentLocation: UserLocation = {
             lat: position.coords.latitude,

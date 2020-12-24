@@ -177,10 +177,11 @@ const CheerButton = (props: Props) => {
 
   return (
     <StyledCheerButtonWrapper onTouchStart={() => false}>
-      cheerArr.map((click: CheerClick, i) => (
-      <StyledCheerCounter key={`${click.num}-${i}`}>
-        {click.str}
-      </StyledCheerCounter>
+      {
+        cheerArr.map((click: CheerClick, i) => (
+          <StyledCheerCounter key={`${click.num}-${i}`}>
+            {click.str}
+          </StyledCheerCounter>
         ))
       }
       {/* <audio preload="auto" controls={false} id="audio-el" /> */}

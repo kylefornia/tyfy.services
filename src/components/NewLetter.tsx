@@ -67,7 +67,7 @@ const NewLetter = (props: Props) => {
       return new Promise((resolve, reject) => {
         const getGeolocation = async (position: any) => {
 
-          if (!position) return alert('Cannot get your location')
+          if (!position) return reject(alert('Cannot get your location'))
 
           let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIPv3();
 
