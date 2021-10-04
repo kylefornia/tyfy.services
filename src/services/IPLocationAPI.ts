@@ -21,7 +21,7 @@ class IPLocationAPI {
   }
 
   static getLocationFromIPv2(): Promise<UserLocation> {
-    return axios.get('http://ip-api.com/json/').then((result) => {
+    return axios.get('https://ip-api.com/json/').then((result) => {
 
       const data: UserLocation = {
         lat: result.data.lat,
@@ -48,7 +48,7 @@ class IPLocationAPI {
       }
 
       return data
-    })
+    }).catch((err) => err)
   }
 
 

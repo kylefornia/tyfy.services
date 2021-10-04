@@ -67,23 +67,31 @@ const NewLetter = (props: Props) => {
       return new Promise((resolve, reject) => {
         const getGeolocation = async (position: any) => {
 
+
           if (!position) return reject(alert('Cannot get your location'))
 
-          let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIPv3();
+          try {
+            let { city, country_name, country_code, region }: UserLocation = await IPLocationAPI.getLocationFromIPv3();
 
-          const location: UserLocation = {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-            city,
-            country_name,
-            country_code,
-            region,
+            const location: UserLocation = {
+              lat: position.coords.latitude,
+              lon: position.coords.longitude,
+              city,
+              country_name,
+              country_code,
+              region,
+            }
+
+            return resolve(location)
+
+          } catch (error) {
+            return reject(error)
           }
-
-          return resolve(location)
         }
 
-        navigator.geolocation.getCurrentPosition(getGeolocation)
+        navigator.geolocation.getCurrentPosition(getGeolocation, (err) => {
+          return resolve(err)
+        })
       });
 
 
@@ -99,10 +107,11 @@ const NewLetter = (props: Props) => {
 
     setIsSending(true)
 
-    let { lat = 0, lon = 0, city, country_name, country_code, region }: UserLocation = await getUserLocation();
+    let { lat = 0, lon = 0, city = '', country_name = '', country_code = '', region = '' }: UserLocation = await getUserLocation();
 
     if (!city) {
-      return alert('Cannot get location. Unable to send letter')
+      // setIsSending(false)
+      alert('Cannot get location. This letter will not show up on the globe.')
     }
 
     await FirebaseAPI.addNewLetter({

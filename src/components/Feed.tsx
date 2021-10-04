@@ -33,7 +33,12 @@ const FeedItem = (Letter: Letter) => {
                 <div className="container-line">
 
                   <div className="user-icon">
-                    {Letter.location && <ReactCountryFlag svg countryCode={Letter.location.country_code} />}
+                    {
+                      !!Letter.location && !!Letter.location.country_code ?
+                        <ReactCountryFlag svg countryCode={Letter.location.country_code} />
+                        :
+                        <i className="ri-earth-fill"></i>
+                    }
                   </div>
 
                   <span className="name">{Letter.name}</span>
@@ -322,7 +327,7 @@ const StyledFeedUser = styled.div`
   /* background: #f8f8f8; */
   flex: 1;
   /* width: calc(50% - 10px); */
-  height: 100%;
+  /* height: 100%; */
   display: flex;
   align-items: center;
 
@@ -335,7 +340,7 @@ const StyledFeedUser = styled.div`
     background: rgba(255,255,255,0.75);
     flex: 1;
     font-family: 'Merriweather', 'Times New Roman', Times, serif;
-
+    height: 100%;
 
 
     &.sender {
@@ -367,6 +372,7 @@ const StyledFeedUser = styled.div`
       flex: 1;
       display: flex;
       flex-flow: column nowrap;
+      height: 100%;
 
       .container-line {
         align-items: center;

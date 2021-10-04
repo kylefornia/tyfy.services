@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import * as firebase from 'firebase/app'
 import styled from 'styled-components';
 import { BrowserRouter as Router, useParams, useLocation, withRouter, RouteComponentProps } from 'react-router-dom'
@@ -29,27 +29,58 @@ const ViewLetter = (props: Props) => {
     letterId: id,
   })
 
+  const [isOpened, setIsOpened] = React.useState<Boolean>(false);
 
-  function getLetter() {
-    firebase.firestore().collection('letters').doc(id).get().then((snap) => {
-      setLetterData({
-        letterId: id,
-        letter: snap.data() as Letter,
-        loading: false,
+
+  const getLetter = useCallback(
+    () => {
+      firebase.firestore().collection('letters').doc(id).get().then((snap) => {
+        setLetterData({
+          letterId: id,
+          letter: snap.data() as Letter,
+          loading: false,
+        })
       })
-    })
-  }
+    },
+    [id],
+  )
 
   function goBack() {
     props.history && props.history.goBack();
   }
 
+
   React.useEffect(() => {
     getLetter()
-  }, [])
+    setTimeout(() => {
+      setIsOpened(true)
+    }, 1000)
+  }, [getLetter])
+
+  if(!letterData.loading && !letterData?.letter) {
+    return (
+      <LetterContainer isOpened={isOpened}>
+        <LetterContentContainer>
+          <LetterContent isOpened={isOpened}>
+          <div className="letter-header">
+          <Toolbar>
+                <button onClick={goBack} className="back-button">
+                  <i className="ri-arrow-left-line" /> Back
+                  </button>
+              </Toolbar>
+              </div>
+            <div className="letter-message-container error">
+              <i className="ri-file-shred-line"></i>
+              This letter might have been shredded
+              </div>
+          </LetterContent>
+        </LetterContentContainer>
+      </LetterContainer>
+    )
+  }
 
   return (
-    <LetterContainer>
+    <LetterContainer isOpened={isOpened}>
 
       {
         letterData.loading ?
@@ -67,22 +98,26 @@ const ViewLetter = (props: Props) => {
                   <i className="ri-arrow-left-line" /> Back
                   </button>
               </Toolbar> */}
-              <LetterContent>
-                {/* <div className="paper"></div> */}
+              <LetterContent isOpened={isOpened}>
                 <div className="letter-header">
 
                   <div className="from-container">
                     <span className="label">From: </span>
                     <div className="from-profile">
                       <div className="from-flag">
-                        <ReactCountryFlag svg countryCode={letterData.letter.location.country_code} />
+                        {
+                          !!letterData.letter?.location && !!letterData.letter?.location?.country_code ?
+                            <ReactCountryFlag svg countryCode={letterData.letter?.location?.country_code} />
+                            :
+                            <i className="ri-earth-fill"></i>
+                        }
                       </div>
                       <div className="from-profile-content">
                         <span className="name">{letterData.letter.name}</span>
 
                         {
-                          !!letterData.letter.location &&
-                          <span className="location-text">{letterData.letter.location.city}, {letterData.letter.location.country_name}</span>
+                          !!letterData.letter?.location && !!letterData.letter?.location?.country_code &&
+                          (<span className="location-text">{letterData.letter.location.city}, {letterData.letter.location.country_name}</span>)
                         }
                       </div>
                     </div>
@@ -95,14 +130,19 @@ const ViewLetter = (props: Props) => {
                           <span className="label">To: </span>
                           <div className="from-profile">
                             <div className="from-flag">
-                              <ReactCountryFlag svg countryCode={letterData.letter.receipient?.location?.country_code} />
+                              {
+                                !!letterData.letter.receipient?.location && !!letterData.letter.receipient?.location?.country_code ?
+                                  <ReactCountryFlag svg countryCode={letterData.letter.receipient?.location.country_code} />
+                                  :
+                                  <i className="ri-earth-fill"></i>
+                              }
                             </div>
                             <div className="from-profile-content">
                               <span className="name">{letterData.letter.receipient?.name}</span>
 
                               {
-                                !!letterData.letter.receipient.location &&
-                                <span className="location-text">{letterData.letter.receipient?.location.city}, {letterData.letter.receipient?.location.country_name}</span>
+                                !!letterData.letter.receipient?.location && !!letterData.letter.receipient?.location?.country_code &&
+                                (<span className="location-text">{letterData.letter.receipient?.location.city}, {letterData.letter.receipient?.location.country_name}</span>)
                               }
                             </div>
                           </div>
@@ -133,11 +173,18 @@ export default withRouter(ViewLetter)
 
 const LetterContainer = styled('div').attrs({
   className: 'view-letter-container'
-})`
+})<{ isOpened: Boolean;}>`
   display: flex;
-  height: calc(100% - 60px);
+  height: calc(100% - 72px);
   overflow: hidden;
   flex-flow: column nowrap;
+  overflow-y: ${({ isOpened }) => isOpened ? 'auto' : 'hidden'};
+  border-radius: 5px;
+
+  &::-webkit-scrollbar {
+    width: 1px;
+    height: 0px;
+  }
 
   }
 
@@ -170,17 +217,25 @@ const LetterContainer = styled('div').attrs({
 `;
 
 
-const LetterContent = styled.div`
+const LetterContent = styled.div<{ isOpened: Boolean;}>`
   padding: 0 0px;
   width: 100%;
   margin: 0 auto;
-  height: calc(100% - 60px);
-  max-height: 605px;
+  position: relative;
+  height: auto;
+  max-height: calc(100% - 72px);
+  // overflow-y: ${({ isOpened }) => isOpened ? 'auto' : 'normal'};
   display: flex;
   flex-flow: column nowrap;
   box-sizing: border-box;
   position: relative;
   backface-visibility: hidden;
+
+  
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
 
   .date {
     font-size: 0.7em;
@@ -302,7 +357,23 @@ const LetterContent = styled.div`
     border-radius: 0% 0% 5px 5px;
     will-change: transform;
     z-index: 0;
-    
+
+    &.error {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      line-height: 2.5em;
+      color: #444;
+
+      i {
+        font-size: 60px;
+        // height: 60px;
+        // width: 60px;
+        color: #56aade;
+        line-height: normal;
+      }
+    }
 
 
     @keyframes open-contents {
@@ -335,6 +406,10 @@ const LetterContent = styled.div`
     flex: 1;
     opacity: 1;
     animation: open-contents-text 400ms linear forwards;
+    /* max-height: 250px; */
+    overflow-y: auto;
+
+    
 
 
     @keyframes open-contents-text {
@@ -382,7 +457,7 @@ const LetterContent = styled.div`
 `;
 
 const Toolbar = styled.div`
-  padding: 10px 0 10px 0px;
+  padding: 0px 20px 20px 20px;
   display: flex;
   justify-content: flex-start;
   width: 100%;

@@ -91,7 +91,7 @@ const Globe = ({ letters = [] }: Props) => {
   function formatPoints(lettersData: Letter[]) {
     const formattedArcs = letters.length > 0 ?
       lettersData
-        .filter((letter) => letter.receipient && letter.receipient.location)
+        .filter((letter) => (!!letter.receipient && !!letter.receipient.location && !!letter.location.city))
         .map((letter: Letter): ArcData => {
 
           const tooltip = `<div 
@@ -163,18 +163,20 @@ const Globe = ({ letters = [] }: Props) => {
         }) : []
 
     const formattedPoints = letters.length > 0 ?
-      lettersData.map((letter: Letter): PointData => {
-        return {
-          lat: letter.location.lat,
-          lng: letter.location.lon,
-          size: 0.02,
-          // color: [['white', 'blue'][Math.round(Math.random() * 2)], ['white', 'blue'][Math.round(Math.random() * 3)]]
-          color: '#26de81',
-          radius: 1,
-          name: letter.name,
-          // ...letter
-        }
-      }) : []
+      lettersData
+        .filter((letter) => (!!letter.receipient && !!letter.receipient.location && !!letter.location.city))
+        .map((letter: Letter): PointData => {
+          return {
+            lat: letter.location.lat,
+            lng: letter.location.lon,
+            size: 0.02,
+            // color: [['white', 'blue'][Math.round(Math.random() * 2)], ['white', 'blue'][Math.round(Math.random() * 3)]]
+            color: '#26de81',
+            radius: 1,
+            name: letter.name,
+            // ...letter
+          }
+        }) : []
     setArcData(formattedArcs)
     setPointsData(formattedPoints)
 
